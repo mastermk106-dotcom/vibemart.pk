@@ -24,7 +24,7 @@ main{max-width:1150px;margin:auto;padding:22px 16px}
 .hero{padding:35px 25px;border-radius:20px;background:linear-gradient(125deg,#6d28d9,#a855f7);color:white}
 .hero h1{font-size:clamp(27px,5vw,43px);margin:0 0 12px}
 .hero p{line-height:1.6}
-.searchrow{display:flex;gap:9px;margin:20px 0;flex-wrap:wrap}
+.searchrow{display:flex;gap:9px;margin:12px 0;flex-wrap:wrap}
 .searchrow input{flex:1;min-width:180px}
 input,textarea,select{width:100%;padding:12px;border:1px solid #ddd3eb;border-radius:10px;background:white;color:#241d31}
 .categories{display:flex;gap:8px;overflow:auto;padding:5px 0 15px}
@@ -50,22 +50,18 @@ input,textarea,select{width:100%;padding:12px;border:1px solid #ddd3eb;border-ra
 .rowbtn{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 .notice{padding:12px;background:#f0eaff;border-radius:10px;font-size:13px;line-height:1.5}
 .order{border:1px solid var(--border);border-radius:12px;padding:13px;margin:10px 0;overflow-wrap:anywhere}
-.order-status{display:inline-block;padding:7px 10px;border-radius:9px;background:#f0eaff;color:#4c1d95;font-weight:bold;font-size:14px}
+.order-status{display:inline-block;padding:9px 12px;border-radius:9px;background:#f0eaff;color:#4c1d95;font-weight:bold;font-size:16px}
 footer{text-align:center;color:var(--muted);padding:25px;font-size:13px}
 #status{margin:12px 0;color:var(--p);font-size:14px;overflow-wrap:anywhere}
 #addProductBtn{display:block;width:100%;font-size:17px;padding:16px;margin:18px 0}
 #productForm{scroll-margin-top:100px}
+.small{font-size:12px;color:var(--muted);overflow-wrap:anywhere}
 @media(max-width:520px){
-header{padding:12px}
-main{padding:15px 12px}
-.hero{padding:25px 18px}
+header{padding:12px}main{padding:15px 12px}.hero{padding:25px 18px}
 .products{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.product img{height:145px}
-.productbody{padding:10px}
-.product h3{font-size:15px}
-.productbuttons{flex-direction:column}
-.productbuttons button{width:100%}
-.panel{padding:13px}
+.product img{height:145px}.productbody{padding:10px}
+.product h3{font-size:15px}.productbuttons{flex-direction:column}
+.productbuttons button{width:100%}.panel{padding:13px}
 }
 </style>
 </head>
@@ -75,6 +71,7 @@ main{padding:15px 12px}
   <div class="actions">
     <button class="secondary" id="loginBtn">👤 Owner Login</button>
     <button class="secondary" id="cartBtn">🛒 Cart (<span id="cartCount">0</span>)</button>
+    <button class="secondary" id="trackBtn">📦 Track Order</button>
     <button class="primary hidden" id="dashboardBtn">👑 Dashboard</button>
     <button class="secondary hidden" id="logoutBtn">Logout</button>
   </div>
@@ -84,11 +81,21 @@ main{padding:15px 12px}
 <section class="hero">
 <h1>Shop Your Vibe ✨</h1>
 <p>Discover useful products at prices you'll love. Easy shopping and Cash on Delivery.</p>
-<button style="background:white;color:#6d28d9" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">Explore Products ↓</button>
+<button style="background:white;color:#6d28d9" id="exploreBtn">Explore Products ↓</button>
+</section>
+
+<section class="panel" id="trackingPanel">
+<h2>📦 Track Your Order</h2>
+<p class="notice">Apna Order ID enter karo aur delivery status check karo. Customer ki private details yahan show nahi hotin.</p>
+<div class="searchrow">
+<input id="trackingId" placeholder="Order ID yahan paste karo" autocomplete="off" aria-label="Order ID">
+<button class="primary" id="trackOrderBtn" type="button">Track Order</button>
+</div>
+<div id="trackingResult" aria-live="polite"></div>
 </section>
 
 <div class="searchrow">
-<input id="search" placeholder="🔎 Search products...">
+<input id="search" placeholder="🔎 Search products..." aria-label="Search products">
 <button class="primary" id="searchBtn">Search</button>
 </div>
 
@@ -166,15 +173,28 @@ main{padding:15px 12px}
 <div class="field"><label for="buyerAddress">Delivery address *</label><textarea id="buyerAddress" required maxlength="500" rows="3"></textarea></div>
 <button class="primary" style="width:100%" type="submit" id="placeOrderBtn">Place COD Order</button>
 </form>
-<div id="checkoutMessage"></div>
+<div id="checkoutMessage" aria-live="polite"></div>
 <div class="rowbtn"><button class="secondary" type="button" id="closeCart">Continue Shopping</button></div>
+</div>
+</div>
+
+<div class="modal hidden" id="successModal" role="dialog" aria-modal="true">
+<div class="modalbox">
+<h2>🎉 Order Successfully Submitted!</h2>
+<p>Apna Order ID save kar lo. Isi se order ka status check hoga.</p>
+<div id="successOrderId" class="notice" style="overflow-wrap:anywhere"></div>
+<div class="rowbtn">
+<button class="primary" id="copyOrderIdBtn" type="button">Copy Order ID</button>
+<button class="secondary" id="trackNewOrderBtn" type="button">Track This Order</button>
+<button class="secondary" id="closeSuccessBtn" type="button">Close</button>
+</div>
 </div>
 </div>
 
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
 import {getAuth,onAuthStateChanged,signInWithEmailAndPassword,signOut,sendPasswordResetEmail} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
-import {getFirestore,collection,getDocs,addDoc,doc,updateDoc,deleteDoc,query,orderBy,serverTimestamp} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+import {getFirestore,collection,getDocs,addDoc,doc,getDoc,updateDoc,deleteDoc,query,orderBy,serverTimestamp,writeBatch} from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
 const firebaseConfig={
 apiKey:"AIzaSyDBz2wmlFK3uwX3TCWnu4lAvQZISuMttEY",
@@ -189,24 +209,27 @@ measurementId:"G-SRK7BLWPPN"
 const OWNER_UID="kAfNnhrB3vePCA72WuMVGshQvLV2";
 const CLOUDINARY_NAME="dvvsxjid";
 const CLOUDINARY_PRESET="vibemart_upload";
-
 const app=initializeApp(firebaseConfig);
 const auth=getAuth(app);
 const db=getFirestore(app);
 const $=id=>document.getElementById(id);
 
-let isOwner=false;
-let allProducts=[];
-let cart=[];
-let activeCategory="All";
-let searchText="";
-let busy=false;
+let isOwner=false,allProducts=[],cart=[],activeCategory="All",searchText="",busy=false,lastOrderId="";
+
+const labels={
+Pending:"⏳ Pending",
+Confirmed:"✅ Order Confirmed",
+Processing:"🧰 Processing",
+Shipped:"🚚 Shipped",
+Delivered:"🎉 Delivered",
+Cancelled:"❌ Cancelled"
+};
 
 $("year").textContent=new Date().getFullYear();
 
 function message(id,text,error=false){
-  $(id).textContent=text;
-  $(id).style.color=error?"#b91c1c":"#6d28d9";
+  const el=$(id);el.textContent=text;
+  el.style.color=error?"#b91c1c":"#6d28d9";
 }
 function money(n){return "Rs "+Number(n||0).toLocaleString("en-PK")}
 function safeText(v){return String(v??"")}
@@ -217,7 +240,7 @@ function friendlyError(e){
     "auth/invalid-email":"Email address check karo.",
     "auth/too-many-requests":"Bohat attempts ho gaye. Baad mein try karo.",
     "auth/network-request-failed":"Internet check karo.",
-    "permission-denied":"Firebase rules ne action allow nahi kiya.",
+    "permission-denied":"Firebase Rules ne action allow nahi kiya.",
     "unavailable":"Service abhi unavailable hai."
   })[c]||("Error: "+(e?.message||"Dobara try karo."));
 }
@@ -232,56 +255,44 @@ function showAuth(){
   message("authMessage","");
 }
 function closeAuth(){$("authModal").classList.add("hidden")}
-function showCart(){
-  renderCart();
-  $("cartModal").classList.remove("hidden");
-}
+function showCart(){renderCart();$("cartModal").classList.remove("hidden")}
+function goTo(id){$(id).scrollIntoView({behavior:"smooth",block:"start"})}
 
+$("exploreBtn").onclick=()=>goTo("shop");
+$("trackBtn").onclick=()=>goTo("trackingPanel");
 $("loginBtn").onclick=()=>isOwner?openDashboard():showAuth();
 $("dashboardBtn").onclick=openDashboard;
-$("hideDashboard").onclick=()=>{
-  $("dashboard").classList.add("hidden");
-  window.scrollTo({top:0,behavior:"smooth"});
-};
+$("hideDashboard").onclick=()=>{$("dashboard").classList.add("hidden");window.scrollTo({top:0,behavior:"smooth"})};
 $("closeAuth").onclick=closeAuth;
 $("closeCart").onclick=()=>$("cartModal").classList.add("hidden");
 $("cartBtn").onclick=showCart;
+$("closeSuccessBtn").onclick=()=>$("successModal").classList.add("hidden");
 
 function openDashboard(){
-  if(!isOwner||auth.currentUser?.uid!==OWNER_UID){
-    showAuth();
-    return;
-  }
+  if(!isOwner||auth.currentUser?.uid!==OWNER_UID){showAuth();return}
   $("dashboard").classList.remove("hidden");
-  $("dashboard").scrollIntoView({behavior:"smooth"});
+  goTo("dashboard");
 }
 $("addProductBtn").onclick=()=>{
   if(!isOwner){showAuth();return}
   resetProductForm();
   $("productEditor").classList.remove("hidden");
-  $("productForm").scrollIntoView({behavior:"smooth"});
+  goTo("productForm");
   $("pName").focus({preventScroll:true});
 };
 
 $("loginForm").onsubmit=async e=>{
-  e.preventDefault();
-  if(busy)return;
-  setBusy(true);
-  message("authMessage","Login ho raha hai...");
+  e.preventDefault();if(busy)return;
+  setBusy(true);message("authMessage","Login ho raha hai...");
   try{
     const r=await signInWithEmailAndPassword(auth,$("email").value.trim(),$("password").value);
     $("password").value="";
     if(r.user.uid!==OWNER_UID){
       message("authMessage","Yeh owner account nahi hai.",true);
       await signOut(auth);
-    }else{
-      closeAuth();
-    }
-  }catch(e){
-    message("authMessage",friendlyError(e),true);
-  }finally{
-    setBusy(false);
-  }
+    }else closeAuth();
+  }catch(e){message("authMessage",friendlyError(e),true)}
+  finally{setBusy(false)}
 };
 
 $("forgotBtn").onclick=async()=>{
@@ -290,9 +301,7 @@ $("forgotBtn").onclick=async()=>{
   try{
     await sendPasswordResetEmail(auth,email);
     message("authMessage","Agar account maujood hai to reset email bhej di gayi hai.");
-  }catch(e){
-    message("authMessage",friendlyError(e),true);
-  }
+  }catch(e){message("authMessage",friendlyError(e),true)}
 };
 
 onAuthStateChanged(auth,async u=>{
@@ -301,18 +310,13 @@ onAuthStateChanged(auth,async u=>{
   $("dashboardBtn").classList.toggle("hidden",!isOwner);
   $("logoutBtn").classList.toggle("hidden",!u);
   $("ownerEmail").textContent=isOwner?"Logged in: "+(u.email||""):"";
-  $("dashboard").classList.toggle("hidden",!isOwner);
+  if(!isOwner)$("dashboard").classList.add("hidden");
   await loadProducts();
 });
 
 $("logoutBtn").onclick=async()=>{
-  try{
-    await signOut(auth);
-    $("dashboard").classList.add("hidden");
-    message("status","Logout successful.");
-  }catch(e){
-    message("status",friendlyError(e),true);
-  }
+  try{await signOut(auth);$("dashboard").classList.add("hidden");message("status","Logout successful.")}
+  catch(e){message("status",friendlyError(e),true)}
 };
 
 async function loadProducts(){
@@ -321,12 +325,9 @@ async function loadProducts(){
     const s=await getDocs(collection(db,"products"));
     allProducts=s.docs.map(d=>({id:d.id,...d.data()}));
     allProducts.sort((a,b)=>safeText(a.name).localeCompare(safeText(b.name)));
-    renderProducts();
-    renderManageProducts();
+    renderProducts();renderManageProducts();
     message("status",allProducts.length?"":"Abhi products nahi hain.");
-  }catch(e){
-    message("status","Products load nahi hue: "+friendlyError(e),true);
-  }
+  }catch(e){message("status","Products load nahi hue: "+friendlyError(e),true)}
 }
 
 function renderProducts(){
@@ -336,429 +337,256 @@ function renderProducts(){
   );
   $("productCount").textContent=list.length+" products";
   $("products").replaceChildren();
-
   if(!list.length){
-    const x=document.createElement("div");
-    x.className="panel";
+    const x=document.createElement("div");x.className="panel";
     x.textContent="Is category mein abhi products nahi mile.";
-    $("products").append(x);
-    return;
+    $("products").append(x);return;
   }
-
   list.forEach(p=>{
-    const c=document.createElement("article");
-    c.className="product";
-    const im=document.createElement("img");
-    im.alt=safeText(p.name);
-    im.loading="lazy";
+    const c=document.createElement("article");c.className="product";
+    const im=document.createElement("img");im.alt=safeText(p.name);im.loading="lazy";
     im.src=safeText(p.imageUrl)||"https://placehold.co/600x450/f0eaff/6d28d9?text=Vibemart";
-    im.onerror=()=>{
-      im.onerror=null;
-      im.src="https://placehold.co/600x450/f0eaff/6d28d9?text=Vibemart";
-    };
-
-    const b=document.createElement("div");
-    b.className="productbody";
-    const t=document.createElement("h3");
-    t.textContent=safeText(p.name)||"Product";
-    const cat=document.createElement("p");
-    cat.textContent=safeText(p.category||"Other");
-    const pr=document.createElement("div");
-    pr.className="price";
-    pr.textContent=money(p.price);
-
+    im.onerror=()=>{im.onerror=null;im.src="https://placehold.co/600x450/f0eaff/6d28d9?text=Vibemart"};
+    const b=document.createElement("div");b.className="productbody";
+    const t=document.createElement("h3");t.textContent=safeText(p.name)||"Product";
+    const cat=document.createElement("p");cat.textContent=safeText(p.category||"Other");
+    const pr=document.createElement("div");pr.className="price";pr.textContent=money(p.price);
     if(Number(p.oldPrice)>Number(p.price)){
-      const old=document.createElement("span");
-      old.className="oldprice";
-      old.textContent=money(p.oldPrice);
-      pr.append(old);
+      const old=document.createElement("span");old.className="oldprice";old.textContent=money(p.oldPrice);pr.append(old);
     }
-
-    const desc=document.createElement("p");
-    desc.textContent=safeText(p.description);
-    const btns=document.createElement("div");
-    btns.className="productbuttons";
-    const add=document.createElement("button");
-    add.className="primary";
-    add.textContent="Add to Cart";
-    add.onclick=()=>addToCart(p.id);
-    btns.append(add);
-    b.append(t,cat,pr,desc,btns);
-    c.append(im,b);
-    $("products").append(c);
+    const desc=document.createElement("p");desc.textContent=safeText(p.description);
+    const btns=document.createElement("div");btns.className="productbuttons";
+    const add=document.createElement("button");add.className="primary";add.textContent="Add to Cart";add.onclick=()=>addToCart(p.id);
+    btns.append(add);b.append(t,cat,pr,desc,btns);c.append(im,b);$("products").append(c);
   });
 }
 
 $("categories").onclick=e=>{
-  const b=e.target.closest("button[data-cat]");
-  if(!b)return;
+  const b=e.target.closest("button[data-cat]");if(!b)return;
   activeCategory=b.dataset.cat;
   $("categories").querySelectorAll("button").forEach(x=>x.classList.toggle("active",x===b));
   renderProducts();
 };
-
-function searchProducts(){
-  searchText=$("search").value.trim();
-  renderProducts();
-}
+function searchProducts(){searchText=$("search").value.trim();renderProducts()}
 $("searchBtn").onclick=searchProducts;
 $("search").onkeydown=e=>{if(e.key==="Enter")searchProducts()};
 
 function addToCart(id){
-  const p=allProducts.find(x=>x.id===id);
-  if(!p)return;
+  const p=allProducts.find(x=>x.id===id);if(!p)return;
   const i=cart.find(x=>x.id===id);
   if(i)i.qty=Math.min(99,i.qty+1);
   else cart.push({id,name:safeText(p.name),price:Number(p.price),qty:1});
-  renderCart();
-  message("status","Product cart mein add ho gaya.");
+  renderCart();message("status","Product cart mein add ho gaya.");
 }
 function cartTotal(){return cart.reduce((s,i)=>s+i.price*i.qty,0)}
-
 function renderCart(){
   $("cartCount").textContent=cart.reduce((n,i)=>n+i.qty,0);
   $("cartItems").replaceChildren();
-
-  if(!cart.length){
-    const p=document.createElement("p");
-    p.textContent="Tumhara cart khaali hai.";
-    $("cartItems").append(p);
-  }
-
+  if(!cart.length){const p=document.createElement("p");p.textContent="Tumhara cart khaali hai.";$("cartItems").append(p)}
   cart.forEach(i=>{
-    const r=document.createElement("div");
-    r.className="order";
-    const t=document.createElement("strong");
-    t.textContent=i.name+" — "+money(i.price*i.qty);
-    const controls=document.createElement("div");
-    controls.className="rowbtn";
-    const minus=document.createElement("button");
-    minus.className="secondary";
-    minus.textContent="−";
-    minus.onclick=()=>{
-      i.qty--;
-      if(i.qty<=0)cart=cart.filter(x=>x.id!==i.id);
-      renderCart();
-    };
-    const qty=document.createElement("span");
-    qty.textContent="Qty: "+i.qty;
-    const plus=document.createElement("button");
-    plus.className="secondary";
-    plus.textContent="+";
+    const r=document.createElement("div");r.className="order";
+    const t=document.createElement("strong");t.textContent=i.name+" — "+money(i.price*i.qty);
+    const controls=document.createElement("div");controls.className="rowbtn";
+    const minus=document.createElement("button");minus.className="secondary";minus.textContent="−";
+    minus.onclick=()=>{i.qty--;if(i.qty<=0)cart=cart.filter(x=>x.id!==i.id);renderCart()};
+    const qty=document.createElement("span");qty.textContent="Qty: "+i.qty;
+    const plus=document.createElement("button");plus.className="secondary";plus.textContent="+";
     plus.onclick=()=>{i.qty=Math.min(99,i.qty+1);renderCart()};
-    controls.append(minus,qty,plus);
-    r.append(t,controls);
-    $("cartItems").append(r);
+    const remove=document.createElement("button");remove.className="danger";remove.textContent="Remove";
+    remove.onclick=()=>{cart=cart.filter(x=>x.id!==i.id);renderCart()};
+    controls.append(minus,qty,plus,remove);r.append(t,controls);$("cartItems").append(r);
   });
-
   $("cartTotal").textContent="Total: "+money(cartTotal());
 }
-
 renderCart();
 
+/* CHECKOUT: Order aur public tracking status ek atomic batch mein create hote hain. */
 $("checkoutForm").onsubmit=async e=>{
-  e.preventDefault();
-  if(busy)return;
-  if(!cart.length){
-    message("checkoutMessage","Pehle cart mein product add karo.",true);
-    return;
+  e.preventDefault();if(busy)return;
+  if(!cart.length){message("checkoutMessage","Pehle cart mein product add karo.",true);return}
+  const name=$("buyerName").value.trim(),phone=$("buyerPhone").value.trim(),address=$("buyerAddress").value.trim();
+  if(name.length<2||phone.length<7||address.length<5||cartTotal()<=0){
+    message("checkoutMessage","Name, phone, address aur total check karo.",true);return
   }
-
-  const name=$("buyerName").value.trim();
-  const phone=$("buyerPhone").value.trim();
-  const address=$("buyerAddress").value.trim();
-  const items=cart.map(i=>({id:i.id,name:i.name,price:i.price,qty:i.qty}));
-  const total=cartTotal();
-
-  if(name.length<2||phone.length<7||address.length<5||total<=0){
-    message("checkoutMessage","Name, phone, address aur total check karo.",true);
-    return;
-  }
-
-  setBusy(true);
-  message("checkoutMessage","Order submit ho raha hai...");
-
+  setBusy(true);message("checkoutMessage","Order submit ho raha hai...");
   try{
-    await addDoc(collection(db,"orders"),{
-      name,phone,address,items,total,createdAt:serverTimestamp()
-    });
-    cart=[];
-    renderCart();
-    $("checkoutForm").reset();
-    message("checkoutMessage","Order submit ho gaya! Seller tumse contact karega.");
-  }catch(e){
-    message("checkoutMessage","Order submit nahi hua: "+friendlyError(e),true);
-  }finally{
-    setBusy(false);
+    const orderRef=doc(collection(db,"orders"));
+    const batch=writeBatch(db);
+    const items=cart.map(i=>({id:i.id,name:i.name,price:i.price,qty:i.qty}));
+    batch.set(orderRef,{name,phone,address,items,total:cartTotal(),createdAt:serverTimestamp()});
+    batch.set(doc(db,"tracking",orderRef.id),{status:"Pending",createdAt:serverTimestamp()});
+    await batch.commit();
+    lastOrderId=orderRef.id;cart=[];renderCart();$("checkoutForm").reset();
+    $("cartModal").classList.add("hidden");
+    $("successOrderId").textContent=lastOrderId;
+    $("successModal").classList.remove("hidden");
+  }catch(e){message("checkoutMessage","Order submit nahi hua: "+friendlyError(e),true)}
+  finally{setBusy(false)}
+};
+
+$("copyOrderIdBtn").onclick=async()=>{
+  try{
+    await navigator.clipboard.writeText(lastOrderId);
+    $("copyOrderIdBtn").textContent="Copied!";
+  }catch{
+    const text=$("successOrderId");
+    text.textContent="Order ID: "+lastOrderId+" — ise select karke copy karein.";
   }
 };
+$("trackNewOrderBtn").onclick=()=>{
+  $("successModal").classList.add("hidden");
+  $("trackingId").value=lastOrderId;
+  goTo("trackingPanel");
+  trackOrder();
+};
+
+/* Public tracker can read only the tracking document, never the private order. */
+async function trackOrder(){
+  const id=$("trackingId").value.trim(),out=$("trackingResult");
+  out.replaceChildren();
+  if(!id||id.length>128){out.textContent="Apna valid Order ID enter karo.";return}
+  out.textContent="Order status check ho raha hai...";
+  try{
+    const snap=await getDoc(doc(db,"tracking",id));
+    out.replaceChildren();
+    if(!snap.exists()){out.textContent="Order nahi mila. Order ID dobara check karo.";return}
+    const data=snap.data();
+    const title=document.createElement("h3");title.textContent="Order Status";
+    const status=document.createElement("div");status.className="order-status";
+    status.textContent=labels[data.status]||"Status unavailable";
+    const idLine=document.createElement("p");idLine.textContent="Order ID: "+id;
+    const note=document.createElement("p");note.className="small";note.textContent="Tracking page par sirf order status dikhaya jata hai.";
+    out.append(title,status,idLine,note);
+  }catch(e){
+    out.replaceChildren();
+    out.textContent="Tracking kaam nahi kar rahi. Firestore Rules aur internet connection check karo.";
+  }
+}
+$("trackOrderBtn").onclick=trackOrder;
+$("trackingId").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();trackOrder()}};
 
 async function uploadImage(file){
   if(!file)return"";
-  if(!["image/jpeg","image/png","image/webp"].includes(file.type)){
-    throw Error("JPG, PNG ya WEBP image select karo.");
-  }
+  if(!["image/jpeg","image/png","image/webp"].includes(file.type))throw Error("JPG, PNG ya WEBP image select karo.");
   if(file.size>5*1024*1024)throw Error("Image 5 MB se chhoti honi chahiye.");
-
-  const f=new FormData();
-  f.append("file",file);
-  f.append("upload_preset",CLOUDINARY_PRESET);
-
-  const r=await fetch(
-    `https://api.cloudinary.com/v1_1/${CLOUDINARY_NAME}/image/upload`,
-    {method:"POST",body:f}
-  );
+  const f=new FormData();f.append("file",file);f.append("upload_preset",CLOUDINARY_PRESET);
+  const r=await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_NAME}/image/upload`,{method:"POST",body:f});
   const j=await r.json();
   if(!r.ok||!j.secure_url)throw Error(j.error?.message||"Cloudinary image upload fail hua.");
   return j.secure_url;
 }
-
 function resetProductForm(){
-  $("productForm").reset();
-  $("editId").value="";
-  $("formTitle").textContent="Add New Product";
-  $("saveProductBtn").textContent="Save Product";
+  $("productForm").reset();$("editId").value="";
+  $("formTitle").textContent="Add New Product";$("saveProductBtn").textContent="Save Product";
 }
 $("cancelEdit").onclick=resetProductForm;
 
 $("productForm").onsubmit=async e=>{
   e.preventDefault();
-
-  if(!isOwner||auth.currentUser?.uid!==OWNER_UID){
-    message("status","Owner login required.",true);
-    return;
-  }
+  if(!isOwner||auth.currentUser?.uid!==OWNER_UID){message("status","Owner login required.",true);return}
   if(busy)return;
-
-  const name=$("pName").value.trim();
-  const price=Number($("pPrice").value);
+  const name=$("pName").value.trim(),price=Number($("pPrice").value);
   const oldPrice=$("pOldPrice").value?Number($("pOldPrice").value):0;
-  const category=$("pCategory").value;
-  const description=$("pDescription").value.trim();
-  const file=$("pImage").files[0];
-  const editId=$("editId").value;
-
+  const category=$("pCategory").value,description=$("pDescription").value.trim();
+  const file=$("pImage").files[0],editId=$("editId").value;
   if(!name||!Number.isInteger(price)||price<1||price>1e7||
     (oldPrice&&(!Number.isInteger(oldPrice)||oldPrice<0||oldPrice>1e7))){
-    message("status","Product name aur prices check karo.",true);
-    return;
+    message("status","Product name aur prices check karo.",true);return
   }
-  if(!editId&&!file){
-    message("status","Naye product ke liye image select karo.",true);
-    return;
-  }
-
+  if(!editId&&!file){message("status","Naye product ke liye image select karo.",true);return}
   setBusy(true);
   try{
     message("status",file?"Image upload ho rahi hai...":"Product save ho raha hai...");
     const imageUrl=file?await uploadImage(file):"";
     const data={name,price,oldPrice,category,description};
     if(imageUrl)data.imageUrl=imageUrl;
-
-    if(editId){
-      await updateDoc(doc(db,"products",editId),data);
-      message("status","Product update ho gaya.");
-    }else{
-      data.createdAt=serverTimestamp();
-      await addDoc(collection(db,"products"),data);
-      message("status","Product successfully add ho gaya!");
-    }
-
-    resetProductForm();
-    await loadProducts();
-  }catch(e){
-    message("status","Save nahi hua: "+friendlyError(e),true);
-  }finally{
-    setBusy(false);
-  }
+    if(editId)await updateDoc(doc(db,"products",editId),data);
+    else{data.createdAt=serverTimestamp();await addDoc(collection(db,"products"),data)}
+    resetProductForm();await loadProducts();message("status","Product successfully save ho gaya!");
+  }catch(e){message("status","Save nahi hua: "+friendlyError(e),true)}
+  finally{setBusy(false)}
 };
 
 function renderManageProducts(){
   $("manageProducts").replaceChildren();
   if(!isOwner)return;
-
-  if(!allProducts.length){
-    $("manageProducts").textContent="Abhi koi product nahi.";
-    return;
-  }
-
+  if(!allProducts.length){$("manageProducts").textContent="Abhi koi product nahi.";return}
   allProducts.forEach(p=>{
-    const r=document.createElement("div");
-    r.className="order";
-    const t=document.createElement("strong");
-    t.textContent=safeText(p.name)+" — "+money(p.price);
-    const bs=document.createElement("div");
-    bs.className="rowbtn";
-
-    const edit=document.createElement("button");
-    edit.className="secondary";
-    edit.textContent="Edit";
+    const r=document.createElement("div");r.className="order";
+    const t=document.createElement("strong");t.textContent=safeText(p.name)+" — "+money(p.price);
+    const bs=document.createElement("div");bs.className="rowbtn";
+    const edit=document.createElement("button");edit.className="secondary";edit.textContent="Edit";
     edit.onclick=()=>{
-      $("editId").value=p.id;
-      $("pName").value=safeText(p.name);
-      $("pPrice").value=Number(p.price);
-      $("pOldPrice").value=Number(p.oldPrice||0)||"";
-      $("pCategory").value=p.category||"Other";
-      $("pDescription").value=safeText(p.description);
-      $("pImage").value="";
-      $("formTitle").textContent="Edit Product (image optional)";
-      $("saveProductBtn").textContent="Update Product";
-      $("productForm").scrollIntoView({behavior:"smooth"});
+      $("editId").value=p.id;$("pName").value=safeText(p.name);
+      $("pPrice").value=Number(p.price);$("pOldPrice").value=Number(p.oldPrice||0)||"";
+      $("pCategory").value=p.category||"Other";$("pDescription").value=safeText(p.description);
+      $("pImage").value="";$("formTitle").textContent="Edit Product (image optional)";
+      $("saveProductBtn").textContent="Update Product";goTo("productForm");
     };
-
-    const del=document.createElement("button");
-    del.className="danger";
-    del.textContent="Delete";
+    const del=document.createElement("button");del.className="danger";del.textContent="Delete";
     del.onclick=async()=>{
       if(!isOwner||!confirm("Product delete karna hai?"))return;
-      try{
-        await deleteDoc(doc(db,"products",p.id));
-        message("status","Product delete ho gaya.");
-        await loadProducts();
-      }catch(e){
-        message("status","Delete fail: "+friendlyError(e),true);
-      }
+      try{await deleteDoc(doc(db,"products",p.id));message("status","Product delete ho gaya.");await loadProducts()}
+      catch(e){message("status","Delete fail: "+friendlyError(e),true)}
     };
-
-    bs.append(edit,del);
-    r.append(t,bs);
-    $("manageProducts").append(r);
+    bs.append(edit,del);r.append(t,bs);$("manageProducts").append(r);
   });
 }
 
-/* FIXED ORDER STATUS SYSTEM */
+/* Seller order dashboard */
 $("loadOrders").onclick=loadOrders;
-
 async function loadOrders(){
-  if(!isOwner||auth.currentUser?.uid!==OWNER_UID){
-    message("status","Sirf owner orders dekh sakta hai.",true);
-    return;
-  }
-
-  const box=$("orders");
-  box.textContent="Orders load ho rahe hain...";
-
+  if(!isOwner||auth.currentUser?.uid!==OWNER_UID){message("status","Sirf owner orders dekh sakta hai.",true);return}
+  const box=$("orders");box.textContent="Orders load ho rahe hain...";
   try{
-    const snap=await getDocs(
-      query(collection(db,"orders"),orderBy("createdAt","desc"))
-    );
+    let snap;
+    try{snap=await getDocs(query(collection(db,"orders"),orderBy("createdAt","desc")))}
+    catch{snap=await getDocs(collection(db,"orders"))}
     box.replaceChildren();
-
-    if(snap.empty){
-      box.textContent="Abhi orders nahi hain.";
-      return;
-    }
-
-    snap.forEach(d=>{
-      const o=d.data();
-      const current=o.status||"Pending";
-      const card=document.createElement("div");
-      card.className="order";
-
-      const title=document.createElement("strong");
-      title.textContent=safeText(o.name)+" — "+money(o.total);
-
-      const status=document.createElement("p");
-      status.className="order-status";
-      const labels={
-        Pending:"⏳ Pending",
-        Confirmed:"✅ Order Confirmed",
-        Shipped:"🚚 Shipped",
-        Delivered:"🎉 Delivered",
-        Cancelled:"❌ Cancelled"
-      };
-      status.textContent="Status: "+(labels[current]||current);
-
-      const details=document.createElement("p");
-      details.style.whiteSpace="pre-line";
-      details.textContent=
-        "Phone: "+safeText(o.phone)+
-        "\nAddress: "+safeText(o.address);
-
+    if(snap.empty){box.textContent="Abhi orders nahi hain.";return}
+    const docs=snap.docs.slice().sort((a,b)=>(b.data().createdAt?.seconds||0)-(a.data().createdAt?.seconds||0));
+    docs.forEach(d=>{
+      const o=d.data(),current=o.status||"Pending";
+      const card=document.createElement("div");card.className="order";
+      const title=document.createElement("strong");title.textContent=safeText(o.name)+" — "+money(o.total);
+      const st=document.createElement("p");st.className="order-status";st.textContent="Status: "+(labels[current]||current);
+      const details=document.createElement("p");details.style.whiteSpace="pre-line";
+      details.textContent="Phone: "+safeText(o.phone)+"\nAddress: "+safeText(o.address);
       const items=document.createElement("p");
-      items.textContent="Items: "+(
-        Array.isArray(o.items)
-          ?o.items.map(i=>safeText(i.name)+" × "+safeText(i.qty)).join(", ")
-          :"Unavailable"
-      );
-
-      const id=document.createElement("small");
-      id.textContent="Order ID: "+d.id;
-
-      const controls=document.createElement("div");
-      controls.className="rowbtn";
-
-      let next=null;
-      if(current==="Pending"){
-        next={label:"✅ Confirm Order",value:"Confirmed",cls:"primary"};
-      }else if(current==="Confirmed"){
-        next={label:"📦 Mark Shipped",value:"Shipped",cls:"secondary"};
-      }else if(current==="Shipped"){
-        next={label:"🎉 Mark Delivered",value:"Delivered",cls:"primary"};
-      }
-
-      if(next){
-        const btn=document.createElement("button");
-        btn.className=next.cls;
-        btn.textContent=next.label;
-
-        btn.onclick=async()=>{
-          if(!isOwner||auth.currentUser?.uid!==OWNER_UID)return;
-          btn.disabled=true;
-          message("status","Order status update ho raha hai...");
-
-          try{
-            await updateDoc(doc(db,"orders",d.id),{status:next.value});
-            message("status","Order status update ho gaya: "+next.value);
-            await loadOrders();
-          }catch(e){
-            message("status","Status update nahi hua: "+friendlyError(e),true);
-            btn.disabled=false;
-          }
-        };
-        controls.append(btn);
-      }
-
-      if(current==="Pending"||current==="Confirmed"){
-        const cancelBtn=document.createElement("button");
-        cancelBtn.className="danger";
-        cancelBtn.textContent="❌ Cancel Order";
-
-        cancelBtn.onclick=async()=>{
-          if(!isOwner||auth.currentUser?.uid!==OWNER_UID)return;
-          if(!confirm("Kya tum order cancel karna chahte ho?"))return;
-
-          cancelBtn.disabled=true;
-          try{
-            await updateDoc(doc(db,"orders",d.id),{status:"Cancelled"});
-            message("status","Order cancel ho gaya.");
-            await loadOrders();
-          }catch(e){
-            message("status","Cancel nahi hua: "+friendlyError(e),true);
-            cancelBtn.disabled=false;
-          }
-        };
-        controls.append(cancelBtn);
-      }
-
-      if(current==="Delivered"){
-        const done=document.createElement("p");
-        done.textContent="✅ Yeh order complete ho chuka hai.";
-        controls.append(done);
-      }
-
-      if(current==="Cancelled"){
-        const done=document.createElement("p");
-        done.textContent="Order cancel ho chuka hai.";
-        controls.append(done);
-      }
-
-      card.append(title,status,details,items,id,controls);
-      box.append(card);
+      items.textContent="Items: "+(Array.isArray(o.items)?o.items.map(i=>safeText(i.name)+" × "+safeText(i.qty)).join(", "):"Unavailable");
+      const id=document.createElement("p");id.className="small";id.textContent="Order ID: "+d.id;
+      const select=document.createElement("select");select.setAttribute("aria-label","Order status");
+      ["Pending","Confirmed","Processing","Shipped","Delivered","Cancelled"].forEach(s=>{
+        const opt=document.createElement("option");opt.value=s;opt.textContent=labels[s];select.append(opt);
+      });
+      select.value=labels[current]?current:"Pending";
+      const save=document.createElement("button");save.className="primary";save.textContent="Save Status";
+      save.onclick=async()=>{
+        save.disabled=true;
+        try{
+          const batch=writeBatch(db);
+          batch.update(doc(db,"orders",d.id),{status:select.value});
+          batch.set(doc(db,"tracking",d.id),{status:select.value,createdAt:o.createdAt||serverTimestamp()},{merge:true});
+          await batch.commit();
+          message("status","Order status update ho gaya: "+select.value);
+          await loadOrders();
+        }catch(e){message("status","Status update nahi hua: "+friendlyError(e),true);save.disabled=false}
+      };
+      const cancel=document.createElement("button");cancel.className="danger";cancel.textContent="Cancel Order";
+      cancel.onclick=async()=>{
+        if(!confirm("Kya order cancel karna hai?"))return;
+        cancel.disabled=true;
+        try{
+          const batch=writeBatch(db);
+          batch.update(doc(db,"orders",d.id),{status:"Cancelled"});
+          batch.set(doc(db,"tracking",d.id),{status:"Cancelled",createdAt:o.createdAt||serverTimestamp()},{merge:true});
+          await batch.commit();message("status","Order cancel ho gaya.");await loadOrders();
+        }catch(e){message("status","Cancel nahi hua: "+friendlyError(e),true);cancel.disabled=false}
+      };
+      const controls=document.createElement("div");controls.className="rowbtn";controls.append(save,cancel);
+      card.append(title,st,details,items,id,select,controls);box.append(card);
     });
-  }catch(e){
-    box.textContent="Orders load nahi hue: "+friendlyError(e);
-  }
+  }catch(e){box.textContent="Orders load nahi hue: "+friendlyError(e)}
 }
 </script>
 </body>
