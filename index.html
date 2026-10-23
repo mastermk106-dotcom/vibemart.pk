@@ -6,21 +6,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#6d28d9">
 <title>Vibemart.pk — Your Vibe, Your Choice!</title>
+
 <style>
 :root{--p:#6d28d9;--dark:#241044;--bg:#f7f5fc;--white:#fff;--muted:#716b80;--border:#e9e2f3}
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#241d31}
 button,input,textarea,select{font:inherit}
-button{cursor:pointer;border:0;border-radius:10px;padding:11px 15px;font-weight:700}
+button{cursor:pointer;border:0;border-radius:10px;padding:12px 15px;font-weight:700}
+button:disabled{opacity:.6;cursor:wait}
 .primary{background:var(--p);color:white}
 .secondary{background:#eee7fb;color:var(--dark)}
 .danger{background:#fee2e2;color:#991b1b}
 header{background:white;border-bottom:1px solid var(--border);padding:15px 5%;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;position:sticky;top:0;z-index:5}
-.logo{font-size:25px;font-weight:900;color:var(--p)}.tag{font-size:12px;color:var(--muted);margin-top:4px}
+.logo{font-size:25px;font-weight:900;color:var(--p)}
+.tag{font-size:12px;color:var(--muted);margin-top:4px}
 .actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 main{max-width:1150px;margin:auto;padding:22px 16px}
 .hero{padding:35px 25px;border-radius:20px;background:linear-gradient(125deg,#6d28d9,#a855f7);color:white}
-.hero h1{font-size:clamp(27px,5vw,43px);margin:0 0 12px}.hero p{line-height:1.6}
+.hero h1{font-size:clamp(27px,5vw,43px);margin:0 0 12px}
+.hero p{line-height:1.6}
 .searchrow{display:flex;gap:9px;margin:20px 0;flex-wrap:wrap}
 .searchrow input{flex:1;min-width:180px}
 input,textarea,select{width:100%;padding:12px;border:1px solid #ddd3eb;border-radius:10px;background:white;color:#241d31}
@@ -31,23 +35,44 @@ input,textarea,select{width:100%;padding:12px;border:1px solid #ddd3eb;border-ra
 .products{display:grid;grid-template-columns:repeat(auto-fill,minmax(205px,1fr));gap:16px}
 .product{background:white;border:1px solid var(--border);border-radius:15px;overflow:hidden;box-shadow:0 4px 15px #30105b0a}
 .product img{width:100%;height:190px;object-fit:cover;background:#eee}
-.productbody{padding:14px}.product h3{margin:0 0 9px;font-size:17px;overflow-wrap:anywhere}
-.price{font-weight:900;color:var(--p);font-size:20px}.oldprice{color:#999;text-decoration:line-through;font-size:13px;margin-left:5px}
+.productbody{padding:14px}
+.product h3{margin:0 0 9px;font-size:17px;overflow-wrap:anywhere}
+.price{font-weight:900;color:var(--p);font-size:20px}
+.oldprice{color:#999;text-decoration:line-through;font-size:13px;margin-left:5px}
 .product p{font-size:13px;color:var(--muted);line-height:1.5}
-.productbuttons{display:flex;gap:7px;margin-top:12px}.productbuttons button{flex:1;padding:10px 6px}
+.productbuttons{display:flex;gap:7px;margin-top:12px}
+.productbuttons button{flex:1;padding:10px 6px}
 .panel{background:white;border:1px solid var(--border);border-radius:15px;padding:18px;margin:20px 0}
 .hidden{display:none!important}
 .modal{position:fixed;inset:0;background:#160b2bbd;display:flex;align-items:center;justify-content:center;padding:16px;z-index:20;overflow:auto}
 .modalbox{width:min(470px,100%);background:white;border-radius:18px;padding:22px;max-height:92vh;overflow:auto}
-.modalbox h2{margin-top:0}.field{margin:12px 0}.field label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}
+.modalbox h2{margin-top:0}
+.field{margin:12px 0}
+.field label{display:block;font-size:13px;font-weight:700;margin-bottom:6px}
 .rowbtn{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 .notice{padding:12px;background:#f0eaff;border-radius:10px;font-size:13px;line-height:1.5}
 .order{border:1px solid var(--border);border-radius:12px;padding:13px;margin:10px 0;overflow-wrap:anywhere}
 footer{text-align:center;color:var(--muted);padding:25px;font-size:13px}
 #status{margin:12px 0;color:var(--p);font-size:14px;overflow-wrap:anywhere}
-@media(max-width:520px){header{padding:12px}main{padding:15px 12px}.hero{padding:25px 18px}.products{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.product img{height:145px}.productbody{padding:10px}.product h3{font-size:15px}.productbuttons{flex-direction:column}.productbuttons button{width:100%}}
+#addProductBtn{display:block;width:100%;font-size:17px;padding:16px;margin:18px 0}
+#productForm{scroll-margin-top:100px}
+#productForm .field{margin:16px 0}
+#saveProductBtn{min-width:160px}
+@media(max-width:520px){
+ header{padding:12px}
+ main{padding:15px 12px}
+ .hero{padding:25px 18px}
+ .products{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ .product img{height:145px}
+ .productbody{padding:10px}
+ .product h3{font-size:15px}
+ .productbuttons{flex-direction:column}
+ .productbuttons button{width:100%}
+ .panel{padding:13px}
+}
 </style>
 </head>
+
 <body>
 <header>
   <div>
@@ -98,29 +123,69 @@ footer{text-align:center;color:var(--muted);padding:25px;font-size:13px}
       <h2>👑 Owner Dashboard</h2>
       <button class="secondary" id="hideDashboard">Close</button>
     </div>
+
     <p id="ownerEmail"></p>
-    <div class="notice">Yahan add kiye gaye products Firestore mein save honge. Product image Cloudinary par upload hogi.</div>
-    <h3 id="formTitle">Add New Product</h3>
-    <form id="productForm">
-      <input type="hidden" id="editId">
-      <div class="field"><label>Product name *</label><input id="pName" required maxlength="100" placeholder="Product name"></div>
-      <div class="field"><label>Price (PKR) *</label><input id="pPrice" type="number" required min="1" max="10000000" step="1" placeholder="200"></div>
-      <div class="field"><label>Old price (optional)</label><input id="pOldPrice" type="number" min="0" max="10000000" step="1" placeholder="250"></div>
-      <div class="field"><label>Category *</label>
-        <select id="pCategory">
-          <option>Fashion</option><option>Home</option><option>Beauty</option><option>Accessories</option><option>Electronics</option><option>Other</option>
-        </select>
-      </div>
-      <div class="field"><label>Description</label><textarea id="pDescription" rows="3" maxlength="1000" placeholder="Product details"></textarea></div>
-      <div class="field"><label>Product image</label><input id="pImage" type="file" accept="image/jpeg,image/png,image/webp"></div>
-      <div class="rowbtn">
-        <button class="primary" type="submit" id="saveProductBtn">Save Product</button>
-        <button class="secondary" type="button" id="cancelEdit">Clear Form</button>
-      </div>
-    </form>
+    <div class="notice">
+      Yahan se apni website ke products add aur manage kar sakte ho.
+      Product image Cloudinary par upload hogi aur product Firestore mein save hoga.
+    </div>
+
+    <button class="primary" type="button" id="addProductBtn">➕ Add Product</button>
+
+    <div id="productEditor">
+      <h3 id="formTitle">Add New Product</h3>
+      <form id="productForm">
+        <input type="hidden" id="editId">
+
+        <div class="field">
+          <label for="pName">Product name *</label>
+          <input id="pName" required maxlength="100" placeholder="Product name">
+        </div>
+
+        <div class="field">
+          <label for="pPrice">Price (PKR) *</label>
+          <input id="pPrice" type="number" required min="1" max="10000000" step="1" placeholder="200">
+        </div>
+
+        <div class="field">
+          <label for="pOldPrice">Old price (optional)</label>
+          <input id="pOldPrice" type="number" min="0" max="10000000" step="1" placeholder="250">
+        </div>
+
+        <div class="field">
+          <label for="pCategory">Category *</label>
+          <select id="pCategory" required>
+            <option>Fashion</option>
+            <option>Home</option>
+            <option>Beauty</option>
+            <option>Accessories</option>
+            <option>Electronics</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="pDescription">Description</label>
+          <textarea id="pDescription" rows="3" maxlength="1000" placeholder="Product details"></textarea>
+        </div>
+
+        <div class="field">
+          <label for="pImage">Product image (JPG, PNG, WEBP)</label>
+          <input id="pImage" type="file" accept="image/jpeg,image/png,image/webp">
+          <small>New product ke liye image select karna zaroori hai. Maximum 5 MB.</small>
+        </div>
+
+        <div class="rowbtn">
+          <button class="primary" type="submit" id="saveProductBtn">Save Product</button>
+          <button class="secondary" type="button" id="cancelEdit">Clear Form</button>
+        </div>
+      </form>
+    </div>
+
     <h3>📦 Customer Orders</h3>
     <button class="secondary" id="loadOrders">Load Orders</button>
     <div id="orders"></div>
+
     <h3>Manage Products</h3>
     <div id="manageProducts"></div>
   </section>
@@ -131,16 +196,22 @@ footer{text-align:center;color:var(--muted);padding:25px;font-size:13px}
 <div class="modal hidden" id="authModal" role="dialog" aria-modal="true" aria-labelledby="authTitle">
   <div class="modalbox">
     <h2 id="authTitle">🔐 Owner Login</h2>
-    <p class="notice">Apne pehle se banaye gaye Firebase email/password account se login karein. Naya account banane se owner access nahi milta.</p>
+    <p class="notice">Apne pehle se banaye gaye Firebase email/password account se login karein.</p>
     <form id="loginForm">
-      <div class="field"><label>Email</label><input id="email" type="email" autocomplete="username" required></div>
-      <div class="field"><label>Password</label><input id="password" type="password" autocomplete="current-password" required></div>
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" type="email" autocomplete="username" required>
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input id="password" type="password" autocomplete="current-password" required>
+      </div>
       <button class="primary" style="width:100%" type="submit" id="signInBtn">Login</button>
     </form>
-    <div id="authMessage"></div>
+    <div id="authMessage" role="status"></div>
     <div class="rowbtn">
-      <button class="secondary" id="forgotBtn">Forgot Password</button>
-      <button class="secondary" id="closeAuth">Cancel</button>
+      <button class="secondary" type="button" id="forgotBtn">Forgot Password</button>
+      <button class="secondary" type="button" id="closeAuth">Cancel</button>
     </div>
   </div>
 </div>
@@ -153,13 +224,24 @@ footer{text-align:center;color:var(--muted);padding:25px;font-size:13px}
     <hr>
     <h3>Cash on Delivery Checkout</h3>
     <form id="checkoutForm">
-      <div class="field"><label>Full name *</label><input id="buyerName" required maxlength="100"></div>
-      <div class="field"><label>Phone number *</label><input id="buyerPhone" type="tel" required maxlength="25" placeholder="03XXXXXXXXX"></div>
-      <div class="field"><label>Delivery address *</label><textarea id="buyerAddress" required maxlength="500" rows="3"></textarea></div>
+      <div class="field">
+        <label for="buyerName">Full name *</label>
+        <input id="buyerName" required maxlength="100">
+      </div>
+      <div class="field">
+        <label for="buyerPhone">Phone number *</label>
+        <input id="buyerPhone" type="tel" required maxlength="25" placeholder="03XXXXXXXXX">
+      </div>
+      <div class="field">
+        <label for="buyerAddress">Delivery address *</label>
+        <textarea id="buyerAddress" required maxlength="500" rows="3"></textarea>
+      </div>
       <button class="primary" style="width:100%" type="submit" id="placeOrderBtn">Place COD Order</button>
     </form>
     <div id="checkoutMessage"></div>
-    <div class="rowbtn"><button class="secondary" id="closeCart">Continue Shopping</button></div>
+    <div class="rowbtn">
+      <button class="secondary" type="button" id="closeCart">Continue Shopping</button>
+    </div>
   </div>
 </div>
 
@@ -174,7 +256,6 @@ import {
   deleteDoc, query, orderBy, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
-/* Vibemart Firebase configuration */
 const firebaseConfig = {
   apiKey: "AIzaSyDBz2wmlFK3uwX3TCWnu4lAvQZISuMttEY",
   authDomain: "vibemart-store-49d82.firebaseapp.com",
@@ -185,18 +266,15 @@ const firebaseConfig = {
   measurementId: "G-SRK7BLWPPN"
 };
 
-/* Owner account UID configured in Firebase */
 const OWNER_UID = "kAfNnhrB3vePCA72WuMVGshQvLV2";
-
-/* Cloudinary image upload configuration */
 const CLOUDINARY_NAME = "dvvsxjid";
 const CLOUDINARY_PRESET = "vibemart_upload";
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-
 const $ = id => document.getElementById(id);
+
 let currentUser = null;
 let isOwner = false;
 let allProducts = [];
@@ -218,10 +296,18 @@ function money(n) {
 function safeText(value) {
   return String(value ?? "");
 }
-function escapeHTML(value) {
-  return safeText(value).replace(/[&<>"']/g, c => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-  }[c]));
+function friendlyError(err) {
+  const code = err?.code || "";
+  const known = {
+    "auth/invalid-credential":"Email ya password sahi nahi hai.",
+    "auth/invalid-email":"Email address check karo.",
+    "auth/too-many-requests":"Bohat attempts ho gaye. Kuch dair baad try karo.",
+    "auth/network-request-failed":"Internet connection check karo.",
+    "auth/user-disabled":"Yeh account disabled hai.",
+    "permission-denied":"Firebase rules ne is action ko allow nahi kiya.",
+    "unavailable":"Service temporarily unavailable hai. Dobara try karo."
+  };
+  return known[code] || ("Error: " + (err?.message || "Dobara try karo."));
 }
 function setBusy(value) {
   busy = value;
@@ -244,22 +330,38 @@ function closeCart() {
   $("cartModal").classList.add("hidden");
 }
 
-$("loginBtn").addEventListener("click", () => {
-  if (isOwner) {
-    $("dashboard").classList.remove("hidden");
-    $("dashboard").scrollIntoView({behavior:"smooth"});
-  } else {
+function openDashboard() {
+  if (!isOwner || auth.currentUser?.uid !== OWNER_UID) {
     showAuth();
+    return;
   }
+  $("dashboard").classList.remove("hidden");
+  $("dashboard").scrollIntoView({behavior:"smooth", block:"start"});
+}
+
+$("loginBtn").addEventListener("click", () => {
+  if (isOwner) openDashboard();
+  else showAuth();
+});
+$("dashboardBtn").addEventListener("click", openDashboard);
+$("hideDashboard").addEventListener("click", () => {
+  $("dashboard").classList.add("hidden");
+  window.scrollTo({top:0, behavior:"smooth"});
 });
 $("closeAuth").addEventListener("click", closeAuth);
 $("closeCart").addEventListener("click", closeCart);
 $("cartBtn").addEventListener("click", showCart);
-$("dashboardBtn").addEventListener("click", () => {
-  $("dashboard").classList.remove("hidden");
-  $("dashboard").scrollIntoView({behavior:"smooth"});
+
+$("addProductBtn").addEventListener("click", () => {
+  if (!isOwner || auth.currentUser?.uid !== OWNER_UID) {
+    showAuth();
+    return;
+  }
+  $("productEditor").classList.remove("hidden");
+  resetProductForm();
+  $("productForm").scrollIntoView({behavior:"smooth", block:"start"});
+  $("pName").focus({preventScroll:true});
 });
-$("hideDashboard").addEventListener("click", () => $("dashboard").classList.add("hidden"));
 
 $("loginForm").addEventListener("submit", async e => {
   e.preventDefault();
@@ -267,11 +369,24 @@ $("loginForm").addEventListener("submit", async e => {
   setBusy(true);
   message("authMessage", "Login ho raha hai...");
   try {
-    await signInWithEmailAndPassword(auth, $("email").value.trim(), $("password").value);
-    closeAuth();
+    const result = await signInWithEmailAndPassword(
+      auth, $("email").value.trim(), $("password").value
+    );
     $("password").value = "";
-    if (auth.currentUser?.uid !== OWNER_UID) {
-      message("status", "Login ho gaya, lekin yeh account owner account nahi hai.", true);
+    if (result.user.uid === OWNER_UID) {
+      closeAuth();
+      isOwner = true;
+      currentUser = result.user;
+      $("dashboard").classList.remove("hidden");
+      $("dashboardBtn").classList.remove("hidden");
+      $("loginBtn").classList.add("hidden");
+      $("logoutBtn").classList.remove("hidden");
+      $("ownerEmail").textContent = "Logged in: " + (result.user.email || "");
+      message("status", "Login successful! Dashboard khul gaya.");
+      $("dashboard").scrollIntoView({behavior:"smooth", block:"start"});
+      renderManageProducts();
+    } else {
+      message("authMessage", "Login hua, lekin yeh account owner account nahi hai.", true);
     }
   } catch (err) {
     message("authMessage", friendlyError(err), true);
@@ -294,37 +409,31 @@ $("forgotBtn").addEventListener("click", async () => {
   }
 });
 
-function friendlyError(err) {
-  const code = err?.code || "";
-  const known = {
-    "auth/invalid-credential":"Email ya password sahi nahi hai.",
-    "auth/invalid-email":"Email address check karo.",
-    "auth/too-many-requests":"Bohat attempts ho gaye. Kuch dair baad try karo.",
-    "auth/network-request-failed":"Internet connection check karo.",
-    "auth/user-disabled":"Yeh account disabled hai.",
-    "permission-denied":"Firebase rules ne is action ko allow nahi kiya.",
-    "unavailable":"Service temporarily unavailable hai. Dobara try karo."
-  };
-  return known[code] || ("Error: " + (err?.message || "Dobara try karo."));
-}
-
 onAuthStateChanged(auth, async user => {
   currentUser = user;
   isOwner = !!user && user.uid === OWNER_UID;
+
   $("loginBtn").classList.toggle("hidden", isOwner);
   $("dashboardBtn").classList.toggle("hidden", !isOwner);
   $("logoutBtn").classList.toggle("hidden", !user);
-  $("ownerEmail").textContent = isOwner ? "Logged in: " + user.email : "";
+  $("ownerEmail").textContent = isOwner ? "Logged in: " + (user.email || "") : "";
+
+  // Owner login ke baad dashboard khula rahega.
+  $("dashboard").classList.toggle("hidden", !isOwner);
+
   if (user && !isOwner) {
-    message("status", "Account login hua hai, lekin owner dashboard ke liye authorized owner account chahiye.", true);
+    message("status", "Yeh account owner account nahi hai. Owner account se login karo.", true);
   }
-  $("dashboard").classList.add("hidden");
+
   await loadProducts();
+
+  if (isOwner) renderManageProducts();
 });
 
 $("logoutBtn").addEventListener("click", async () => {
   try {
     await signOut(auth);
+    $("dashboard").classList.add("hidden");
     message("status", "Logout successful.");
   } catch (err) {
     message("status", friendlyError(err), true);
@@ -339,12 +448,12 @@ async function loadProducts() {
     allProducts.sort((a,b) => safeText(a.name).localeCompare(safeText(b.name)));
     renderProducts();
     renderManageProducts();
-    message("status", allProducts.length ? "" : "Abhi products nahi hain. Owner login karke dashboard se product add kar sakte ho.");
+    message("status", allProducts.length ? "" : "Abhi products nahi hain. Owner dashboard se Add Product use karo.");
   } catch (err) {
     allProducts = [];
     renderProducts();
     renderManageProducts();
-    message("status", "Products load nahi hue: " + friendlyError(err) + " Firebase Firestore rules check karo.", true);
+    message("status", "Products load nahi hue: " + friendlyError(err) + " Firestore rules check karo.", true);
   }
 }
 
@@ -354,6 +463,7 @@ function renderProducts() {
     const haystack = (safeText(p.name) + " " + safeText(p.description) + " " + safeText(p.category)).toLowerCase();
     return categoryMatch && haystack.includes(searchText.toLowerCase());
   });
+
   $("productCount").textContent = filtered.length + " products";
   $("products").replaceChildren();
 
@@ -368,11 +478,16 @@ function renderProducts() {
   filtered.forEach(p => {
     const card = document.createElement("article");
     card.className = "product";
+
     const img = document.createElement("img");
     img.alt = safeText(p.name);
     img.loading = "lazy";
     img.src = safeText(p.imageUrl) || "https://placehold.co/600x450/f0eaff/6d28d9?text=Vibemart";
-    img.onerror = () => { img.src = "https://placehold.co/600x450/f0eaff/6d28d9?text=Vibemart"; };
+    img.onerror = () => {
+      img.onerror = null;
+      img.src = "https://placehold.co/600x450/f0eaff/6d28d9?text=Vibemart";
+    };
+
     const body = document.createElement("div");
     body.className = "productbody";
     const title = document.createElement("h3");
@@ -382,12 +497,14 @@ function renderProducts() {
     const price = document.createElement("div");
     price.className = "price";
     price.textContent = money(p.price);
+
     if (Number(p.oldPrice) > Number(p.price)) {
       const old = document.createElement("span");
       old.className = "oldprice";
       old.textContent = money(p.oldPrice);
       price.append(old);
     }
+
     const description = document.createElement("p");
     description.textContent = safeText(p.description);
     const buttons = document.createElement("div");
@@ -396,6 +513,7 @@ function renderProducts() {
     add.className = "primary";
     add.textContent = "Add to Cart";
     add.addEventListener("click", () => addToCart(p.id));
+
     buttons.append(add);
     body.append(title, category, price, description, buttons);
     card.append(img, body);
@@ -410,15 +528,14 @@ $("categories").addEventListener("click", e => {
   $("categories").querySelectorAll("button").forEach(b => b.classList.toggle("active", b === btn));
   renderProducts();
 });
-$("searchBtn").addEventListener("click", () => {
+
+function searchProducts() {
   searchText = $("search").value.trim();
   renderProducts();
-});
+}
+$("searchBtn").addEventListener("click", searchProducts);
 $("search").addEventListener("keydown", e => {
-  if (e.key === "Enter") {
-    searchText = $("search").value.trim();
-    renderProducts();
-  }
+  if (e.key === "Enter") searchProducts();
 });
 
 function addToCart(id) {
@@ -436,11 +553,13 @@ function cartTotal() {
 function renderCart() {
   $("cartCount").textContent = cart.reduce((n,i) => n+i.qty,0);
   $("cartItems").replaceChildren();
+
   if (!cart.length) {
     const p = document.createElement("p");
     p.textContent = "Tumhara cart abhi khaali hai.";
     $("cartItems").append(p);
   }
+
   cart.forEach(item => {
     const row = document.createElement("div");
     row.className = "order";
@@ -448,6 +567,7 @@ function renderCart() {
     info.textContent = item.name + " — " + money(item.price * item.qty);
     const controls = document.createElement("div");
     controls.className = "rowbtn";
+
     const minus = document.createElement("button");
     minus.className = "secondary";
     minus.textContent = "−";
@@ -456,8 +576,10 @@ function renderCart() {
       if (item.qty <= 0) cart = cart.filter(x => x.id !== item.id);
       renderCart();
     });
+
     const qty = document.createElement("span");
     qty.textContent = "Qty: " + item.qty;
+
     const plus = document.createElement("button");
     plus.className = "secondary";
     plus.textContent = "+";
@@ -465,23 +587,29 @@ function renderCart() {
       item.qty = Math.min(99,item.qty+1);
       renderCart();
     });
+
     controls.append(minus,qty,plus);
     row.append(info,controls);
     $("cartItems").append(row);
   });
+
   $("cartTotal").textContent = "Total: " + money(cartTotal());
 }
+renderCart();
 
 $("checkoutForm").addEventListener("submit", async e => {
   e.preventDefault();
   if (busy) return;
+
   if (!cart.length) {
     message("checkoutMessage", "Pehle cart mein product add karo.", true);
     return;
   }
+
   const name = $("buyerName").value.trim();
   const phone = $("buyerPhone").value.trim();
   const address = $("buyerAddress").value.trim();
+
   if (name.length < 2 || phone.length < 7 || address.length < 5) {
     message("checkoutMessage", "Name, phone aur complete address check karo.", true);
     return;
@@ -489,6 +617,7 @@ $("checkoutForm").addEventListener("submit", async e => {
 
   const items = cart.map(i => ({id:i.id, name:i.name, price:i.price, qty:i.qty}));
   const total = cartTotal();
+
   if (!Number.isFinite(total) || total <= 0) {
     message("checkoutMessage", "Order total sahi nahi hai.", true);
     return;
@@ -496,6 +625,7 @@ $("checkoutForm").addEventListener("submit", async e => {
 
   setBusy(true);
   message("checkoutMessage", "Order submit ho raha hai...");
+
   try {
     await addDoc(collection(db, "orders"), {
       name, phone, address, items, total, createdAt: serverTimestamp()
@@ -503,7 +633,7 @@ $("checkoutForm").addEventListener("submit", async e => {
     cart = [];
     renderCart();
     $("checkoutForm").reset();
-    message("checkoutMessage", "Order submit ho gaya! Seller tumse contact karega. Order number ke liye seller se rabta karo.");
+    message("checkoutMessage", "Order submit ho gaya! Seller tumse contact karega.");
   } catch (err) {
     message("checkoutMessage", "Order submit nahi hua: " + friendlyError(err), true);
   } finally {
@@ -513,18 +643,23 @@ $("checkoutForm").addEventListener("submit", async e => {
 
 async function uploadImage(file) {
   if (!file) return "";
+
   if (!["image/jpeg","image/png","image/webp"].includes(file.type)) {
     throw new Error("JPG, PNG ya WEBP image select karo.");
   }
   if (file.size > 5 * 1024 * 1024) {
     throw new Error("Image 5 MB se chhoti honi chahiye.");
   }
+
   const form = new FormData();
   form.append("file", file);
   form.append("upload_preset", CLOUDINARY_PRESET);
-  const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_NAME}/image/upload`, {
-    method:"POST", body:form
-  });
+
+  const response = await fetch(
+    `https://api.cloudinary.com/v1_1/${CLOUDINARY_NAME}/image/upload`,
+    {method:"POST", body:form}
+  );
+
   const result = await response.json();
   if (!response.ok || !result.secure_url) {
     throw new Error(result.error?.message || "Image upload fail hua. Cloudinary preset check karo.");
@@ -538,15 +673,18 @@ function resetProductForm() {
   $("formTitle").textContent = "Add New Product";
   $("saveProductBtn").textContent = "Save Product";
 }
+
 $("cancelEdit").addEventListener("click", resetProductForm);
 
 $("productForm").addEventListener("submit", async e => {
   e.preventDefault();
+
   if (!isOwner || auth.currentUser?.uid !== OWNER_UID) {
     message("status", "Owner login required.", true);
     return;
   }
   if (busy) return;
+
   const name = $("pName").value.trim();
   const price = Number($("pPrice").value);
   const oldPrice = $("pOldPrice").value ? Number($("pOldPrice").value) : 0;
@@ -561,11 +699,19 @@ $("productForm").addEventListener("submit", async e => {
     return;
   }
 
+  if (!editId && !file) {
+    message("status", "Naye product ke liye image select karo.", true);
+    $("pImage").focus();
+    return;
+  }
+
   setBusy(true);
+
   try {
     message("status", file ? "Image upload ho rahi hai..." : "Product save ho raha hai...");
     let imageUrl = "";
     if (file) imageUrl = await uploadImage(file);
+
     const data = {name, price, oldPrice, category, description};
     if (imageUrl) data.imageUrl = imageUrl;
 
@@ -573,16 +719,14 @@ $("productForm").addEventListener("submit", async e => {
       await updateDoc(doc(db,"products",editId), data);
       message("status", "Product update ho gaya.");
     } else {
-      if (!imageUrl) {
-        message("status", "Naye product ke liye image select karo.", true);
-        return;
-      }
       data.createdAt = serverTimestamp();
       await addDoc(collection(db,"products"), data);
       message("status", "Product successfully add ho gaya!");
     }
+
     resetProductForm();
     await loadProducts();
+    $("productEditor").classList.remove("hidden");
   } catch (err) {
     message("status", "Save nahi hua: " + friendlyError(err), true);
   } finally {
@@ -593,21 +737,28 @@ $("productForm").addEventListener("submit", async e => {
 function renderManageProducts() {
   $("manageProducts").replaceChildren();
   if (!isOwner) return;
+
   if (!allProducts.length) {
     $("manageProducts").textContent = "Abhi koi product nahi.";
     return;
   }
+
   allProducts.forEach(p => {
     const row = document.createElement("div");
     row.className = "order";
+
     const title = document.createElement("strong");
     title.textContent = safeText(p.name) + " — " + money(p.price);
+
     const buttons = document.createElement("div");
     buttons.className = "rowbtn";
+
     const edit = document.createElement("button");
     edit.className = "secondary";
     edit.textContent = "Edit";
     edit.addEventListener("click", () => {
+      $("dashboard").classList.remove("hidden");
+      $("productEditor").classList.remove("hidden");
       $("editId").value = p.id;
       $("pName").value = safeText(p.name);
       $("pPrice").value = Number(p.price);
@@ -617,14 +768,16 @@ function renderManageProducts() {
       $("pImage").value = "";
       $("formTitle").textContent = "Edit Product (image optional)";
       $("saveProductBtn").textContent = "Update Product";
-      $("productForm").scrollIntoView({behavior:"smooth"});
+      $("productForm").scrollIntoView({behavior:"smooth",block:"start"});
     });
+
     const del = document.createElement("button");
     del.className = "danger";
     del.textContent = "Delete";
     del.addEventListener("click", async () => {
       if (!isOwner || auth.currentUser?.uid !== OWNER_UID) return;
       if (!confirm("Kya tum waqai is product ko delete karna chahte ho?")) return;
+
       try {
         await deleteDoc(doc(db,"products",p.id));
         message("status", "Product delete ho gaya.");
@@ -633,6 +786,7 @@ function renderManageProducts() {
         message("status", "Delete fail hua: " + friendlyError(err), true);
       }
     });
+
     buttons.append(edit,del);
     row.append(title,buttons);
     $("manageProducts").append(row);
@@ -640,32 +794,46 @@ function renderManageProducts() {
 }
 
 $("loadOrders").addEventListener("click", loadOrders);
+
 async function loadOrders() {
   if (!isOwner || auth.currentUser?.uid !== OWNER_UID) {
     message("status", "Sirf owner orders dekh sakta hai.", true);
     return;
   }
+
   $("orders").textContent = "Orders load ho rahe hain...";
+
   try {
     const snap = await getDocs(query(collection(db,"orders"),orderBy("createdAt","desc")));
     $("orders").replaceChildren();
+
     if (snap.empty) {
       $("orders").textContent = "Abhi orders nahi hain.";
       return;
     }
+
     snap.forEach(d => {
       const o = d.data();
       const card = document.createElement("div");
       card.className = "order";
+
       const title = document.createElement("strong");
       title.textContent = safeText(o.name) + " — " + money(o.total);
+
       const details = document.createElement("p");
       details.textContent = "Phone: " + safeText(o.phone) + "\nAddress: " + safeText(o.address);
       details.style.whiteSpace = "pre-line";
+
       const products = document.createElement("p");
-      products.textContent = "Items: " + (Array.isArray(o.items) ? o.items.map(i => safeText(i.name)+" × "+safeText(i.qty)).join(", ") : "Unavailable");
+      products.textContent = "Items: " + (
+        Array.isArray(o.items)
+          ? o.items.map(i => safeText(i.name)+" × "+safeText(i.qty)).join(", ")
+          : "Unavailable"
+      );
+
       const id = document.createElement("small");
       id.textContent = "Order ID: " + d.id;
+
       card.append(title,details,products,id);
       $("orders").append(card);
     });
