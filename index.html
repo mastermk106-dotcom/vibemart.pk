@@ -1,0 +1,271 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#6d28d9">
+  <meta name="description" content="Vibemart.pk - Your Vibe, Your Choice! Shop amazing products online.">
+  <title>Vibemart.pk | Your Vibe, Your Choice!</title>
+
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:Arial,sans-serif;background:#f8f7ff;color:#20183a}
+    header{background:white;padding:16px 5%;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;box-shadow:0 2px 12px #24104a12}
+    .logo{font-size:26px;font-weight:900;color:#6d28d9}
+    .logo span{color:#20183a}
+    .tagline{font-size:12px;color:#777;margin-top:4px}
+    button{border:0;cursor:pointer;font-weight:bold;border-radius:10px;padding:11px 15px}
+    .primary{background:#6d28d9;color:white}
+    .outline{background:white;color:#6d28d9;border:1px solid #ddd}
+    .hero{margin:24px auto;max-width:1200px;width:90%;padding:38px 25px;border-radius:22px;background:linear-gradient(120deg,#ede4ff,#f8edff,#e8eaff)}
+    .hero h1{font-size:clamp(28px,5vw,46px);margin-bottom:12px}
+    .hero p{color:#635779;line-height:1.6;margin-bottom:20px}
+    .search-wrap{max-width:1200px;width:90%;margin:25px auto}
+    input,select,textarea{width:100%;padding:13px;border:1px solid #ddd;border-radius:10px;font-size:15px;background:white}
+    .filters{display:flex;gap:9px;flex-wrap:wrap;margin-top:14px}
+    .filters button{background:white;border:1px solid #e3d9f5;color:#5b21b6}
+    .filters button.active{background:#6d28d9;color:white}
+    .section{max-width:1200px;width:90%;margin:30px auto}
+    .section-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:18px;flex-wrap:wrap}
+    .products{display:grid;grid-template-columns:repeat(auto-fit,minmax(205px,1fr));gap:18px}
+    .product{background:white;border-radius:16px;overflow:hidden;box-shadow:0 4px 18px #2010400d}
+    .product img{width:100%;height:210px;object-fit:cover;background:#eee}
+    .product-info{padding:15px}
+    .product-info h3{margin-bottom:8px}
+    .category{font-size:12px;color:#7c3aed}
+    .price{font-size:21px;font-weight:900;margin:10px 0;color:#5b21b6}
+    .product button{width:100%;margin-top:8px}
+    .empty{text-align:center;padding:35px;color:#777;grid-column:1/-1}
+    .panel{display:none;background:white;padding:22px;border-radius:16px;margin-top:20px}
+    .panel.show{display:block}
+    .form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:15px 0}
+    .panel h3{margin-bottom:12px}
+    .cart-row{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid #eee}
+    .cart-row button{padding:7px 10px}
+    .total{font-size:20px;font-weight:bold;margin:18px 0}
+    footer{text-align:center;background:#21143d;color:white;padding:28px 15px;margin-top:50px;line-height:1.8}
+    .note{font-size:13px;color:#777;line-height:1.6;margin-top:12px}
+    .modal{display:none;position:fixed;inset:0;background:#160b2dbb;z-index:5;align-items:center;justify-content:center;padding:18px}
+    .modal.show{display:flex}
+    .modal-box{background:white;padding:24px;border-radius:18px;width:100%;max-width:420px}
+    .modal-box input{margin:8px 0}
+    @media(max-width:550px){header{padding:14px 5%}.logo{font-size:23px}.hero{padding:28px 20px}.product img{height:190px}}
+  </style>
+</head>
+
+<body>
+<header>
+  <div>
+    <div class="logo">vibemart<span>.pk</span></div>
+    <div class="tagline">Your Vibe, Your Choice!</div>
+  </div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <button class="outline" onclick="showCart()">🛒 Cart (<span id="cartCount">0</span>)</button>
+    <button class="primary" onclick="showOwnerLogin()">👑 Owner</button>
+  </div>
+</header>
+
+<section class="hero">
+  <h1>Find Your Vibe ✨</h1>
+  <p>Discover amazing products at prices you'll love. Welcome to Vibemart.pk!</p>
+  <button class="primary" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">Shop Now →</button>
+</section>
+
+<section class="search-wrap">
+  <input id="search" placeholder="🔎 Search products..." oninput="renderProducts()">
+  <div class="filters" id="filters"></div>
+</section>
+
+<section class="section" id="shop">
+  <div class="section-head">
+    <h2>🛍️ Explore Products</h2>
+    <span id="productCount">0 products</span>
+  </div>
+  <div class="products" id="products"></div>
+
+  <div class="panel" id="ownerPanel">
+    <h3>👑 Owner Dashboard</h3>
+    <p class="note">Abhi demo mode hai. Firebase connect hone ke baad owner login aur uploads secure honge.</p>
+    <div class="form-grid">
+      <input id="pName" placeholder="Product name">
+      <input id="pPrice" type="number" min="1" placeholder="Price in Rs">
+      <select id="pCategory">
+        <option>Fashion</option><option>Home</option><option>Beauty</option>
+        <option>Electronics</option><option>Accessories</option><option>Other</option>
+      </select>
+      <input id="pImage" type="url" placeholder="Product image URL">
+    </div>
+    <button class="primary" onclick="addProduct()">Add Demo Product</button>
+    <button class="outline" onclick="document.getElementById('ownerPanel').classList.remove('show')">Close</button>
+    <p class="note">Important: Yeh temporary demo dashboard hai, asli owner security nahi. Public website par isay secure owner login samajh kar use na karein.</p>
+  </div>
+
+  <div class="panel" id="cartPanel">
+    <div class="section-head"><h3>🛒 Your Cart</h3><button class="outline" onclick="closeCart()">Close</button></div>
+    <div id="cartItems"></div>
+    <div class="total" id="cartTotal">Total: Rs 0</div>
+    <h3>Cash on Delivery Checkout</h3>
+    <div class="form-grid">
+      <input id="customerName" placeholder="Your name">
+      <input id="customerPhone" type="tel" placeholder="Phone number">
+      <input id="customerCity" placeholder="City">
+      <textarea id="customerAddress" placeholder="Delivery address"></textarea>
+    </div>
+    <button class="primary" onclick="placeDemoOrder()">Place Demo Order (COD)</button>
+    <p class="note">Demo order sirf is page par confirmation dikhata hai. Abhi order owner ko send ya save nahi hota. Firebase baad mein connect karenge.</p>
+  </div>
+</section>
+
+<div class="modal" id="ownerModal">
+  <div class="modal-box">
+    <h2>👑 Owner Access</h2>
+    <p class="note">Yeh demo login nahi hai; Firebase owner authentication baad mein banayenge.</p>
+    <input id="demoCode" type="password" placeholder="Temporary demo code">
+    <button class="primary" style="width:100%;margin-top:10px" onclick="demoOwnerLogin()">Open Demo Dashboard</button>
+    <button class="outline" style="width:100%;margin-top:8px" onclick="closeOwnerLogin()">Cancel</button>
+  </div>
+</div>
+
+<footer>
+  <div class="logo" style="color:white">vibemart.pk</div>
+  <p>Your Vibe, Your Choice!</p>
+  <p>© <span id="year"></span> Vibemart.pk</p>
+</footer>
+
+<script>
+  const categories = ["All","Fashion","Home","Beauty","Electronics","Accessories","Other"];
+  let selectedCategory = "All";
+  let cart = [];
+
+  let products = [
+    {id:1,name:"Stylish Everyday Bag",price:450,category:"Fashion",image:"https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=700&q=80"},
+    {id:2,name:"Home Decor Item",price:350,category:"Home",image:"https://images.unsplash.com/photo-1490312278390-ab64016e0aa9?auto=format&fit=crop&w=700&q=80"},
+    {id:3,name:"Fashion Accessories",price:250,category:"Accessories",image:"https://images.unsplash.com/photo-1611652022419-a9419f74343d?auto=format&fit=crop&w=700&q=80"},
+    {id:4,name:"Beauty Essentials",price:300,category:"Beauty",image:"https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=700&q=80"}
+  ];
+
+  function renderFilters(){
+    document.getElementById("filters").innerHTML = categories.map(c =>
+      `<button class="${selectedCategory===c?'active':''}" onclick="chooseCategory('${c}')">${c}</button>`
+    ).join("");
+  }
+
+  function chooseCategory(category){
+    selectedCategory=category;
+    renderFilters();
+    renderProducts();
+  }
+
+  function renderProducts(){
+    const query=document.getElementById("search").value.toLowerCase().trim();
+    const shown=products.filter(p =>
+      (selectedCategory==="All" || p.category===selectedCategory) &&
+      p.name.toLowerCase().includes(query)
+    );
+    document.getElementById("productCount").textContent=shown.length+" products";
+    document.getElementById("products").innerHTML=shown.length ? shown.map(p=>`
+      <article class="product">
+        <img src="${escapeAttr(p.image)}" alt="${escapeAttr(p.name)}" loading="lazy"
+          onerror="this.src='https://placehold.co/500x400/eee/555?text=Vibemart'">
+        <div class="product-info">
+          <div class="category">${escapeHTML(p.category)}</div>
+          <h3>${escapeHTML(p.name)}</h3>
+          <div class="price">Rs ${Number(p.price).toLocaleString("en-PK")}</div>
+          <button class="primary" onclick="addToCart(${p.id})">Add to Cart 🛒</button>
+        </div>
+      </article>`).join("") : '<div class="empty">No products found. Try another search.</div>';
+  }
+
+  function addToCart(id){
+    const product=products.find(p=>p.id===id);
+    if(!product)return;
+    const existing=cart.find(item=>item.id===id);
+    if(existing)existing.qty++;
+    else cart.push({...product,qty:1});
+    updateCartCount();
+    alert("Product cart mein add ho gaya!");
+  }
+
+  function updateCartCount(){
+    document.getElementById("cartCount").textContent=cart.reduce((sum,p)=>sum+p.qty,0);
+  }
+
+  function showCart(){
+    document.getElementById("cartPanel").classList.add("show");
+    renderCart();
+    document.getElementById("cartPanel").scrollIntoView({behavior:"smooth",block:"start"});
+  }
+
+  function closeCart(){document.getElementById("cartPanel").classList.remove("show")}
+
+  function renderCart(){
+    const box=document.getElementById("cartItems");
+    box.innerHTML=cart.length?cart.map(p=>`
+      <div class="cart-row">
+        <div><strong>${escapeHTML(p.name)}</strong><br>Rs ${p.price} × ${p.qty}</div>
+        <div>
+          <button class="outline" onclick="changeQty(${p.id},-1)">−</button>
+          <button class="outline" onclick="changeQty(${p.id},1)">+</button>
+        </div>
+      </div>`).join(""):'<p>Your cart is empty.</p>';
+    const total=cart.reduce((sum,p)=>sum+p.price*p.qty,0);
+    document.getElementById("cartTotal").textContent="Total: Rs "+total.toLocaleString("en-PK");
+  }
+
+  function changeQty(id,delta){
+    const item=cart.find(p=>p.id===id);
+    if(!item)return;
+    item.qty+=delta;
+    if(item.qty<=0)cart=cart.filter(p=>p.id!==id);
+    updateCartCount();
+    renderCart();
+  }
+
+  function placeDemoOrder(){
+    if(!cart.length){alert("Pehle cart mein product add karo.");return}
+    const name=document.getElementById("customerName").value.trim();
+    const phone=document.getElementById("customerPhone").value.trim();
+    const city=document.getElementById("customerCity").value.trim();
+    const address=document.getElementById("customerAddress").value.trim();
+    if(!name||!phone||!city||!address){alert("Name, phone, city aur address fill karo.");return}
+    if(!/^[0-9+\-\s()]{7,20}$/.test(phone)){alert("Valid phone number enter karo.");return}
+    const total=cart.reduce((sum,p)=>sum+p.price*p.qty,0);
+    alert("Demo order ready! Total Rs "+total+". Abhi order send nahi hua. Firebase connect hone ke baad real order system banega.");
+  }
+
+  function showOwnerLogin(){document.getElementById("ownerModal").classList.add("show")}
+  function closeOwnerLogin(){document.getElementById("ownerModal").classList.remove("show")}
+  function demoOwnerLogin(){
+    alert("Yeh sirf demo page hai; real owner login Firebase connect hone ke baad secure hoga.");
+    closeOwnerLogin();
+    document.getElementById("ownerPanel").classList.add("show");
+    document.getElementById("ownerPanel").scrollIntoView({behavior:"smooth"});
+  }
+
+  function addProduct(){
+    const name=document.getElementById("pName").value.trim();
+    const price=Number(document.getElementById("pPrice").value);
+    const category=document.getElementById("pCategory").value;
+    const image=document.getElementById("pImage").value.trim();
+    if(!name||!Number.isFinite(price)||price<=0||!image){alert("Name, valid price aur image URL fill karo.");return}
+    try{new URL(image)}catch(e){alert("Valid image URL enter karo.");return}
+    products.unshift({id:Date.now(),name,price,category,image});
+    renderProducts();
+    alert("Demo product add ho gaya. Refresh karne par yeh save nahi rahega.");
+    document.getElementById("pName").value="";
+    document.getElementById("pPrice").value="";
+    document.getElementById("pImage").value="";
+  }
+
+  function escapeHTML(value){
+    return String(value).replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+  }
+  function escapeAttr(value){return escapeHTML(value)}
+
+  document.getElementById("year").textContent=new Date().getFullYear();
+  renderFilters();
+  renderProducts();
+</script>
+</body>
+</html>
