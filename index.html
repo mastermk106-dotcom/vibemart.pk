@@ -498,38 +498,197 @@ async function loadCoupons(){
 }
 
 /* COD CHECKOUT */
-$("checkoutForm").onsubmit=async e=>{
- e.preventDefault();if(busy)return;
- if(!cart.length){message("checkoutMessage","Pehle cart mein product add karo.",true);return}
- const name=$("buyerName").value.trim(),phone=$("buyerPhone").value.trim(),address=$("buyerAddress").value.trim();
- if(name.length<2||phone.length<7||address.length<5){message("checkoutMessage","Name, phone aur address check karo.",true);return}
- setBusy(true);message("checkoutMessage","Products verify ho rahe hain...");
- try{
-  const verified=[];
-  for(const item of cart){
-   const snap=await getDoc(doc(db,"products",item.id));
-   if(!snap.exists())throw Error("Cart ka ek product ab available nahi.");
-   const p=snap.data(),stockKnown=p.stock!==null&&p.stock!==undefined&&p.stock!==""&&Number.isFinite(Number(p.stock));
-   if(stockKnown&&Number(p.stock)<item.qty)throw Error("Stock kam hai: "+safeText(p.name));
-   verified.push({id:snap.id,name:safeText(p.name),price:effectivePrice(p),qty:item.qty});
+
+/* COD CHECKOUT — SUPABASE + FIREBASE DASHBOARD BRIDGE */
+
+const SUPABASE_URL = "https://adcbsicxudirmavvmckv.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY =
+  "sb_publishable_TOqaVsPwxsUHaBrtGuKr3g_v0by4Gyt";
+
+$("checkoutForm").onsubmit = async (e) => {
+  e.preventDefault();
+  if (busy) return;
+
+  if (!cart.length) {
+    message("checkoutMessage", "Pehle cart mein product add karo.", true);
+    return;
   }
-  cart=verified;renderCart();
-  const subtotal=cartSubtotal(),discount=discountAmount(),total=finalTotal();
-  if(!Number.isFinite(total)||total<=0)throw Error("Order total valid nahi hai.");
-  const orderRef=doc(collection(db,"orders")),trackingRef=doc(db,"tracking",orderRef.id),batch=writeBatch(db);
-  const items=cart.map(i=>({id:i.id,name:i.name,price:i.price,qty:i.qty}));
-  batch.set(orderRef,{name,phone,address,items,total,subtotal,discount,couponCode:appliedCoupon?.code||"",createdAt:serverTimestamp()});
-  batch.set(trackingRef,{status:"Pending",createdAt:serverTimestamp()});
-  await batch.commit();
-  lastOrderId=orderRef.id;cart=[];clearCoupon();renderCart();await loadProducts();
-  $("checkoutForm").reset();$("cartModal").classList.add("hidden");$("successOrderId").textContent=lastOrderId;
-  $("successTotal").textContent="Final payable amount (COD): "+money(total)+" · Discount: "+money(discount);
-  $("successModal").classList.remove("hidden");
- }catch(e){console.error("CHECKOUT ERROR:",e);message("checkoutMessage","Order submit nahi hua ("+(e?.code||"error")+"): "+friendlyError(e),true)}
- finally{setBusy(false)}
+
+  const name = $("buyerName").value.trim();
+  const phone = $("buyerPhone").value.trim();
+  const address = $("buyerAddress").value.trim();
+
+  if (name.length < 2 || phone.length < 7 || address.length < 5) {
+    message("checkoutMessage", "Name, phone aur address check karo.", true);
+    return;
+  }
+
+  const checkoutButton = $("placeOrderBtn");
+  setBusy(true);
+  message("checkoutMessage", "Supabase se order aur stock verify ho raha hai...");
+
+  try {
+    // Firebase se product IDs aur latest product details verify karo.
+    const verifiedItems = [];
+
+    for (const item of cart) {
+      const snap = await getDoc(doc(db, "products", item.id));
+
+      if (!snap.exists()) {
+        throw new Error("Cart ka product ab available nahi.");
+      }
+
+      const p = snap.data();
+
+      verifiedItems.push({
+        id: snap.id,
+        name: safeText(p.name),
+        price: effectivePrice(p),
+        qty: item.qty
+      });
+    }
+
+    // Price client se nahi bhejte; Supabase server khud calculate karega.
+    const payload = {
+      name,
+      phone,
+      address,
+      items: verifiedItems.map(item => ({
+        product_id: item.id,
+        qty: item.qty
+      })),
+      coupon_code: appliedCoupon?.code || null
+    };
+
+    const response = await fetch(
+      `${SUPABASE_URL}/functions/v1/vibemart-checkout`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": SUPABASE_PUBLISHABLE_KEY
+        },
+        body: JSON.stringify(payload)
+      }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok || result.success !== true || !result.order_id) {
+      throw new Error(
+        result.error || "Order confirm nahi hua. Cart aur stock check karo."
+      );
+    }
+
+    // Server se mila order ID hi dono systems mein use hoga.
+    const orderId = String(result.order_id);
+    const total = Number(result.total);
+
+    if (!Number.isFinite(total) || total < 0) {
+      message(
+        "checkoutMessage",
+        "Supabase ne order ID diya hai, lekin total confirm nahi hua. Dobara order submit mat karo; pehle Supabase Orders check karo.",
+        true
+      );
+      return;
+    }
+
+    const subtotal = Number.isFinite(Number(result.subtotal))
+      ? Number(result.subtotal)
+      : verifiedItems.reduce((sum, item) => sum + item.price * item.qty, 0);
+
+    const discount = Number.isFinite(Number(result.discount))
+      ? Number(result.discount)
+      : Math.max(0, subtotal - total);
+
+    const items = verifiedItems.map(item => ({
+      id: item.id,
+      name: item.name,
+      price: item.price,
+      qty: item.qty
+    }));
+
+    // Firebase owner dashboard aur tracking ko purane format mein sync karo.
+    // Supabase order pehle hi ban chuka hai; sync fail ho to duplicate order mat banao.
+    try {
+      const batch = writeBatch(db);
+
+      batch.set(doc(db, "orders", orderId), {
+        name,
+        phone,
+        address,
+        items,
+        total,
+        subtotal,
+        discount,
+        couponCode: appliedCoupon?.code || "",
+        status: "Pending",
+        source: "supabase",
+        createdAt: serverTimestamp()
+      });
+
+      batch.set(doc(db, "tracking", orderId), {
+        status: "Pending",
+        source: "supabase",
+        createdAt: serverTimestamp()
+      });
+
+      await batch.commit();
+    } catch (syncError) {
+      console.error("Firebase dashboard sync failed:", syncError);
+      lastOrderId = orderId;
+
+      message(
+        "checkoutMessage",
+        "Order Supabase mein confirm ho gaya, lekin dashboard sync nahi hua. Order ID save kar lo: " + orderId,
+        true
+      );
+      return;
+    }
+
+    lastOrderId = orderId;
+    cart = [];
+    clearCoupon();
+    renderCart();
+
+    $("checkoutForm").reset();
+    $("cartModal").classList.add("hidden");
+    $("successOrderId").textContent = orderId;
+    $("successTotal").textContent =
+      "Final payable amount (COD): " + money(total) +
+      " · Discount: " + money(discount);
+
+    $("successModal").classList.remove("hidden");
+
+  } catch (error) {
+    console.error("SUPABASE CHECKOUT ERROR:", error);
+
+    message(
+      "checkoutMessage",
+      error.message || "Order submit nahi hua. Supabase aur internet check karo.",
+      true
+    );
+  } finally {
+    setBusy(false);
+  }
 };
-$("copyOrderIdBtn").onclick=async()=>{try{await navigator.clipboard.writeText(lastOrderId);$("copyOrderIdBtn").textContent="Copied!"}catch{$("successOrderId").textContent="Order ID: "+lastOrderId+" — ise select karke copy karein."}};
-$("trackNewOrderBtn").onclick=()=>{$("successModal").classList.add("hidden");$("trackingId").value=lastOrderId;goTo("trackingPanel");trackOrder()};
+
+$("copyOrderIdBtn").onclick = async () => {
+  try {
+    await navigator.clipboard.writeText(lastOrderId);
+    $("copyOrderIdBtn").textContent = "Copied!";
+  } catch {
+    $("successOrderId").textContent =
+      "Order ID: " + lastOrderId + " — ise select karke copy karo.";
+  }
+};
+
+$("trackNewOrderBtn").onclick = () => {
+  $("successModal").classList.add("hidden");
+  $("trackingId").value = lastOrderId;
+  goTo("trackingPanel");
+  trackOrder();
+};
 
 /* ORDER TRACKING */
 async function trackOrder(){
