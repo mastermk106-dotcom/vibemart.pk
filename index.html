@@ -223,15 +223,15 @@ import{getAuth,onAuthStateChanged,signInWithEmailAndPassword,signOut,sendPasswor
 import{getFirestore,collection,getDocs,addDoc,doc,getDoc,updateDoc,deleteDoc,query,orderBy,serverTimestamp,writeBatch,setDoc}from"https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
 const firebaseConfig={
- apiKey:"AIzaSyDBz2wmlFK3uwX3TCWnu4lAvQZISuMttEY",
- authDomain:"vibemart-store-49d82.firebaseapp.com",
- projectId:"vibemart-store-49d82",
- storageBucket:"vibemart-store-49d82.firebasestorage.app",
- messagingSenderId:"27763181491",
- appId:"1:27763181491:web:57cc31f25b0fa531fb6dc6",
- measurementId:"G-SRK7BLWPPN"
+ apiKey:"AIzaSyCsMCc6HsgxRiru8mFpzbhv1TkdUhf8es1Y",
+ authDomain:"vibemart-store-a8fc7.firebaseapp.com",
+ projectId:"vibemart-store-a8fc7",
+ storageBucket:"vibemart-store-a8fc7.firebasestorage.app",
+ messagingSenderId:"171774556689",
+ appId:"1:171774556689:web:effbc2ddc6e05449c90fb0",
+ measurementId:"G-FMWBEN6J4Y"
 };
-const OWNER_UID="kAfNnhrB3vePCA72WuMVGshQvLV2";
+const OWNER_UID="KRzsMCc0rDaHCNLETwFU8YWZOVy1";
 const CLOUDINARY_NAME="dvvsxjid",CLOUDINARY_PRESET="vibemart_upload";
 const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app),$=id=>document.getElementById(id);
 
@@ -497,18 +497,10 @@ async function loadCoupons(){
  }catch(e){box.textContent="Coupons load nahi hue: "+friendlyError(e)}
 }
 
-/* COD CHECKOUT */
-
-/* COD CHECKOUT — SUPABASE + FIREBASE DASHBOARD BRIDGE */
-
-const SUPABASE_URL = "https://adcbsicxudirmavvmckv.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY =
-  "sb_publishable_TOqaVsPwxsUHaBrtGuKr3g_v0by4Gyt";
-
+/* COD CHECKOUT — FIRESTORE ONLY (NO SUPABASE) */
 $("checkoutForm").onsubmit = async (e) => {
   e.preventDefault();
   if (busy) return;
-
   if (!cart.length) {
     message("checkoutMessage", "Pehle cart mein product add karo.", true);
     return;
@@ -517,157 +509,71 @@ $("checkoutForm").onsubmit = async (e) => {
   const name = $("buyerName").value.trim();
   const phone = $("buyerPhone").value.trim();
   const address = $("buyerAddress").value.trim();
-
-  if (name.length < 2 || phone.length < 7 || address.length < 5) {
+  if (name.length < 2 || name.length > 100 || phone.length < 7 || phone.length > 25 || address.length < 5 || address.length > 500) {
     message("checkoutMessage", "Name, phone aur address check karo.", true);
     return;
   }
+  if (cart.some(i => !Number.isInteger(i.qty) || i.qty < 1 || i.qty > 99)) {
+    message("checkoutMessage", "Product quantity valid nahi hai.", true);
+    return;
+  }
 
-  const checkoutButton = $("placeOrderBtn");
   setBusy(true);
-  message("checkoutMessage", "Supabase se order aur stock verify ho raha hai...");
-
+  message("checkoutMessage", "Firebase mein order submit ho raha hai...");
   try {
-    // Firebase se product IDs aur latest product details verify karo.
+    // Refresh product details from Firestore; never rely on old cart prices.
     const verifiedItems = [];
-
     for (const item of cart) {
       const snap = await getDoc(doc(db, "products", item.id));
-
-      if (!snap.exists()) {
-        throw new Error("Cart ka product ab available nahi.");
-      }
-
+      if (!snap.exists()) throw new Error("Cart ka ek product ab available nahi.");
       const p = snap.data();
-
-      verifiedItems.push({
-        id: snap.id,
-        name: safeText(p.name),
-        price: effectivePrice(p),
-        qty: item.qty
-      });
+      const price = Number(effectivePrice(p));
+      if (!Number.isFinite(price) || price < 1 || !safeText(p.name)) throw new Error("Product price ya details valid nahi.");
+      verifiedItems.push({ id: snap.id, name: safeText(p.name).slice(0,100), price, qty: item.qty });
     }
 
-    // Price client se nahi bhejte; Supabase server khud calculate karega.
-    const payload = {
-      name,
-      phone,
-      address,
-      items: verifiedItems.map(item => ({
-        product_id: item.id,
-        qty: item.qty
-      })),
-      coupon_code: appliedCoupon?.code || null
-    };
-
-    const response = await fetch(
-      `${SUPABASE_URL}/functions/v1/vibemart-checkout`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "apikey": SUPABASE_PUBLISHABLE_KEY
-        },
-        body: JSON.stringify(payload)
+    const subtotal = verifiedItems.reduce((sum, item) => sum + item.price * item.qty, 0);
+    let discount = 0;
+    let couponCode = "";
+    if (appliedCoupon?.code) {
+      const code = String(appliedCoupon.code).toUpperCase();
+      const couponSnap = await getDoc(doc(db, "coupons", code));
+      if (couponSnap.exists()) {
+        const c = couponSnap.data();
+        if (c.active === true && ["percent", "fixed"].includes(c.type) && Number(c.value) > 0 && subtotal >= Number(c.minOrder || 0)) {
+          const value = Number(c.value);
+          discount = c.type === "percent" ? Math.floor(subtotal * Math.min(100, value) / 100) : value;
+          discount = Math.min(subtotal, Math.max(0, discount));
+          couponCode = code;
+        }
       }
-    );
-
-    const result = await response.json();
-
-    if (!response.ok || result.success !== true || !result.order_id) {
-      throw new Error(
-        result.error || "Order confirm nahi hua. Cart aur stock check karo."
-      );
     }
+    const total = Math.max(0, subtotal - discount);
+    const items = verifiedItems.map(i => ({ id:i.id, name:i.name, price:i.price, qty:i.qty }));
 
-    // Server se mila order ID hi dono systems mein use hoga.
-    const orderId = String(result.order_id);
-    const total = Number(result.total);
+    // Order ID is generated by Firestore. Customer submits order only; owner dashboard reads it.
+    const orderRef = doc(collection(db, "orders"));
+    await setDoc(orderRef, {
+      name, phone, address, items, subtotal, discount, couponCode, total,
+      status: "Pending", createdAt: serverTimestamp(), source: "firebase-cod"
+    });
+    // Tracking starts at Pending. Owner can update status from Dashboard.
+    await setDoc(doc(db, "tracking", orderRef.id), {
+      status: "Pending", createdAt: serverTimestamp()
+    });
 
-    if (!Number.isFinite(total) || total < 0) {
-      message(
-        "checkoutMessage",
-        "Supabase ne order ID diya hai, lekin total confirm nahi hua. Dobara order submit mat karo; pehle Supabase Orders check karo.",
-        true
-      );
-      return;
-    }
-
-    const subtotal = Number.isFinite(Number(result.subtotal))
-      ? Number(result.subtotal)
-      : verifiedItems.reduce((sum, item) => sum + item.price * item.qty, 0);
-
-    const discount = Number.isFinite(Number(result.discount))
-      ? Number(result.discount)
-      : Math.max(0, subtotal - total);
-
-    const items = verifiedItems.map(item => ({
-      id: item.id,
-      name: item.name,
-      price: item.price,
-      qty: item.qty
-    }));
-
-    // Firebase owner dashboard aur tracking ko purane format mein sync karo.
-    // Supabase order pehle hi ban chuka hai; sync fail ho to duplicate order mat banao.
-    try {
-      const batch = writeBatch(db);
-
-      batch.set(doc(db, "orders", orderId), {
-        name,
-        phone,
-        address,
-        items,
-        total,
-        subtotal,
-        discount,
-        couponCode: appliedCoupon?.code || "",
-        status: "Pending",
-        source: "supabase",
-        createdAt: serverTimestamp()
-      });
-
-      batch.set(doc(db, "tracking", orderId), {
-        status: "Pending",
-        source: "supabase",
-        createdAt: serverTimestamp()
-      });
-
-      await batch.commit();
-    } catch (syncError) {
-      console.error("Firebase dashboard sync failed:", syncError);
-      lastOrderId = orderId;
-
-      message(
-        "checkoutMessage",
-        "Order Supabase mein confirm ho gaya, lekin dashboard sync nahi hua. Order ID save kar lo: " + orderId,
-        true
-      );
-      return;
-    }
-
-    lastOrderId = orderId;
+    lastOrderId = orderRef.id;
     cart = [];
     clearCoupon();
     renderCart();
-
     $("checkoutForm").reset();
     $("cartModal").classList.add("hidden");
-    $("successOrderId").textContent = orderId;
-    $("successTotal").textContent =
-      "Final payable amount (COD): " + money(total) +
-      " · Discount: " + money(discount);
-
+    $("successOrderId").textContent = orderRef.id;
+    $("successTotal").textContent = "Final payable amount (COD): " + money(total) + " · Discount: " + money(discount);
     $("successModal").classList.remove("hidden");
-
   } catch (error) {
-    console.error("SUPABASE CHECKOUT ERROR:", error);
-
-    message(
-      "checkoutMessage",
-      error.message || "Order submit nahi hua. Supabase aur internet check karo.",
-      true
-    );
+    console.error("FIRESTORE CHECKOUT ERROR:", error);
+    message("checkoutMessage", "Order submit nahi hua: " + friendlyError(error) + ". Firebase Rules aur project config check karo.", true);
   } finally {
     setBusy(false);
   }
