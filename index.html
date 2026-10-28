@@ -271,18 +271,27 @@ $("spinButton").onclick=async()=>{
  if(!identifier){message("spinMessage","Valid email ya phone enter karo.",true);return}
  btn.disabled=true;message("spinMessage","Daily spin check ho raha hai...");
  try{
-  const day=spinDay(),hash=await spinHash(identifier),claimId=day+"_"+hash,ref=doc(db,"dailySpins",claimId),old=await getDoc(ref);
-  if(old.exists()){
-   const c=old.data();rotateWheelToPrize(c.prizeLabel,false);
-   if(c.prizeType!=="none"&&Number(c.value)>0){spinPrize={type:c.prizeType,value:Number(c.value),label:c.prizeLabel};spinClaimId=claimId;message("spinMessage","Aaj ka spin use ho chuka hai. Prize: "+c.prizeLabel);showSpinApplyButton()}
-   else{spinPrize=null;spinClaimId="";message("spinMessage","Aaj ka spin use ho chuka hai. Prize: Try Again. Kal dobara try karna.")}
-   return;
+  const day=spinDay(),hash=await spinHash(identifier),claimId=day+"_"+hash,ref=doc(db,"dailySpins",claimId);
+  // Claim creation is atomic: two simultaneous clicks cannot create two prizes.
+  const result=await runTransaction(db,async tx=>{
+   const existing=await tx.get(ref);
+   if(existing.exists()) return {claim:existing.data(),created:false};
+   const p=SPIN_PRIZES[Math.floor(Math.random()*SPIN_PRIZES.length)];
+   const claim={identifierHash:hash,day,prizeLabel:p.label,prizeType:p.type,value:p.value,createdAt:serverTimestamp()};
+   tx.set(ref,claim);
+   return {claim,created:true};
+  });
+  const c=result.claim;
+  rotateWheelToPrize(c.prizeLabel,result.created);
+  if(result.created) await new Promise(r=>setTimeout(r,4100));
+  if(c.prizeType!=="none"&&Number(c.value)>0){
+   spinPrize={type:c.prizeType,value:Number(c.value),label:c.prizeLabel};spinClaimId=claimId;
+   message("spinMessage",result.created?"🎉 Mubarak! Tumhein "+c.prizeLabel+" mila.":"Aaj ka spin pehle use ho chuka hai. Prize: "+c.prizeLabel);
+   showSpinApplyButton();
+  }else{
+   spinPrize=null;spinClaimId="";
+   message("spinMessage",result.created?"🙂 Try Again! Kal dobara spin karna.":"Aaj ka spin pehle use ho chuka hai. Prize: Try Again. Kal dobara try karna.");
   }
-  const idx=Math.floor(Math.random()*SPIN_PRIZES.length),p=SPIN_PRIZES[idx];
-  spinPrize=null;spinClaimId="";rotateWheelToPrize(p.label,true);
-  await new Promise(r=>setTimeout(r,4100));
-  await setDoc(ref,{identifierHash:hash,day,prizeLabel:p.label,prizeType:p.type,value:p.value,createdAt:serverTimestamp()});
-  if(p.type!=="none"){spinPrize={type:p.type,value:p.value,label:p.label};spinClaimId=claimId;message("spinMessage","🎉 Mubarak! Tumhein "+p.label+" mila.");showSpinApplyButton()}else message("spinMessage","🙂 Try Again! Kal dobara spin karna.");
  }catch(e){console.error(e);message("spinMessage","Spin save nahi hua: "+friendlyError(e),true)}finally{btn.disabled=false}
 };
 function showSpinApplyButton(){let b=$("applySpinPrizeBtn");if(!b){b=document.createElement("button");b.id="applySpinPrizeBtn";b.type="button";b.className="primary";b.textContent="Apply Spin Prize to Cart";$("spinMessage").after(b);b.onclick=()=>{if(!spinPrize)return;appliedCoupon=null;renderCart();$("cartModal").classList.remove("hidden");message("couponMessage","Spin prize selected: "+spinPrize.label);renderCart()}}}
