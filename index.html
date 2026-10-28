@@ -259,16 +259,27 @@ const spinWheel=$("spinWheel");
 SPIN_PRIZES.forEach((p,i)=>{const el=document.createElement("span");el.className="spin-label";el.textContent=p.label;el.style.transform=`rotate(${i*60+30}deg) translateY(-50%)`;spinWheel.append(el)});
 function spinDay(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
 async function spinHash(v){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(v));return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,"0")).join("")}
-function cleanSpinId(v){v=v.trim().toLowerCase();if(v.includes("@"))return /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(v)?v:"";const n=v.replace(/\\D/g,"");return n.length>=7&&n.length<=15?n:""}
+function cleanSpinId(v){v=v.trim().toLowerCase();if(v.includes("@"))return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)?v:"";const n=v.replace(/\D/g,"");return n.length>=7&&n.length<=15?n:""}
+function rotateWheelToPrize(prizeLabel,animate=true){
+ const idx=SPIN_PRIZES.findIndex(p=>p.label===prizeLabel);if(idx<0)return;
+ const target=2160+360-(idx*60+30);
+ spinWheel.style.transition=animate?"transform 4s cubic-bezier(.12,.72,.12,1)":"none";
+ spinWheel.style.transform=`rotate(${target}deg)`;
+}
 $("spinButton").onclick=async()=>{
  const btn=$("spinButton"),identifier=cleanSpinId($("spinIdentifier").value);
  if(!identifier){message("spinMessage","Valid email ya phone enter karo.",true);return}
  btn.disabled=true;message("spinMessage","Daily spin check ho raha hai...");
  try{
   const day=spinDay(),hash=await spinHash(identifier),claimId=day+"_"+hash,ref=doc(db,"dailySpins",claimId),old=await getDoc(ref);
-  if(old.exists()){const c=old.data();if(c.prizeType!=="none"&&Number(c.value)>0){spinPrize={type:c.prizeType,value:Number(c.value),label:c.prizeLabel};spinClaimId=claimId;message("spinMessage","Aaj ka spin use ho chuka hai. Prize: "+c.prizeLabel);showSpinApplyButton()}else message("spinMessage","Aaj ka spin use ho chuka hai. Kal dobara try karna.");return}
+  if(old.exists()){
+   const c=old.data();rotateWheelToPrize(c.prizeLabel,false);
+   if(c.prizeType!=="none"&&Number(c.value)>0){spinPrize={type:c.prizeType,value:Number(c.value),label:c.prizeLabel};spinClaimId=claimId;message("spinMessage","Aaj ka spin use ho chuka hai. Prize: "+c.prizeLabel);showSpinApplyButton()}
+   else{spinPrize=null;spinClaimId="";message("spinMessage","Aaj ka spin use ho chuka hai. Prize: Try Again. Kal dobara try karna.")}
+   return;
+  }
   const idx=Math.floor(Math.random()*SPIN_PRIZES.length),p=SPIN_PRIZES[idx];
-  spinWheel.style.transition="none";spinWheel.style.transform="rotate(0deg)";void spinWheel.offsetWidth;spinWheel.style.transition="transform 4s cubic-bezier(.12,.72,.12,1)";spinWheel.style.transform=`rotate(${2160+360-(idx*60+30)}deg)`;
+  spinPrize=null;spinClaimId="";rotateWheelToPrize(p.label,true);
   await new Promise(r=>setTimeout(r,4100));
   await setDoc(ref,{identifierHash:hash,day,prizeLabel:p.label,prizeType:p.type,value:p.value,createdAt:serverTimestamp()});
   if(p.type!=="none"){spinPrize={type:p.type,value:p.value,label:p.label};spinClaimId=claimId;message("spinMessage","🎉 Mubarak! Tumhein "+p.label+" mila.");showSpinApplyButton()}else message("spinMessage","🙂 Try Again! Kal dobara spin karna.");
@@ -576,7 +587,19 @@ $("checkoutForm").onsubmit = async (e) => {
     const subtotal = verifiedItems.reduce((sum, item) => sum + item.price * item.qty, 0);
     let discount = 0;
     let couponCode = "";
-    if (appliedCoupon?.code) {
+    const spinPrizeRecord = (spinPrize && spinClaimId) ? {
+      label: String(spinPrize.label || "").slice(0, 30),
+      type: spinPrize.type,
+      value: Number(spinPrize.value),
+      claimId: spinClaimId
+    } : null;
+    if (spinPrizeRecord && ["percent", "fixed"].includes(spinPrizeRecord.type)) {
+      const value = Number(spinPrizeRecord.value);
+      discount = spinPrizeRecord.type === "percent"
+        ? Math.floor(subtotal * Math.min(100, Math.max(0, value)) / 100)
+        : Math.max(0, value);
+      discount = Math.min(subtotal, discount);
+    } else if (appliedCoupon?.code) {
       const code = String(appliedCoupon.code).toUpperCase();
       const couponSnap = await getDoc(doc(db, "coupons", code));
       if (couponSnap.exists()) {
