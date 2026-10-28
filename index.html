@@ -82,11 +82,13 @@ footer{text-align:center;color:var(--muted);padding:25px;font-size:13px}
 .spin-label{position:absolute;left:50%;top:50%;width:45%;transform-origin:0 50%;font-size:12px;font-weight:900;color:white;text-shadow:0 1px 3px #222}
 .spin-pointer{position:absolute;top:-7px;left:calc(50% - 15px);z-index:2;width:0;height:0;border-left:15px solid transparent;border-right:15px solid transparent;border-top:32px solid #241044}
 .spin-message{font-weight:bold;margin:12px 0;min-height:24px}
-.spin-result-card{display:none;max-width:360px;margin:14px auto 8px;padding:18px 20px;border:2px solid #7c3aed;border-radius:16px;background:#fff;box-shadow:0 6px 18px #4c1d9530;text-align:center}
-.spin-result-card.show{display:block}
-.spin-result-kicker{font-size:12px;font-weight:800;letter-spacing:1px;color:#6d28d9;text-transform:uppercase}
-.spin-result-value{display:block;margin-top:6px;font-size:28px;font-weight:900;line-height:1.2;color:#241044;overflow-wrap:anywhere}
-.spin-result-note{margin-top:7px;font-size:13px;color:#5b5568}
+.spin-result-card{display:none;box-sizing:border-box;width:min(100%,420px);min-height:112px;margin:16px auto 10px;padding:18px 20px;border:2px solid #7c3aed;border-radius:18px;background:#fff;box-shadow:0 8px 24px #4c1d9530;text-align:center;position:relative;z-index:1}
+.spin-result-card.show{display:block;animation:spinResultPop .28s ease-out}
+.spin-result-kicker{display:block;font-size:12px;font-weight:900;letter-spacing:1.2px;color:#6d28d9;text-transform:uppercase}
+.spin-result-value{box-sizing:border-box;display:block;width:100%;margin:9px auto 0;padding:10px 12px;border:2px solid #ede9fe;border-radius:12px;background:#f5f3ff;font-size:clamp(23px,5vw,30px);font-weight:900;line-height:1.2;color:#241044;overflow-wrap:anywhere;white-space:normal}
+.spin-result-note{margin-top:9px;font-size:13px;line-height:1.45;color:#5b5568}
+@keyframes spinResultPop{from{opacity:.4;transform:translateY(5px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:520px){.spin-panel{padding:14px 10px}.spin-wheel-wrap{width:min(290px,78vw);height:min(290px,78vw)}.spin-label{font-size:10px}.spin-result-card{padding:15px 12px}}
 </style>
 </head>
 <body>
@@ -261,16 +263,29 @@ try{const saved=JSON.parse(localStorage.getItem("vibemart_wishlist")||"[]");wish
 const labels={Pending:"⏳ Pending",Confirmed:"✅ Order Confirmed",Processing:"🧰 Processing",Shipped:"🚚 Shipped",Delivered:"🎉 Delivered",Cancelled:"❌ Cancelled"};
 $("year").textContent=new Date().getFullYear();
 const spinWheel=$("spinWheel");
-SPIN_PRIZES.forEach((p,i)=>{const el=document.createElement("span");el.className="spin-label";el.textContent=p.label;el.style.transform=`rotate(${i*60+30}deg) translateX(10px)`;el.style.marginLeft="0";el.style.textAlign="center";spinWheel.append(el)});
+SPIN_PRIZES.forEach((p,i)=>{const el=document.createElement("span");el.className="spin-label";el.textContent=p.label;el.style.transform=`rotate(${i*60-60}deg) translateX(10px)`;el.style.marginLeft="0";el.style.textAlign="center";spinWheel.append(el)});
 function spinDay(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
 async function spinHash(v){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(v));return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,"0")).join("")}
 function cleanSpinId(v){v=v.trim().toLowerCase();if(v.includes("@"))return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)?v:"";const n=v.replace(/\D/g,"");return n.length>=7&&n.length<=15?n:""}
+let spinWheelRotation=0;
 function rotateWheelToPrize(prizeLabel,animate=true){
- const idx=SPIN_PRIZES.findIndex(p=>p.label===prizeLabel);if(idx<0)return;
- // Conic-gradient segments are clockwise from 12 o'clock; align the selected segment centre with the fixed top pointer.
- const target=2160 + 360 - (idx*60 + 30);
+ const idx=SPIN_PRIZES.findIndex(p=>p.label===prizeLabel);
+ if(idx<0)return;
+ // The wheel, labels, and saved prize all use the same six-item order.
+ // The fixed pointer is at 12 o'clock; align the selected slice centre to it.
+ const desired=((360-(idx*60+30))%360+360)%360;
+ let target;
+ if(animate){
+   const current=((spinWheelRotation%360)+360)%360;
+   const extra=((desired-current)+360)%360;
+   // Always add six complete turns, including when the same prize repeats.
+   target=spinWheelRotation+(6*360)+extra;
+ }else{
+   target=desired;
+ }
  spinWheel.style.transition=animate?"transform 4s cubic-bezier(.12,.72,.12,1)":"none";
  spinWheel.style.transform=`rotate(${target}deg)`;
+ spinWheelRotation=target;
 }
 function showSpinResult(label,note,isWin){
  const card=$("spinResultCard");
