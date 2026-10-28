@@ -193,6 +193,121 @@ footer{padding:32px 15px;background:#25123e;color:#d9c8f3;line-height:1.8}
 @media(max-width:600px){.announcement-bar{font-size:9px;padding:8px 5px}.announce-sep{padding:0 4px}header{position:relative;padding:13px 12px;align-items:center}.logo{font-size:22px}.tag{font-size:10px}.actions{width:100%;justify-content:flex-start;gap:6px}.actions button{flex:1 1 auto;padding:9px 8px;font-size:10px}main{padding:14px 11px 32px}.hero{grid-template-columns:1fr;min-height:0;padding:27px 20px 16px;border-radius:22px}.hero h1{font-size:clamp(43px,12vw,58px);letter-spacing:-2px}.hero p{font-size:13px}.hero-actions{gap:12px;margin-top:20px}.hero .hero-cta{padding:12px 14px}.hero-note{font-size:10px}.hero-art{min-height:210px;margin-top:0;transform:scale(.82)}.hero-orbit{width:220px;height:220px}.orbit-two{width:180px;height:180px}.hero-bag{width:135px;height:145px}.pill-deal{right:1%;top:10%}.pill-shop{left:0;bottom:8%}.benefits{gap:8px;margin:12px 0 20px}.benefit{padding:10px 8px;gap:8px;border-radius:13px}.benefit-icon{flex-basis:32px;width:32px;height:32px;font-size:16px;border-radius:10px}.benefit strong{font-size:10px}.benefit small{font-size:9px}.panel{padding:15px;border-radius:16px}.panel h2,.spin-panel h2,.sectionhead h2{font-size:20px}.searchrow{gap:7px}.searchrow input{min-width:100%;width:100%}.searchrow button{width:100%}.categories{margin-right:-11px;padding-right:11px}.categories button{padding:9px 13px;font-size:11px}.products{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.product{border-radius:14px}.product img{height:155px;padding:8px}.productbody{padding:10px}.product h3{font-size:12px;min-height:34px}.price{font-size:18px}.product p{font-size:11px}.productbuttons{flex-direction:column;gap:6px;margin-top:10px}.productbuttons button{width:100%;padding:9px 5px;font-size:10px}.rating{font-size:13px}.ratingSummary{font-size:10px}.spin-panel{padding:17px 10px;border-radius:17px}.spin-wheel-wrap{width:min(285px,78vw);height:min(285px,78vw)}.spin-label{font-size:10px}.spin-result-card{padding:14px 11px}.modalbox{padding:18px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 
+
+/* VIBEMART 3D COLOURFUL + PURPLE/GOLD DEEP CUSTOMIZATION */
+:root{
+ --vm-purple:#5b21b6;--vm-purple-deep:#25113f;--vm-purple-light:#f4edff;
+ --vm-gold:#f5b82e;--vm-gold-light:#fff5d6;--vm-ink:#21152f;
+ --vm-muted:#766b85;--vm-border:#e9e0f5;--vm-card:#fff;
+}
+html{scroll-behavior:smooth;scroll-padding-top:100px}
+body{background:radial-gradient(ellipse at 6% 0%,#f3eaff 0,transparent 28%),radial-gradient(ellipse at 96% 18%,#fff4d8 0,transparent 20%),#fbf9ff;color:var(--vm-ink)}
+button{font-weight:800;letter-spacing:.05px;transition:transform .18s ease,box-shadow .18s ease,filter .18s ease}
+button:hover{filter:saturate(1.08);transform:translateY(-2px)}
+button:active{transform:translateY(0) scale(.98)}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #f5b82e;outline-offset:3px}
+.announcement-bar{background:linear-gradient(100deg,#291343,#5b21b6 58%,#8b5cf6);color:#fff;font-weight:750;letter-spacing:.2px}
+.announce-dot{background:var(--vm-gold);box-shadow:0 0 0 4px #f5b82e30}
+header{position:sticky;top:0;z-index:50;display:flex;gap:20px;justify-content:space-between;background:#ffffffed;border-bottom:1px solid #e8def4;box-shadow:0 7px 25px #2410440d;backdrop-filter:blur(16px)}
+.logo{color:var(--vm-purple-deep);letter-spacing:-1px;text-shadow:0 2px 0 #f5b82e35}
+.logo:first-letter{filter:drop-shadow(0 3px 2px #f5b82e60)}
+.tag{color:#8a6a21;font-weight:800;letter-spacing:.4px}
+.actions{gap:9px;align-items:center}
+.actions button,.secondary{border:1px solid #e8def4;background:linear-gradient(180deg,#fff,#f8f4ff);color:#4b2a70;box-shadow:0 3px 0 #e8def4,0 6px 12px #2b174008}
+.primary,.hero-cta{border:1px solid #6d28d9!important;background:linear-gradient(135deg,#7c3aed 0%,#5520b5 65%,#3b167d 100%)!important;color:#fff!important;box-shadow:0 5px 0 #341064,0 10px 20px #5b21b632!important}
+.primary:hover,.hero-cta:hover{box-shadow:0 5px 0 #341064,0 14px 26px #5b21b64a!important}
+.hero{position:relative;overflow:hidden;border:1px solid #e4d5fb;background:radial-gradient(circle at 86% 22%,#fff0bd 0,transparent 23%),linear-gradient(120deg,#fff 0%,#f8f1ff 56%,#fff6df 100%);box-shadow:0 20px 55px #4c1d9510}
+.hero:after{content:"";position:absolute;left:0;right:0;bottom:0;height:5px;background:linear-gradient(90deg,#5b21b6,#a78bfa,#f5b82e,#ffdf83);pointer-events:none}
+.hero-eyebrow{border:1px solid #ead9ff;background:#fff;box-shadow:0 4px 12px #5b21b612;color:#6b31bd}
+.hero h1{color:#29133f;text-wrap:balance}
+.hero h1 span{background:linear-gradient(90deg,#6d28d9,#9a56e8 48%,#d08a00);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero-art{filter:drop-shadow(0 18px 25px #6d28d925)}
+.hero-bag{background:linear-gradient(145deg,#a78bfa 0%,#6d28d9 48%,#3b167d 100%);box-shadow:inset -9px -10px 0 #2b105a40,inset 7px 7px 0 #ffffff35,0 20px 30px #5425a544}
+.bag-handle{border-color:#f8c84b}
+.bag-logo{color:#fff;text-shadow:0 2px 0 #301052}
+.bag-logo span{color:#ffd86a}
+.float-pill{border:1px solid #f4e2a4;background:linear-gradient(135deg,#fff,#fff7df);color:#6b4710;box-shadow:0 9px 25px #5b3b101c}
+.benefits{gap:14px}
+.benefit{border:1px solid #ece2f8;background:linear-gradient(145deg,#fff,#faf6ff);box-shadow:0 7px 18px #2b17400a;transition:transform .2s,box-shadow .2s}
+.benefit:hover{transform:translateY(-3px);box-shadow:0 13px 24px #2b174014}
+.benefit-icon{display:grid;place-items:center;background:linear-gradient(145deg,#fff7db,#f3d47a);border:1px solid #f2d889;box-shadow:inset 0 2px 0 #fff,0 4px 0 #d8a82e;color:#5b21b6;text-shadow:0 2px 2px #8c5c1530}
+.panel{border:1px solid #e9def8;background:linear-gradient(150deg,#fff,#fdfbff);box-shadow:0 12px 32px #29134c0a}
+.panel h2,.sectionhead h2,.spin-panel h2{color:#2b1742;letter-spacing:-.45px}
+.sectionhead{align-items:center;gap:12px}
+.sectionhead:after{content:"";height:3px;flex:1;max-width:100px;border-radius:99px;background:linear-gradient(90deg,#8b5cf6,#f5b82e);opacity:.8}
+.sectionhead button{margin-left:auto}
+#trackingPanel .notice{border-left:4px solid #f5b82e}
+input,textarea,select{background:#fff;color:#291b3a;min-height:44px;padding:11px 13px}
+input[type=file]{padding:9px;background:#faf7ff}
+.field{margin-bottom:13px}
+.field label{display:block;margin-bottom:6px;font-size:12px;font-weight:850;letter-spacing:.15px;color:#49335f}
+.field small,.small{color:#837791;line-height:1.65}
+.notice{border-radius:13px;box-shadow:inset 0 1px 0 #fff}
+.searchrow{gap:10px;margin:14px 0}
+.searchrow input{background:#fff;box-shadow:0 4px 14px #27113e08}
+.categories{padding-top:12px;padding-bottom:20px}
+.categories button{box-shadow:0 3px 0 #e9e0f5,0 6px 14px #27113e06}
+.categories button.active{background:linear-gradient(135deg,#7c3aed,#4c1d95);border-color:#5b21b6;box-shadow:0 4px 0 #35105f,0 8px 18px #5b21b62b}
+.product{overflow:hidden;box-shadow:0 7px 20px #27113e0b}
+.product img{background:radial-gradient(circle at 50% 35%,#fff 0,#f5efff 74%,#eee5fb 100%)}
+.productbody{display:flex;flex-direction:column;align-items:stretch}
+.product h3{color:#2b1742}
+.price{color:#5b21b6;text-shadow:0 1px 0 #f5b82e25}
+.productbuttons button{min-height:39px}
+.productbuttons .primary{background:linear-gradient(135deg,#7c3aed,#4c1d95)!important}
+.saleBadge{border:1px solid #f6d98a;background:linear-gradient(135deg,#fff3c7,#ffe29a);color:#7c4b00;box-shadow:0 3px 0 #efc45d}
+#productCount{background:linear-gradient(135deg,#f1e7ff,#fff0c4);border:1px solid #e7d4ff;color:#54219b}
+#status{padding:20px;border:1px dashed #d7c4f3;border-radius:15px;background:#fff;text-align:center}
+.spin-panel{border-color:#e7d4ff;background:radial-gradient(circle at 85% 5%,#fff0bd 0,transparent 25%),radial-gradient(circle at 4% 90%,#e9ddff 0,transparent 30%),linear-gradient(145deg,#fff,#f9f4ff);box-shadow:0 18px 42px #4c1d9512}
+.spin-wheel{border:8px solid #fff;outline:2px solid #e7c25b;box-shadow:0 12px 28px #24104432, inset 0 0 0 3px #ffffff88}
+.spin-pointer{filter:drop-shadow(0 3px 2px #24104430)}
+.spin-result-card{border:2px solid #d6b65a;background:linear-gradient(145deg,#fff,#fff9e8);box-shadow:0 12px 30px #b7861d20}
+.spin-result-kicker{color:#76500c}
+.spin-result-value{border-color:#f1d990;background:linear-gradient(135deg,#fff6d9,#f0e5ff);color:#4b1f86;box-shadow:inset 0 1px 0 #fff}
+#dashboard{border:1px solid #ddc6ff;background:linear-gradient(150deg,#fff,#fbf7ff);box-shadow:0 20px 55px #4c1d9514}
+#dashboard>.notice{background:linear-gradient(100deg,#f5edff,#fff8df);border-color:#e9d8ff}
+#ownerEmail{display:inline-block;padding:8px 12px;border-radius:999px;background:#f0e8ff;color:#5b21b6;font-weight:800;font-size:12px}
+#productEditor,#couponForm,#manageCoupons,#orders,#manageProducts{border:1px solid #ece3f7;border-radius:16px;padding:16px;background:#fff;box-shadow:0 5px 18px #29134c08}
+#productEditor{margin-top:14px;background:linear-gradient(145deg,#fff,#fcf9ff)}
+#dashboard h3{margin-top:22px;color:#4c1d95}
+#dashboard hr,.modalbox hr{border:0;border-top:1px solid #eee5f8;margin:22px 0}
+#productForm,#couponForm{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 14px}
+#productForm .field,#couponForm .field{min-width:0}
+#productForm .field:nth-of-type(1),#productForm .field:nth-of-type(7),#productForm .field:nth-of-type(8),#productForm .field:nth-of-type(9),#productForm .rowbtn,#couponForm .rowbtn{grid-column:1/-1}
+#productForm .rowbtn{display:flex;gap:10px;flex-wrap:wrap}
+#dashboard #addProductBtn{margin:8px 0}
+#manageProducts>*,#manageCoupons>*,#orders>*{margin-top:10px}
+.order,.reviewItem{padding:15px!important;box-shadow:0 5px 15px #27113e07}
+.order-status{border:1px solid #dfd0ff;border-radius:99px;padding:5px 10px;font-weight:850}
+.modal{z-index:100;background:#1e1032a8;backdrop-filter:blur(10px);padding:14px}
+.modalbox{width:min(100%,560px);max-height:min(90vh,900px);overflow:auto;border:1px solid #eadcf9;border-radius:24px;background:linear-gradient(145deg,#fff,#fcf8ff);box-shadow:0 30px 100px #12051f66;padding:clamp(18px,3vw,30px)}
+.modalbox h2{color:#32164e;letter-spacing:-.5px}
+.modalbox h3{color:#51239a}
+.modalbox .notice{background:linear-gradient(100deg,#f5edff,#fff8df)}
+.rowbtn{display:flex;flex-wrap:wrap;gap:9px;margin-top:15px}
+.rowbtn button{flex:1 1 auto}
+.summaryrow{padding:12px 0;border-bottom:1px solid #eee6f6;display:flex;justify-content:space-between;gap:12px}
+.summaryrow strong{color:#4c1d95}
+.couponbox{padding:14px;border:1px dashed #d9c4f5;border-radius:15px;background:#fbf7ff}
+#checkoutForm,#loginForm,#reviewForm{margin-top:12px}
+#checkoutForm .primary,#loginForm .primary{min-height:48px}
+footer{position:relative;margin-top:30px;padding:38px 16px 44px;background:radial-gradient(circle at 85% 0,#6030a0 0,transparent 30%),linear-gradient(135deg,#25113f,#3b1768);color:#e9dcff;text-align:center}
+footer:before{content:"✦  VIBEMART  ✦";display:block;margin-bottom:9px;color:#f5cf63;font-weight:900;letter-spacing:3px;font-size:12px}
+@media(max-width:700px){
+ header{position:relative;flex-direction:column;gap:12px}
+ .actions{display:flex;flex-wrap:wrap;justify-content:flex-start;width:100%}
+ .actions button{flex:1 1 calc(50% - 8px);min-height:42px}
+ .hero{grid-template-columns:1fr}
+ .hero-art{min-height:230px}
+ #productForm,#couponForm{grid-template-columns:1fr}
+ #productForm .field,#couponForm .field,#productForm .rowbtn{grid-column:1}
+ #productEditor,#manageCoupons,#orders,#manageProducts{padding:12px}
+ .modal{padding:8px}
+ .modalbox{border-radius:20px;max-height:94vh}
+ .sectionhead:after{display:none}
+}
+@media(prefers-reduced-motion:reduce){button:hover,.benefit:hover,.product:hover{transform:none}}
+
 </style>
 </head>
 <body>
