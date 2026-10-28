@@ -76,6 +76,12 @@ footer{text-align:center;color:var(--muted);padding:25px;font-size:13px}
  .productbuttons button{width:100%}
  .panel{padding:13px}
 }
+.spin-panel{background:linear-gradient(135deg,#fff,#f3e8ff);border:2px solid #d8b4fe;border-radius:18px;padding:20px;margin:20px 0;text-align:center}
+.spin-wheel-wrap{position:relative;width:min(310px,80vw);height:min(310px,80vw);margin:18px auto}
+.spin-wheel{width:100%;height:100%;border-radius:50%;border:8px solid white;box-shadow:0 4px 18px #24104433;background:conic-gradient(#7c3aed 0deg 60deg,#fbbf24 60deg 120deg,#ec4899 120deg 180deg,#22c55e 180deg 240deg,#3b82f6 240deg 300deg,#f97316 300deg 360deg);transition:transform 4s cubic-bezier(.12,.72,.12,1);position:relative}
+.spin-label{position:absolute;left:50%;top:50%;width:45%;transform-origin:0 50%;font-size:12px;font-weight:900;color:white;text-shadow:0 1px 3px #222}
+.spin-pointer{position:absolute;top:-7px;left:calc(50% - 15px);z-index:2;width:0;height:0;border-left:15px solid transparent;border-right:15px solid transparent;border-top:32px solid #241044}
+.spin-message{font-weight:bold;margin:12px 0;min-height:24px}
 </style>
 </head>
 <body>
@@ -104,7 +110,13 @@ footer{text-align:center;color:var(--muted);padding:25px;font-size:13px}
   <div class="searchrow"><input id="trackingId" placeholder="Order ID yahan paste karo" autocomplete="off"><button class="primary" id="trackOrderBtn">Track Order</button></div>
   <div id="trackingResult" aria-live="polite"></div>
  </section>
-
+ <section class="spin-panel" id="dailySpinPanel">
+  <h2>🎡 Daily Spin & Win!</h2><p>Apna email ya phone enter karo. Har identifier ko roz sirf 1 spin milega.</p>
+  <div class="field" style="max-width:440px;margin:12px auto"><label for="spinIdentifier">Email ya phone number</label><input id="spinIdentifier" maxlength="120" placeholder="Email ya phone number"></div>
+  <div class="spin-wheel-wrap"><div class="spin-pointer"></div><div class="spin-wheel" id="spinWheel"></div></div>
+  <button class="primary" id="spinButton" type="button">🎁 Spin Now</button><div id="spinMessage" class="spin-message" aria-live="polite"></div>
+  <p class="small">Prizes: 10% OFF, Rs 100 OFF, Rs 50 OFF, 15% OFF, Rs 200 OFF, Try Again. Discount order subtotal par apply hota hai.</p>
+ </section>
  <div class="searchrow"><input id="search" placeholder="🔎 Search products..."><button class="primary" id="searchBtn">Search</button></div>
  <div class="categories" id="categories">
   <button class="active" data-cat="All">All</button><button data-cat="Fashion">Fashion</button><button data-cat="Home">Home</button><button data-cat="Beauty">Beauty</button><button data-cat="Accessories">Accessories</button><button data-cat="Electronics">Electronics</button><button data-cat="Other">Other</button>
@@ -237,10 +249,33 @@ const CLOUDINARY_NAME="dvvsxjid",CLOUDINARY_PRESET="vibemart_upload";
 const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app),$=id=>document.getElementById(id);
 
 let isOwner=false,allProducts=[],cart=[],activeCategory="All",searchText="",busy=false,lastOrderId="",appliedCoupon=null,wishlist=[],activeReviewProduct=null,reviewCache={};
+let spinPrize=null,spinClaimId="";
+const SPIN_PRIZES=[{label:"10% OFF",type:"percent",value:10},{label:"Rs 100 OFF",type:"fixed",value:100},{label:"Rs 50 OFF",type:"fixed",value:50},{label:"15% OFF",type:"percent",value:15},{label:"Rs 200 OFF",type:"fixed",value:200},{label:"Try Again",type:"none",value:0}];
 try{const saved=JSON.parse(localStorage.getItem("vibemart_wishlist")||"[]");wishlist=Array.isArray(saved)?saved.filter(x=>typeof x==="string"):[]}catch{wishlist=[]}
 
 const labels={Pending:"⏳ Pending",Confirmed:"✅ Order Confirmed",Processing:"🧰 Processing",Shipped:"🚚 Shipped",Delivered:"🎉 Delivered",Cancelled:"❌ Cancelled"};
 $("year").textContent=new Date().getFullYear();
+const spinWheel=$("spinWheel");
+SPIN_PRIZES.forEach((p,i)=>{const el=document.createElement("span");el.className="spin-label";el.textContent=p.label;el.style.transform=`rotate(${i*60+30}deg) translateY(-50%)`;spinWheel.append(el)});
+function spinDay(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+async function spinHash(v){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(v));return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,"0")).join("")}
+function cleanSpinId(v){v=v.trim().toLowerCase();if(v.includes("@"))return /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(v)?v:"";const n=v.replace(/\\D/g,"");return n.length>=7&&n.length<=15?n:""}
+$("spinButton").onclick=async()=>{
+ const btn=$("spinButton"),identifier=cleanSpinId($("spinIdentifier").value);
+ if(!identifier){message("spinMessage","Valid email ya phone enter karo.",true);return}
+ btn.disabled=true;message("spinMessage","Daily spin check ho raha hai...");
+ try{
+  const day=spinDay(),hash=await spinHash(identifier),claimId=day+"_"+hash,ref=doc(db,"dailySpins",claimId),old=await getDoc(ref);
+  if(old.exists()){const c=old.data();if(c.prizeType!=="none"&&Number(c.value)>0){spinPrize={type:c.prizeType,value:Number(c.value),label:c.prizeLabel};spinClaimId=claimId;message("spinMessage","Aaj ka spin use ho chuka hai. Prize: "+c.prizeLabel);showSpinApplyButton()}else message("spinMessage","Aaj ka spin use ho chuka hai. Kal dobara try karna.");return}
+  const idx=Math.floor(Math.random()*SPIN_PRIZES.length),p=SPIN_PRIZES[idx];
+  spinWheel.style.transition="none";spinWheel.style.transform="rotate(0deg)";void spinWheel.offsetWidth;spinWheel.style.transition="transform 4s cubic-bezier(.12,.72,.12,1)";spinWheel.style.transform=`rotate(${2160+360-(idx*60+30)}deg)`;
+  await new Promise(r=>setTimeout(r,4100));
+  await setDoc(ref,{identifierHash:hash,day,prizeLabel:p.label,prizeType:p.type,value:p.value,createdAt:serverTimestamp()});
+  if(p.type!=="none"){spinPrize={type:p.type,value:p.value,label:p.label};spinClaimId=claimId;message("spinMessage","🎉 Mubarak! Tumhein "+p.label+" mila.");showSpinApplyButton()}else message("spinMessage","🙂 Try Again! Kal dobara spin karna.");
+ }catch(e){console.error(e);message("spinMessage","Spin save nahi hua: "+friendlyError(e),true)}finally{btn.disabled=false}
+};
+function showSpinApplyButton(){let b=$("applySpinPrizeBtn");if(!b){b=document.createElement("button");b.id="applySpinPrizeBtn";b.type="button";b.className="primary";b.textContent="Apply Spin Prize to Cart";$("spinMessage").after(b);b.onclick=()=>{if(!spinPrize)return;appliedCoupon=null;renderCart();$("cartModal").classList.remove("hidden");message("couponMessage","Spin prize selected: "+spinPrize.label);renderCart()}}}
+
 
 function message(id,text,error=false){const el=$(id);el.textContent=text;el.style.color=error?"#b91c1c":"#6d28d9"}
 function money(n){return"Rs "+Number(n||0).toLocaleString("en-PK",{maximumFractionDigits:0})}
@@ -430,6 +465,7 @@ function addToCart(id){
 }
 function cartSubtotal(){return cart.reduce((s,i)=>s+i.price*i.qty,0)}
 function discountAmount(){
+ if(spinPrize&&spinClaimId){const c=spinPrize;const d=c.type==="percent"?Math.floor(cartSubtotal()*Number(c.value)/100):Number(c.value);return Math.min(cartSubtotal(),Math.max(0,d))}
  if(!appliedCoupon)return 0;const c=appliedCoupon;
  if(cartSubtotal()<Number(c.minOrder||0))return 0;
  let d=c.type==="percent"?Math.floor(cartSubtotal()*Number(c.value)/100):Number(c.value);
@@ -467,7 +503,7 @@ $("applyCouponBtn").onclick=async()=>{
    if(c.active!==true){appliedCoupon=null;message("couponMessage","Ye coupon filhal disabled hai.",true)}
    else if(!["percent","fixed"].includes(c.type)||!Number.isFinite(Number(c.value))||Number(c.value)<=0||(c.type==="percent"&&Number(c.value)>100)){appliedCoupon=null;message("couponMessage","Coupon settings valid nahi hain.",true)}
    else if(cartSubtotal()<Number(c.minOrder||0)){appliedCoupon=null;message("couponMessage","Minimum cart amount "+money(c.minOrder)+" hai.",true)}
-   else{appliedCoupon={code,...c};message("couponMessage",code+" apply ho gaya! Discount: "+money(discountAmount()))}
+   else{spinPrize=null;spinClaimId="";appliedCoupon={code,...c};message("couponMessage",code+" apply ho gaya! Discount: "+money(discountAmount()))}
   }
  }catch(e){appliedCoupon=null;message("couponMessage","Coupon load nahi hua: "+friendlyError(e),true)}
  finally{btn.disabled=false;renderCart()}
@@ -579,7 +615,7 @@ $("checkoutForm").onsubmit = async (e) => {
          transaction.update(refs[index], {stock:stock-item.qty,lastOrderId:orderRef.id});
        }
        if (finalSubtotal !== subtotal) throw new Error("Cart total change ho gaya hai. Dobara checkout karein.");
-       transaction.set(orderRef,{name,phone,address,items:finalItems,subtotal:finalSubtotal,discount,couponCode,total,stockChanges,status:"Pending",createdAt:serverTimestamp(),source:"firebase-cod"});
+       transaction.set(orderRef,{name,phone,address,items:finalItems,subtotal:finalSubtotal,discount,couponCode,spinPrize:spinPrizeRecord,spinClaimId:spinPrizeRecord?.claimId||"",total,stockChanges,status:"Pending",createdAt:serverTimestamp(),source:"firebase-cod"});
        transaction.set(trackingRef,{status:"Pending",createdAt:serverTimestamp()});
      });
 
