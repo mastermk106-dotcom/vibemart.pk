@@ -4,7 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#6d28d9">
-<meta name="description" content="Vibemart.pk — Shop useful products at prices you'll love.">
+<meta name="description" content="Shop useful everyday finds at Vibemart.pk. Explore product deals, add favourites to your wishlist, order with Cash on Delivery, and track your order online.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Vibemart.pk — Smart Finds. Great Vibes.">
+<meta property="og:description" content="Discover everyday products, special deals, wishlist favourites, Cash on Delivery and order tracking at Vibemart.pk.">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="color-scheme" content="light">
 <title>Vibemart.pk — Your Vibe, Your Choice!</title>
 <style>
 :root{--p:#6d28d9;--dark:#241044;--bg:#f7f5fc;--muted:#716b80;--border:#e9e2f3}
@@ -89,9 +94,109 @@ footer{text-align:center;color:var(--muted);padding:25px;font-size:13px}
 .spin-result-note{margin-top:9px;font-size:13px;line-height:1.45;color:#5b5568}
 @keyframes spinResultPop{from{opacity:.4;transform:translateY(5px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
 @media(max-width:520px){.spin-panel{padding:14px 10px}.spin-wheel-wrap{width:min(290px,78vw);height:min(290px,78vw)}.spin-label{font-size:10px}.spin-result-card{padding:15px 12px}}
+
+/* VIBEMART PREMIUM STORE REDESIGN — layout-only overrides, original app logic preserved */
+:root{--p:#6d28d9;--dark:#21113c;--bg:#f7f7fb;--muted:#77758a;--border:#e9e6f1;--accent:#ffcf5a;--surface:#fff;--shadow:0 12px 32px rgba(38,18,73,.075)}
+html{scroll-behavior:smooth;scroll-padding-top:100px}
+body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#f7f7fb;color:#251b36;line-height:1.5}
+button{border-radius:12px;transition:transform .18s ease,box-shadow .18s ease,background .18s ease}
+button:not(:disabled):hover{transform:translateY(-1px)}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #c4b5fd;outline-offset:2px}
+.announcement-bar{min-height:34px;padding:7px 14px;background:#25123e;color:#f7f1ff;text-align:center;font-size:11px;font-weight:750;letter-spacing:.035em}
+.announce-dot{display:inline-block;width:7px;height:7px;margin:0 7px 1px 0;border-radius:50%;background:#ffd36a;box-shadow:0 0 0 3px #ffffff18}
+.announce-sep{padding:0 8px;color:#c4b5fd}
+header{min-height:80px;padding:14px max(4%,calc((100% - 1280px)/2));background:rgba(255,255,255,.96);border-bottom:1px solid #ece8f4;box-shadow:0 5px 20px #21113c08;gap:18px;backdrop-filter:blur(14px)}
+.logo{font-size:clamp(22px,2.4vw,29px);letter-spacing:-1.2px;color:#5420b5;line-height:1.1}
+.tag{font-size:11px;letter-spacing:.025em;color:#82788f}
+.actions{gap:7px}
+.actions button{padding:10px 12px;font-size:12px;border-radius:11px;white-space:nowrap}
+.secondary{background:#f7f3ff;color:#4b267d;border:1px solid #e8ddfb}
+.secondary:hover{background:#eee5ff;box-shadow:0 5px 14px #6d28d91a}
+.primary{background:linear-gradient(135deg,#6d28d9,#8548e8);color:#fff;box-shadow:0 5px 13px #6d28d929}
+.primary:hover{background:linear-gradient(135deg,#5b21b6,#7437d8);box-shadow:0 8px 18px #6d28d938}
+main{max-width:1280px;padding:27px 22px 45px}
+.hero{position:relative;isolation:isolate;overflow:hidden;display:grid;grid-template-columns:1.1fr .9fr;align-items:center;min-height:365px;padding:clamp(28px,5vw,58px);border:1px solid #6b36bb;border-radius:28px;background:radial-gradient(circle at 83% 20%,#a77af4 0,transparent 28%),linear-gradient(120deg,#281347 0%,#51219b 52%,#773ce0 100%);color:#fff;box-shadow:0 20px 45px #45208020}
+.hero:before{content:"";position:absolute;z-index:-1;inset:0;background:linear-gradient(115deg,transparent 45%,#ffffff09 45%,#ffffff09 46%,transparent 46%,transparent 62%,#ffffff08 62%,#ffffff08 63%,transparent 63%);pointer-events:none}
+.hero-copy{position:relative;z-index:2;max-width:590px}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;padding:7px 11px;border:1px solid #ffffff40;border-radius:99px;background:#ffffff13;color:#f2e9ff;font-size:10px;font-weight:850;letter-spacing:1.15px}
+.hero-eyebrow span{color:#ffd36a;font-size:14px}
+.hero h1{margin:20px 0 13px;font-size:clamp(42px,6vw,70px);font-weight:900;letter-spacing:-2.8px;line-height:.99}
+.hero h1 span{color:#ffd56e}
+.hero p{max-width:440px;margin:0;color:#eee4ff;font-size:clamp(14px,1.6vw,17px);line-height:1.75}
+.hero-actions{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:25px}
+.hero .hero-cta{display:inline-flex;align-items:center;gap:20px;padding:14px 18px;background:#ffd56e;color:#28143f;border-radius:13px;font-size:13px;font-weight:900;box-shadow:0 8px 20px #16082a35}
+.hero .hero-cta span{font-size:20px;line-height:12px}
+.hero .hero-cta:hover{background:#ffe19a;box-shadow:0 12px 25px #16082a45}
+.hero-note{font-size:11px;color:#e2d2ff}
+.hero-art{position:relative;min-height:250px;height:100%;display:flex;align-items:center;justify-content:center}
+.hero-orbit{position:absolute;width:255px;height:255px;border:1px solid #ffffff35;border-radius:50%}
+.orbit-two{width:205px;height:205px;border-style:dashed;transform:rotate(25deg)}
+.hero-bag{position:relative;width:155px;height:165px;display:flex;flex-direction:column;align-items:center;justify-content:center;clip-path:polygon(9% 15%,91% 15%,100% 100%,0 100%);border-radius:18px;background:linear-gradient(140deg,#fff,#eee4ff 68%,#c9b1f5);color:#5420b5;filter:drop-shadow(0 18px 15px #1c0b3a50);transform:rotate(5deg)}
+.bag-handle{position:absolute;top:8px;width:54px;height:37px;border:7px solid #d2b9ff;border-bottom:0;border-radius:22px 22px 0 0}
+.bag-logo{margin-top:25px;font-size:56px;font-weight:1000;letter-spacing:-5px;line-height:1}
+.bag-logo span{color:#f0a900;font-size:24px;vertical-align:top}
+.bag-caption{margin-top:8px;font-size:9px;font-weight:950;letter-spacing:2px}
+.hero-spark{position:absolute;color:#ffdc79;font-size:28px}.spark-one{top:15%;left:19%}.spark-two{right:11%;bottom:20%;font-size:35px}
+.float-pill{position:absolute;padding:10px 13px;border:1px solid #ffffff7a;border-radius:13px;background:#ffffffed;color:#39205c;font-size:11px;font-weight:850;box-shadow:0 10px 24px #16082a30;white-space:nowrap}
+.pill-deal{top:17%;right:2%;transform:rotate(5deg)}.pill-shop{bottom:14%;left:0;transform:rotate(-4deg)}
+.benefits{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:17px 0 27px}
+.benefit{display:flex;align-items:center;gap:12px;min-width:0;padding:15px;background:#fff;border:1px solid #ece8f4;border-radius:16px;box-shadow:0 5px 17px #21113c05}
+.benefit-icon{flex:0 0 40px;width:40px;height:40px;display:grid;place-items:center;border-radius:13px;background:#f1e9ff;color:#5c27b7;font-size:19px}
+.benefit strong,.benefit small{display:block}.benefit strong{font-size:12px;color:#332247}.benefit small{margin-top:3px;color:#888196;font-size:10px}
+.panel{padding:22px;background:#fff;border:1px solid #ece8f4;border-radius:20px;box-shadow:0 8px 25px #21113c06}
+.panel h2,.spin-panel h2,.sectionhead h2{color:#2d1b43;font-size:clamp(20px,2.4vw,26px);letter-spacing:-.65px}
+#trackingPanel{margin:0 0 22px}
+#trackingPanel .notice{background:#f7f2ff;border:1px solid #eee4ff;color:#5c4777}
+.searchrow{gap:10px;margin:18px 0 12px}
+.searchrow input{min-width:0;min-height:48px;padding:13px 15px;border-color:#e5deef;border-radius:13px;box-shadow:inset 0 1px 2px #26134305}
+.searchrow input::placeholder{color:#a19aac}
+.searchrow button{min-height:46px}
+.categories{gap:8px;padding:9px 0 17px;scrollbar-width:thin}
+.categories button{padding:10px 16px;background:#fff;border:1px solid #e8e1f1;border-radius:99px;color:#5c526b;font-size:12px;font-weight:800}
+.categories button:hover{border-color:#b99ce9;color:#5724b3}
+.categories button.active{background:#5e24bd;border-color:#5e24bd;color:#fff;box-shadow:0 5px 12px #6d28d92b}
+#shop{scroll-margin-top:115px}
+.sectionhead{margin:14px 0 16px}
+.sectionhead h2{margin:0}
+#productCount{padding:6px 10px;border-radius:99px;background:#f0e8ff;color:#5c27b7;font-size:11px;font-weight:850}
+.products{grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:17px}
+.product{position:relative;background:#fff;border:1px solid #ece8f4;border-radius:18px;box-shadow:0 5px 20px #21113c06;transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease}
+.product:hover{transform:translateY(-5px);border-color:#d8c5f5;box-shadow:0 15px 30px #29134c12}
+.product img{display:block;height:220px;object-fit:contain;padding:12px;background:linear-gradient(145deg,#faf9fd,#f2eff8)}
+.productbody{padding:15px}
+.product h3{min-height:42px;margin:0 0 8px;color:#2d223a;font-size:15px;font-weight:800;line-height:1.4}
+.price{color:#5923b9;font-size:22px;letter-spacing:-.6px}
+.oldprice{color:#a49caf}
+.product p{color:#777184;font-size:12px;line-height:1.6}
+.productbuttons{gap:8px;margin-top:14px}
+.productbuttons button{padding:10px 8px;border-radius:10px;font-size:11px}
+.rating{font-size:15px}.ratingSummary{color:#77698b;font-size:11px}
+.saleBadge{border-radius:99px;background:#fff0e7;color:#bd4b18;padding:5px 9px;font-size:10px}
+#status{padding:15px 0;color:#6d28d9;font-weight:750}
+.spin-panel{position:relative;overflow:hidden;margin:22px 0;padding:clamp(18px,3vw,28px);border:1px solid #dfcffb;border-radius:22px;background:radial-gradient(circle at 90% 5%,#f2eaff,transparent 34%),linear-gradient(135deg,#fff,#faf7ff);box-shadow:0 9px 28px #4c1d950b}
+.spin-panel h2{margin-top:0}.spin-panel>p:not(.small){max-width:620px;margin:0 auto;color:#746580;font-size:13px;line-height:1.7}
+.spin-wheel{box-shadow:0 8px 25px #24104428;border:8px solid #fff}
+.spin-pointer{filter:drop-shadow(0 3px 2px #24104425)}
+.spin-panel .primary{min-width:155px;padding:13px 22px}
+.spin-result-card{border-color:#d8c4ff;box-shadow:0 12px 28px #4c1d9518}
+#dailySpinPanel .small{line-height:1.6}
+.modal{backdrop-filter:blur(6px)}
+.modalbox{border:1px solid #eee7fa;box-shadow:0 25px 90px #12051f55}
+.field label{color:#443452}
+input,textarea,select{border-color:#e4dced;border-radius:11px}
+input:focus,textarea:focus,select:focus{border-color:#a78bfa;box-shadow:0 0 0 3px #8b5cf626;outline:none}
+.notice{border:1px solid #e9ddff;background:#f8f4ff;color:#58476e}
+.order,.reviewItem{border-color:#ece6f4;border-radius:14px;background:#fff}
+.order-status{background:#f0e8ff;color:#5420b5}
+footer{padding:32px 15px;background:#25123e;color:#d9c8f3;line-height:1.8}
+@media(max-width:900px){header{align-items:flex-start}.actions{justify-content:flex-end}.hero{grid-template-columns:1fr .72fr;min-height:330px}.hero-art{transform:scale(.9)}.benefits{grid-template-columns:repeat(2,minmax(0,1fr))}.products{grid-template-columns:repeat(auto-fill,minmax(190px,1fr))}}
+@media(max-width:600px){.announcement-bar{font-size:9px;padding:8px 5px}.announce-sep{padding:0 4px}header{position:relative;padding:13px 12px;align-items:center}.logo{font-size:22px}.tag{font-size:10px}.actions{width:100%;justify-content:flex-start;gap:6px}.actions button{flex:1 1 auto;padding:9px 8px;font-size:10px}main{padding:14px 11px 32px}.hero{grid-template-columns:1fr;min-height:0;padding:27px 20px 16px;border-radius:22px}.hero h1{font-size:clamp(43px,12vw,58px);letter-spacing:-2px}.hero p{font-size:13px}.hero-actions{gap:12px;margin-top:20px}.hero .hero-cta{padding:12px 14px}.hero-note{font-size:10px}.hero-art{min-height:210px;margin-top:0;transform:scale(.82)}.hero-orbit{width:220px;height:220px}.orbit-two{width:180px;height:180px}.hero-bag{width:135px;height:145px}.pill-deal{right:1%;top:10%}.pill-shop{left:0;bottom:8%}.benefits{gap:8px;margin:12px 0 20px}.benefit{padding:10px 8px;gap:8px;border-radius:13px}.benefit-icon{flex-basis:32px;width:32px;height:32px;font-size:16px;border-radius:10px}.benefit strong{font-size:10px}.benefit small{font-size:9px}.panel{padding:15px;border-radius:16px}.panel h2,.spin-panel h2,.sectionhead h2{font-size:20px}.searchrow{gap:7px}.searchrow input{min-width:100%;width:100%}.searchrow button{width:100%}.categories{margin-right:-11px;padding-right:11px}.categories button{padding:9px 13px;font-size:11px}.products{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.product{border-radius:14px}.product img{height:155px;padding:8px}.productbody{padding:10px}.product h3{font-size:12px;min-height:34px}.price{font-size:18px}.product p{font-size:11px}.productbuttons{flex-direction:column;gap:6px;margin-top:10px}.productbuttons button{width:100%;padding:9px 5px;font-size:10px}.rating{font-size:13px}.ratingSummary{font-size:10px}.spin-panel{padding:17px 10px;border-radius:17px}.spin-wheel-wrap{width:min(285px,78vw);height:min(285px,78vw)}.spin-label{font-size:10px}.spin-result-card{padding:14px 11px}.modalbox{padding:18px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
 </style>
 </head>
 <body>
+<div class="announcement-bar"><span class="announce-dot"></span> Smart finds, friendly prices <span class="announce-sep">•</span> Cash on Delivery available <span class="announce-sep">•</span> Shop your vibe</div>
 <header>
  <div><div class="logo">💜 vibemart.pk</div><div class="tag">Your Vibe, Your Choice!</div></div>
  <div class="actions">
@@ -106,9 +211,19 @@ footer{text-align:center;color:var(--muted);padding:25px;font-size:13px}
 
 <main>
  <section class="hero">
-  <h1>Shop Your Vibe ✨</h1>
-  <p>Discover useful products at prices you'll love. Easy shopping and Cash on Delivery.</p>
-  <button style="background:white;color:#6d28d9" id="exploreBtn">Explore Products ↓</button>
+  <div class="hero-copy">
+   <span class="hero-eyebrow"><span>✦</span> YOUR EVERYDAY FINDS, UPGRADED</span>
+   <h1>Good finds.<br><span>Great vibes.</span></h1>
+   <p>Discover products you'll love, explore special deals, and shop simply with Cash on Delivery.</p>
+   <div class="hero-actions"><button class="hero-cta" id="exploreBtn">Explore the store <span aria-hidden="true">→</span></button><span class="hero-note">Easy browsing · Simple ordering</span></div>
+  </div>
+  <div class="hero-art" aria-hidden="true"><div class="hero-orbit orbit-one"></div><div class="hero-orbit orbit-two"></div><div class="hero-spark spark-one">✦</div><div class="hero-spark spark-two">✧</div><div class="hero-bag"><div class="bag-handle"></div><div class="bag-logo">v<span>✦</span></div><div class="bag-caption">YOUR VIBE</div></div><div class="float-pill pill-deal">✦ Great finds</div><div class="float-pill pill-shop">♡ Pick your favourite</div></div>
+ </section>
+ <section class="benefits" aria-label="Shopping benefits">
+  <div class="benefit"><span class="benefit-icon">🚚</span><div><strong>Cash on Delivery</strong><small>Pay when it arrives</small></div></div>
+  <div class="benefit"><span class="benefit-icon">♡</span><div><strong>Save favourites</strong><small>Keep your wishlist</small></div></div>
+  <div class="benefit"><span class="benefit-icon">📦</span><div><strong>Order tracking</strong><small>Check your order status</small></div></div>
+  <div class="benefit"><span class="benefit-icon">🎁</span><div><strong>Daily Spin & Win</strong><small>Try your luck</small></div></div>
  </section>
 
  <section class="panel" id="trackingPanel">
