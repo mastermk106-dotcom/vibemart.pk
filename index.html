@@ -82,6 +82,11 @@ footer{text-align:center;color:var(--muted);padding:25px;font-size:13px}
 .spin-label{position:absolute;left:50%;top:50%;width:45%;transform-origin:0 50%;font-size:12px;font-weight:900;color:white;text-shadow:0 1px 3px #222}
 .spin-pointer{position:absolute;top:-7px;left:calc(50% - 15px);z-index:2;width:0;height:0;border-left:15px solid transparent;border-right:15px solid transparent;border-top:32px solid #241044}
 .spin-message{font-weight:bold;margin:12px 0;min-height:24px}
+.spin-result-card{display:none;max-width:360px;margin:14px auto 8px;padding:18px 20px;border:2px solid #7c3aed;border-radius:16px;background:#fff;box-shadow:0 6px 18px #4c1d9530;text-align:center}
+.spin-result-card.show{display:block}
+.spin-result-kicker{font-size:12px;font-weight:800;letter-spacing:1px;color:#6d28d9;text-transform:uppercase}
+.spin-result-value{display:block;margin-top:6px;font-size:28px;font-weight:900;line-height:1.2;color:#241044;overflow-wrap:anywhere}
+.spin-result-note{margin-top:7px;font-size:13px;color:#5b5568}
 </style>
 </head>
 <body>
@@ -114,7 +119,7 @@ footer{text-align:center;color:var(--muted);padding:25px;font-size:13px}
   <h2>🎡 Daily Spin & Win!</h2><p>Apna email ya phone enter karo. Har identifier ko roz sirf 1 spin milega.</p>
   <div class="field" style="max-width:440px;margin:12px auto"><label for="spinIdentifier">Email ya phone number</label><input id="spinIdentifier" maxlength="120" placeholder="Email ya phone number"></div>
   <div class="spin-wheel-wrap"><div class="spin-pointer"></div><div class="spin-wheel" id="spinWheel"></div></div>
-  <button class="primary" id="spinButton" type="button">🎁 Spin Now</button><div id="spinMessage" class="spin-message" aria-live="polite"></div>
+  <button class="primary" id="spinButton" type="button">🎁 Spin Now</button><div id="spinMessage" class="spin-message" aria-live="polite"></div><div id="spinResultCard" class="spin-result-card" aria-live="polite"><span class="spin-result-kicker">Your spin result</span><strong id="spinResultValue" class="spin-result-value">—</strong><div id="spinResultNote" class="spin-result-note">Prize result will appear here.</div></div>
   <p class="small">Prizes: 10% OFF, Rs 100 OFF, Rs 50 OFF, 15% OFF, Rs 200 OFF, Try Again. Discount order subtotal par apply hota hai.</p>
  </section>
  <div class="searchrow"><input id="search" placeholder="🔎 Search products..."><button class="primary" id="searchBtn">Search</button></div>
@@ -256,20 +261,28 @@ try{const saved=JSON.parse(localStorage.getItem("vibemart_wishlist")||"[]");wish
 const labels={Pending:"⏳ Pending",Confirmed:"✅ Order Confirmed",Processing:"🧰 Processing",Shipped:"🚚 Shipped",Delivered:"🎉 Delivered",Cancelled:"❌ Cancelled"};
 $("year").textContent=new Date().getFullYear();
 const spinWheel=$("spinWheel");
-SPIN_PRIZES.forEach((p,i)=>{const el=document.createElement("span");el.className="spin-label";el.textContent=p.label;el.style.transform=`rotate(${i*60+30}deg) translateY(-50%)`;spinWheel.append(el)});
+SPIN_PRIZES.forEach((p,i)=>{const el=document.createElement("span");el.className="spin-label";el.textContent=p.label;el.style.transform=`rotate(${i*60+30}deg) translateX(10px)`;el.style.marginLeft="0";el.style.textAlign="center";spinWheel.append(el)});
 function spinDay(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
 async function spinHash(v){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(v));return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,"0")).join("")}
 function cleanSpinId(v){v=v.trim().toLowerCase();if(v.includes("@"))return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)?v:"";const n=v.replace(/\D/g,"");return n.length>=7&&n.length<=15?n:""}
 function rotateWheelToPrize(prizeLabel,animate=true){
  const idx=SPIN_PRIZES.findIndex(p=>p.label===prizeLabel);if(idx<0)return;
- const target=2160+360-(idx*60+30);
+ // Conic-gradient segments are clockwise from 12 o'clock; align the selected segment centre with the fixed top pointer.
+ const target=2160 + 360 - (idx*60 + 30);
  spinWheel.style.transition=animate?"transform 4s cubic-bezier(.12,.72,.12,1)":"none";
  spinWheel.style.transform=`rotate(${target}deg)`;
+}
+function showSpinResult(label,note,isWin){
+ const card=$("spinResultCard");
+ $("spinResultValue").textContent=label;
+ $("spinResultNote").textContent=note;
+ card.style.borderColor=isWin?"#7c3aed":"#9ca3af";
+ card.classList.add("show");
 }
 $("spinButton").onclick=async()=>{
  const btn=$("spinButton"),identifier=cleanSpinId($("spinIdentifier").value);
  if(!identifier){message("spinMessage","Valid email ya phone enter karo.",true);return}
- btn.disabled=true;message("spinMessage","Daily spin check ho raha hai...");
+ btn.disabled=true;$("spinResultCard").classList.remove("show");message("spinMessage","Daily spin check ho raha hai...");
  try{
   const day=spinDay(),hash=await spinHash(identifier),claimId=day+"_"+hash,ref=doc(db,"dailySpins",claimId);
   // Claim creation is atomic: two simultaneous clicks cannot create two prizes.
@@ -287,10 +300,12 @@ $("spinButton").onclick=async()=>{
   if(c.prizeType!=="none"&&Number(c.value)>0){
    spinPrize={type:c.prizeType,value:Number(c.value),label:c.prizeLabel};spinClaimId=claimId;
    message("spinMessage",result.created?"🎉 Mubarak! Tumhein "+c.prizeLabel+" mila.":"Aaj ka spin pehle use ho chuka hai. Prize: "+c.prizeLabel);
+   showSpinResult(c.prizeLabel,result.created?"Prize cart mein apply karne ke liye neeche button dabao.":"Yeh aaj ka pehle se saved result hai.",true);
    showSpinApplyButton();
   }else{
    spinPrize=null;spinClaimId="";
    message("spinMessage",result.created?"🙂 Try Again! Kal dobara spin karna.":"Aaj ka spin pehle use ho chuka hai. Prize: Try Again. Kal dobara try karna.");
+   showSpinResult("Try Again",result.created?"Kal dobara koshish karein.":"Aaj ka result pehle hi use ho chuka hai.",false);
   }
  }catch(e){console.error(e);message("spinMessage","Spin save nahi hua: "+friendlyError(e),true)}finally{btn.disabled=false}
 };
