@@ -223,7 +223,7 @@ import{getAuth,onAuthStateChanged,signInWithEmailAndPassword,signOut,sendPasswor
 import{getFirestore,collection,getDocs,addDoc,doc,getDoc,updateDoc,deleteDoc,query,orderBy,serverTimestamp,writeBatch,setDoc}from"https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
 const firebaseConfig={
- apiKey:"AIzaSyCsMCc6HsgxRiru8mFpzbhv1TkdUhf8es1Y",
+ apiKey:"AIzaSyCs86shMXrGiru8mFpzbhv1TkdUhf8es1Y",
  authDomain:"vibemart-store-a8fc7.firebaseapp.com",
  projectId:"vibemart-store-a8fc7",
  storageBucket:"vibemart-store-a8fc7.firebasestorage.app",
@@ -250,8 +250,10 @@ function showAuth(){$("authModal").classList.remove("hidden");message("authMessa
 function closeAuth(){$("authModal").classList.add("hidden")}
 function goTo(id){$(id).scrollIntoView({behavior:"smooth",block:"start"})}
 function saveWishlist(){try{localStorage.setItem("vibemart_wishlist",JSON.stringify(wishlist))}catch{}$("wishlistCount").textContent=wishlist.length}
-function isSaleActive(p){return Number(p.salePrice)>0&&Number(p.salePrice)<Number(p.price)&&(!p.saleEnds||new Date(p.saleEnds).getTime()>Date.now())}
-function effectivePrice(p){return isSaleActive(p)?Number(p.salePrice):Number(p.price)}
+function productName(p){return safeText(p?.name??p?.title??p?.productName??p?.product_name??"").trim()}
+function regularPrice(p){return Number(p?.price??p?.regularPrice??p?.sellingPrice??p?.productPrice??p?.product_price??p?.amount??NaN)}
+function isSaleActive(p){const base=regularPrice(p),sale=Number(p?.salePrice??p?.sale_price??NaN);return sale>0&&base>0&&sale<base&&(!p.saleEnds||new Date(p.saleEnds).getTime()>Date.now())}
+function effectivePrice(p){const sale=Number(p?.salePrice??p?.sale_price??NaN);return isSaleActive(p)?sale:regularPrice(p)}
 function starString(n){const r=Math.max(0,Math.min(5,Math.round(Number(n)||0)));return"★".repeat(r)+"☆".repeat(5-r)}
 
 function priceDetails(p){
@@ -269,8 +271,8 @@ function renderWishlist(){
  const box=$("wishlistProducts");box.replaceChildren();const items=allProducts.filter(p=>wishlist.includes(p.id));$("wishlistEmpty").classList.toggle("hidden",items.length>0);
  items.forEach(p=>{
   const card=document.createElement("article");card.className="product";
-  const img=document.createElement("img");img.loading="lazy";img.alt=safeText(p.name);img.src=safeText(p.imageUrl)||"https://placehold.co/600x450/f0eaff/6d28d9?text=Vibemart";img.onerror=()=>{img.onerror=null;img.src="https://placehold.co/600x450/f0eaff/6d28d9?text=Vibemart"};
-  const body=document.createElement("div");body.className="productbody";const title=document.createElement("h3");title.textContent=safeText(p.name)||"Product";body.append(title,priceDetails(p));
+  const img=document.createElement("img");img.loading="lazy";img.alt=productName(p);img.src=safeText(p.imageUrl)||"https://placehold.co/600x450/f0eaff/6d28d9?text=Vibemart";img.onerror=()=>{img.onerror=null;img.src="https://placehold.co/600x450/f0eaff/6d28d9?text=Vibemart"};
+  const body=document.createElement("div");body.className="productbody";const title=document.createElement("h3");title.textContent=productName(p)||"Product";body.append(title,priceDetails(p));
   const buttons=document.createElement("div");buttons.className="productbuttons";
   const add=document.createElement("button");add.type="button";add.className="primary";add.textContent="🛒 Add to Cart";add.onclick=()=>addToCart(p.id);
   const rev=document.createElement("button");rev.type="button";rev.className="secondary";rev.textContent="⭐ Reviews";rev.onclick=()=>openReviews(p.id);
@@ -322,14 +324,14 @@ async function loadProducts(){
 
 /* PRODUCTS — Add to Cart button is explicitly appended to the card */
 function renderProducts(){
- const list=allProducts.filter(p=>(activeCategory==="All"||p.category===activeCategory)&&(safeText(p.name)+" "+safeText(p.description)+" "+safeText(p.category)).toLowerCase().includes(searchText.toLowerCase()));
+ const list=allProducts.filter(p=>(activeCategory==="All"||p.category===activeCategory)&&(productName(p)+" "+safeText(p.description)+" "+safeText(p.category)).toLowerCase().includes(searchText.toLowerCase()));
  $("productCount").textContent=list.length+" products";$("products").replaceChildren();
  if(!list.length){const x=document.createElement("div");x.className="panel";x.textContent="Is category mein abhi products nahi mile.";$("products").append(x);return}
  list.forEach(p=>{
   const c=document.createElement("article");c.className="product";
-  const im=document.createElement("img");im.alt=safeText(p.name);im.loading="lazy";im.src=safeText(p.imageUrl)||"https://placehold.co/600x450/f0eaff/6d28d9?text=Vibemart";im.onerror=()=>{im.onerror=null;im.src="https://placehold.co/600x450/f0eaff/6d28d9?text=Vibemart"};
+  const im=document.createElement("img");im.alt=productName(p);im.loading="lazy";im.src=safeText(p.imageUrl)||"https://placehold.co/600x450/f0eaff/6d28d9?text=Vibemart";im.onerror=()=>{im.onerror=null;im.src="https://placehold.co/600x450/f0eaff/6d28d9?text=Vibemart"};
   const b=document.createElement("div");b.className="productbody";
-  const t=document.createElement("h3");t.textContent=safeText(p.name)||"Product";
+  const t=document.createElement("h3");t.textContent=productName(p)||"Product";
   const cat=document.createElement("p");cat.textContent=safeText(p.category||"Other");
   const desc=document.createElement("p");desc.textContent=safeText(p.description);
   const rating=document.createElement("div");rating.className="ratingSummary";rating.textContent="⭐ Loading ratings...";
@@ -377,7 +379,7 @@ async function loadReviewSummary(productId){
 }
 async function openReviews(productId){
  const p=allProducts.find(x=>x.id===productId);if(!p)return;
- activeReviewProduct=productId;$("reviewProductName").textContent="Product: "+safeText(p.name);
+ activeReviewProduct=productId;$("reviewProductName").textContent="Product: "+productName(p);
  $("reviewsTitle").textContent="⭐ Customer Reviews";$("reviewsModal").classList.remove("hidden");
  $("reviewsList").textContent="Reviews load ho rahe hain...";$("reviewSummary").textContent="";
  $("reviewForm").reset();message("reviewMessage","");await refreshReviews(productId);
@@ -421,7 +423,7 @@ $("reviewForm").onsubmit=async e=>{
 function addToCart(id){
  const p=allProducts.find(x=>x.id===id);if(!p)return;
  const i=cart.find(x=>x.id===id);
- if(i)i.qty=Math.min(99,i.qty+1);else cart.push({id,name:safeText(p.name),price:effectivePrice(p),qty:1});
+ if(i)i.qty=Math.min(99,i.qty+1);else cart.push({id,name:productName(p),price:effectivePrice(p),qty:1});
  renderCart();message("status","Product cart mein add ho gaya.");
 }
 function cartSubtotal(){return cart.reduce((s,i)=>s+i.price*i.qty,0)}
@@ -528,8 +530,9 @@ $("checkoutForm").onsubmit = async (e) => {
       if (!snap.exists()) throw new Error("Cart ka ek product ab available nahi.");
       const p = snap.data();
       const price = Number(effectivePrice(p));
-      if (!Number.isFinite(price) || price < 1 || !safeText(p.name)) throw new Error("Product price ya details valid nahi.");
-      verifiedItems.push({ id: snap.id, name: safeText(p.name).slice(0,100), price, qty: item.qty });
+      const nameOnRecord = productName(p);
+      if (!Number.isFinite(price) || price < 1 || !nameOnRecord) throw new Error("Product details missing hain. Dashboard → Manage Products mein product ka naam aur price check karo.");
+      verifiedItems.push({ id: snap.id, name: nameOnRecord.slice(0,100), price, qty: item.qty });
     }
 
     const subtotal = verifiedItems.reduce((sum, item) => sum + item.price * item.qty, 0);
@@ -648,11 +651,11 @@ function renderManageProducts(){
  if(!allProducts.length){$("manageProducts").textContent="Abhi koi product nahi.";return}
  allProducts.forEach(p=>{
   const r=document.createElement("div");r.className="order";
-  const t=document.createElement("strong");t.textContent=safeText(p.name)+" — "+money(p.price)+(isSaleActive(p)?" · ⚡ Sale "+money(p.salePrice):"");
+  const t=document.createElement("strong");t.textContent=productName(p)+" — "+money(p.price)+(isSaleActive(p)?" · ⚡ Sale "+money(p.salePrice):"");
   const bs=document.createElement("div");bs.className="rowbtn";
   const edit=document.createElement("button");edit.className="secondary";edit.textContent="Edit";
   edit.onclick=()=>{
-   $("editId").value=p.id;$("pName").value=safeText(p.name);$("pPrice").value=Number(p.price);
+   $("editId").value=p.id;$("pName").value=productName(p);$("pPrice").value=Number(p.price);
    $("pOldPrice").value=Number(p.oldPrice||0)||"";$("pSalePrice").value=Number(p.salePrice||0)||"";
    $("pSaleEnds").value=safeText(p.saleEnds);$("pCategory").value=p.category||"Other";
    $("pDescription").value=safeText(p.description);$("pImage").value="";
