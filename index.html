@@ -555,7 +555,7 @@ $("spinButton").onclick=async()=>{
   }
  }catch(e){console.error(e);message("spinMessage","Spin save nahi hua: "+friendlyError(e),true)}finally{btn.disabled=false}
 };
-function showSpinApplyButton(){let b=$("applySpinPrizeBtn");if(!b){b=document.createElement("button");b.id="applySpinPrizeBtn";b.type="button";b.className="primary";b.textContent="Apply Spin Prize to Cart";$("spinMessage").after(b);b.onclick=()=>{if(!spinPrize)return;appliedCoupon=null;renderCart();$("cartModal").classList.remove("hidden");message("couponMessage","Spin prize selected: "+spinPrize.label);renderCart()}}}
+function showSpinApplyButton(){let b=$("applySpinPrizeBtn");if(!b){b=document.createElement("button");b.id="applySpinPrizeBtn";b.type="button";b.className="primary";b.textContent="Apply Spin Prize to Cart";$("spinMessage").after(b);b.onclick=()=>{if(!spinPrize)return;renderCart();$("cartModal").classList.remove("hidden");message("couponMessage","Spin prize selected: "+spinPrize.label);renderCart()}}}
 
 
 function message(id,text,error=false){const el=$(id);el.textContent=text;el.style.color=error?"#b91c1c":"#6d28d9"}
@@ -746,11 +746,24 @@ function addToCart(id){
 }
 function cartSubtotal(){return cart.reduce((s,i)=>s+i.price*i.qty,0)}
 function discountAmount(){
- if(spinPrize&&spinClaimId){const c=spinPrize;const d=c.type==="percent"?Math.floor(cartSubtotal()*Number(c.value)/100):Number(c.value);return Math.min(cartSubtotal(),Math.max(0,d))}
- if(!appliedCoupon)return 0;const c=appliedCoupon;
- if(cartSubtotal()<Number(c.minOrder||0))return 0;
- let d=c.type==="percent"?Math.floor(cartSubtotal()*Number(c.value)/100):Number(c.value);
- return Math.min(cartSubtotal(),Math.max(0,d));
+ const subtotal=cartSubtotal();
+ let spinDiscount=0,couponDiscount=0;
+
+ if(spinPrize&&spinClaimId&&["percent","fixed"].includes(spinPrize.type)){
+  const value=Number(spinPrize.value);
+  spinDiscount=spinPrize.type==="percent"
+   ?Math.floor(subtotal*Math.min(100,Math.max(0,value))/100)
+   :Math.max(0,value);
+ }
+
+ if(appliedCoupon&&["percent","fixed"].includes(appliedCoupon.type)&&subtotal>=Number(appliedCoupon.minOrder||0)){
+  const value=Number(appliedCoupon.value);
+  couponDiscount=appliedCoupon.type==="percent"
+   ?Math.floor(subtotal*Math.min(100,value)/100)
+   :Math.max(0,value);
+ }
+
+ return Math.min(subtotal,spinDiscount+couponDiscount);
 }
 function finalTotal(){return Math.max(0,cartSubtotal()-discountAmount())}
 function renderCart(){
@@ -784,7 +797,7 @@ $("applyCouponBtn").onclick=async()=>{
    if(c.active!==true){appliedCoupon=null;message("couponMessage","Ye coupon filhal disabled hai.",true)}
    else if(!["percent","fixed"].includes(c.type)||!Number.isFinite(Number(c.value))||Number(c.value)<=0||(c.type==="percent"&&Number(c.value)>100)){appliedCoupon=null;message("couponMessage","Coupon settings valid nahi hain.",true)}
    else if(cartSubtotal()<Number(c.minOrder||0)){appliedCoupon=null;message("couponMessage","Minimum cart amount "+money(c.minOrder)+" hai.",true)}
-   else{spinPrize=null;spinClaimId="";appliedCoupon={code,...c};message("couponMessage",code+" apply ho gaya! Discount: "+money(discountAmount()))}
+   else{appliedCoupon={code,...c};message("couponMessage",code+" apply ho gaya! Coupon aur Spin Prize dono ka discount calculate hoga.")}
   }
  }catch(e){appliedCoupon=null;message("couponMessage","Coupon load nahi hua: "+friendlyError(e),true)}
  finally{btn.disabled=false;renderCart()}
@@ -863,25 +876,45 @@ $("checkoutForm").onsubmit = async (e) => {
       value: Number(spinPrize.value),
       claimId: spinClaimId
     } : null;
+
+    let spinDiscount = 0;
+    let couponDiscount = 0;
+
     if (spinPrizeRecord && ["percent", "fixed"].includes(spinPrizeRecord.type)) {
       const value = Number(spinPrizeRecord.value);
-      discount = spinPrizeRecord.type === "percent"
+      spinDiscount = spinPrizeRecord.type === "percent"
         ? Math.floor(subtotal * Math.min(100, Math.max(0, value)) / 100)
         : Math.max(0, value);
-      discount = Math.min(subtotal, discount);
-    } else if (appliedCoupon?.code) {
+    }
+
+    if (appliedCoupon?.code) {
       const code = String(appliedCoupon.code).toUpperCase();
       const couponSnap = await getDoc(doc(db, "coupons", code));
-      if (couponSnap.exists()) {
-        const c = couponSnap.data();
-        if (c.active === true && ["percent", "fixed"].includes(c.type) && Number(c.value) > 0 && subtotal >= Number(c.minOrder || 0)) {
-          const value = Number(c.value);
-          discount = c.type === "percent" ? Math.floor(subtotal * Math.min(100, value) / 100) : value;
-          discount = Math.min(subtotal, Math.max(0, discount));
-          couponCode = code;
-        }
+
+      if (!couponSnap.exists()) {
+        throw new Error("Coupon nahi mila. Dobara coupon check karo.");
       }
+
+      const c = couponSnap.data();
+      if (
+        c.active !== true ||
+        !["percent", "fixed"].includes(c.type) ||
+        !Number.isFinite(Number(c.value)) ||
+        Number(c.value) <= 0 ||
+        (c.type === "percent" && Number(c.value) > 100) ||
+        subtotal < Number(c.minOrder || 0)
+      ) {
+        throw new Error("Coupon ab valid nahi hai. Dobara coupon check karo.");
+      }
+
+      const value = Number(c.value);
+      couponDiscount = c.type === "percent"
+        ? Math.floor(subtotal * value / 100)
+        : value;
+      couponCode = code;
     }
+
+    discount = Math.min(subtotal, spinDiscount + couponDiscount);
     const total = Math.max(0, subtotal - discount);
     const items = verifiedItems.map(i => ({ id:i.id, name:i.name, price:i.price, qty:i.qty }));
 
