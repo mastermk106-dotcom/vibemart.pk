@@ -335,6 +335,22 @@ footer:before{content:"✦  VIBEMART  ✦";display:block;margin-bottom:9px;color
 #settingsMessage{margin-top:10px;font-size:13px}
 @media(max-width:700px){#settingsForm{grid-template-columns:1fr}#settingsForm .rowbtn{grid-column:1}}
 
+
+/* Dedicated full-screen pages: dashboard, settings and daily spin */
+#dashboard{position:fixed!important;inset:0!important;z-index:1200!important;margin:0!important;padding:clamp(16px,3vw,30px)!important;border:0!important;border-radius:0!important;overflow-y:auto!important;overscroll-behavior:contain;background:linear-gradient(145deg,#f8f4ff,#fff)!important;box-shadow:none!important}
+#dashboard>.sectionhead{position:sticky;top:-1px;z-index:3;padding:12px 0;background:#fbf8ff}
+#dashboard .dashboard-shortcuts{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:18px 0 24px}
+#dashboard .dashboard-shortcuts button{min-height:76px;text-align:left;padding:17px;border:1px solid #e6d8fa;background:#fff;color:#4c1d95;border-radius:16px;font-weight:850;box-shadow:0 5px 18px #4c1d950b}
+#storeSettings.settings-page{position:fixed!important;inset:0!important;z-index:1300!important;overflow-y:auto!important;margin:0!important;padding:clamp(18px,4vw,38px)!important;border:0!important;border-radius:0!important;background:#faf7ff!important;box-shadow:none!important}
+#storeSettings .settings-page-head{display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:850px;margin:0 auto 20px}
+#storeSettings .settings-page-inner{max-width:850px;margin:0 auto;padding:clamp(18px,3vw,30px);background:#fff;border:1px solid #e8def4;border-radius:20px;box-shadow:0 12px 35px #4c1d9510}
+#dailySpinPanel.spin-page{position:fixed!important;inset:0!important;z-index:1250!important;overflow-y:auto!important;display:block!important;margin:0!important;padding:clamp(18px,4vw,40px)!important;border:0!important;border-radius:0!important;max-width:none!important;background:radial-gradient(circle at 85% 10%,#fff0bd,transparent 30%),linear-gradient(145deg,#f8f3ff,#fff)!important}
+#dailySpinPanel.spin-page.hidden{display:none!important}
+.spin-page-inner{max-width:650px;margin:20px auto;padding:clamp(18px,4vw,34px);background:#fff;border:1px solid #e7d4ff;border-radius:24px;box-shadow:0 18px 50px #4c1d9515;text-align:center}
+.spin-page-head{display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:900px;margin:0 auto}
+#openSpinPage{display:block;margin:12px auto 20px;padding:12px 20px}
+@media(max-width:600px){#dashboard,#storeSettings.settings-page,#dailySpinPanel.spin-page{padding:14px!important}#dashboard>.sectionhead{align-items:center}#storeSettings .settings-page-head{align-items:center}}
+
 </style>
 </head>
 <body>
@@ -374,12 +390,13 @@ footer:before{content:"✦  VIBEMART  ✦";display:block;margin-bottom:9px;color
   <div class="searchrow"><input id="trackingId" placeholder="Order ID yahan paste karo" autocomplete="off"><button class="primary" id="trackOrderBtn">Track Order</button></div>
   <div id="trackingResult" aria-live="polite"></div>
  </section>
- <section class="spin-panel" id="dailySpinPanel">
-  <h2>🎡 Daily Spin & Win!</h2><p>Apna email ya phone enter karo. Har identifier ko roz sirf 1 spin milega.</p>
+ <button class="primary" id="openSpinPage" type="button">🎡 Open Daily Spin & Win</button>
+ <section class="spin-panel hidden" id="dailySpinPanel">
+  <div class="spin-page-head"><span style="font-weight:900;color:#4c1d95">VIBEMART REWARDS</span><button class="secondary" id="closeSpinPage" type="button">← Back to Store</button></div><div class="spin-page-inner"><h2>🎡 Daily Spin & Win!</h2><p>Apna email ya phone enter karo. Har identifier ko roz sirf 1 spin milega.</p>
   <div class="field" style="max-width:440px;margin:12px auto"><label for="spinIdentifier">Email ya phone number</label><input id="spinIdentifier" maxlength="120" placeholder="Email ya phone number"></div>
   <div class="spin-wheel-wrap"><div class="spin-pointer"></div><div class="spin-wheel" id="spinWheel"></div></div>
   <button class="primary" id="spinButton" type="button">🎁 Spin Now</button><div id="spinMessage" class="spin-message" aria-live="polite"></div><div id="spinResultCard" class="spin-result-card" aria-live="polite"><span class="spin-result-kicker">Your spin result</span><strong id="spinResultValue" class="spin-result-value">—</strong><div id="spinResultNote" class="spin-result-note">Prize result will appear here.</div></div>
-  <p class="small">Prizes: 10% OFF, Rs 100 OFF, Rs 50 OFF, 15% OFF, Rs 200 OFF, Try Again. Discount order subtotal par apply hota hai.</p>
+  <p class="small">Prizes: 10% OFF, Rs 100 OFF, Rs 50 OFF, 15% OFF, Rs 200 OFF, Try Again. Discount order subtotal par apply hota hai.</p></div>
  </section>
  <div class="searchrow"><input id="search" placeholder="🔎 Search products..."><button class="primary" id="searchBtn">Search</button></div>
  <div class="categories" id="categories">
@@ -399,9 +416,10 @@ footer:before{content:"✦  VIBEMART  ✦";display:block;margin-bottom:9px;color
  <section class="panel hidden" id="dashboard">
   <div class="sectionhead"><h2>👑 Owner Dashboard</h2><button class="secondary" id="hideDashboard">Close</button></div>
   <p id="ownerEmail"></p>
-  <div class="notice">Products, flash sales, coupons aur customer orders yahan manage karo.</div>
-  <section class="settings-card" id="storeSettings">
-   <h3>⚙️ Store Settings</h3>
+  <div class="notice">Welcome to your control centre. Har section apne alag page par khulega.</div>
+  <div class="dashboard-shortcuts"><button type="button" id="openSettingsPage">⚙️ Store Settings<br><small>Store name, contact aur announcement</small></button><button type="button" id="openSpinFromDashboard">🎡 Daily Spin Page<br><small>Spin experience preview</small></button><button type="button" id="goProductsAdmin">📦 Manage Products<br><small>Add, edit aur remove products</small></button><button type="button" id="goOrdersAdmin">🧾 Customer Orders<br><small>Orders aur coupons manage karein</small></button></div>
+  <section class="settings-card hidden" id="storeSettings">
+   <div class="settings-page-head"><h2>⚙️ Store Settings</h2><button class="secondary" type="button" id="closeSettingsPage">← Back to Dashboard</button></div><div class="settings-page-inner">
    <p class="small">Yahan ki changes website par customers ko bhi nazar aayengi.</p>
    <form id="settingsForm">
     <div class="field"><label for="settingStoreName">Store name</label><input id="settingStoreName" maxlength="50" required></div>
@@ -413,7 +431,7 @@ footer:before{content:"✦  VIBEMART  ✦";display:block;margin-bottom:9px;color
     <div class="rowbtn"><button class="primary" type="submit" id="saveSettingsBtn">Save Store Settings</button><button class="secondary" type="button" id="resetSettingsBtn">Reset to Defaults</button></div>
    </form>
    <div id="settingsMessage" aria-live="polite"></div>
-  </section>
+  </div></section>
   <button class="primary" id="addProductBtn">➕ Add Product</button>
   <div id="productEditor">
    <h3 id="formTitle">Add New Product</h3>
@@ -673,14 +691,21 @@ $("exploreBtn").onclick=()=>goTo("shop");
 $("trackBtn").onclick=()=>goTo("trackingPanel");
 $("loginBtn").onclick=()=>isOwner?openDashboard():showAuth();
 $("dashboardBtn").onclick=openDashboard;
-$("hideDashboard").onclick=()=>{$("dashboard").classList.add("hidden");window.scrollTo({top:0,behavior:"smooth"})};
+$("hideDashboard").onclick=()=>{$("dashboard").classList.add("hidden");$("storeSettings").classList.add("hidden")};
+$("openSettingsPage").onclick=()=>{if(!isOwner)return;fillSettingsForm(window.currentStoreSettings||DEFAULT_STORE_SETTINGS);$("storeSettings").classList.remove("hidden")};
+$("closeSettingsPage").onclick=()=>$("storeSettings").classList.add("hidden");
+$("openSpinPage").onclick=()=>{$("dailySpinPanel").classList.remove("hidden");$("dailySpinPanel").classList.add("spin-page")};
+$("closeSpinPage").onclick=()=>{$("dailySpinPanel").classList.add("hidden");$("dailySpinPanel").classList.remove("spin-page")};
+$("openSpinFromDashboard").onclick=()=>{$("dailySpinPanel").classList.remove("hidden");$("dailySpinPanel").classList.add("spin-page")};
+$("goProductsAdmin").onclick=()=>{const el=$("productEditor");el.scrollIntoView({behavior:"smooth",block:"start"})};
+$("goOrdersAdmin").onclick=()=>$("orders").scrollIntoView({behavior:"smooth",block:"start"});
 $("closeAuth").onclick=closeAuth;
 $("closeCart").onclick=()=>$("cartModal").classList.add("hidden");
 $("closeCartX").onclick=()=>$("cartModal").classList.add("hidden");
 $("cartBtn").onclick=()=>{renderCart();$("cartModal").classList.remove("hidden")};
 $("closeSuccessBtn").onclick=()=>$("successModal").classList.add("hidden");
 
-function openDashboard(){if(!isOwner||auth.currentUser?.uid!==OWNER_UID){showAuth();return}$("dashboard").classList.remove("hidden");goTo("dashboard");loadCoupons()}
+function openDashboard(){if(!isOwner||auth.currentUser?.uid!==OWNER_UID){showAuth();return}$("dashboard").classList.remove("hidden");$("storeSettings").classList.add("hidden");loadCoupons()}
 $("addProductBtn").onclick=()=>{if(!isOwner){showAuth();return}resetProductForm();$("productEditor").classList.remove("hidden");goTo("productForm");$("pName").focus({preventScroll:true})};
 
 $("loginForm").onsubmit=async e=>{
@@ -754,9 +779,11 @@ async function loadStoreSettings(){
  try{
   const snap=await getDoc(doc(db,"storeSettings","main"));
   const settings=snap.exists()?snap.data():DEFAULT_STORE_SETTINGS;
+  window.currentStoreSettings=settings;
   applyStoreSettings(settings);
   fillSettingsForm(settings);
  }catch(e){
+  window.currentStoreSettings=DEFAULT_STORE_SETTINGS;
   applyStoreSettings(DEFAULT_STORE_SETTINGS);
   fillSettingsForm(DEFAULT_STORE_SETTINGS);
   console.warn("Store settings read failed:",e);
@@ -773,6 +800,7 @@ $("settingsForm").onsubmit=async e=>{
  const btn=$("saveSettingsBtn");btn.disabled=true;message("settingsMessage","Settings save ho rahi hain...");
  try{
   await setDoc(doc(db,"storeSettings","main"),{...v,updatedAt:serverTimestamp()},{merge:true});
+  window.currentStoreSettings=v;
   applyStoreSettings(v);
   message("settingsMessage","Settings successfully save ho gayi!");
  }catch(e){message("settingsMessage","Save nahi hui: "+friendlyError(e),true)}
@@ -785,7 +813,7 @@ onAuthStateChanged(auth,async u=>{
  isOwner=!!u&&u.uid===OWNER_UID;
  $("loginBtn").classList.toggle("hidden",isOwner);$("dashboardBtn").classList.toggle("hidden",!isOwner);$("logoutBtn").classList.toggle("hidden",!u);
  $("ownerEmail").textContent=isOwner?"Logged in: "+(u.email||""):"";
- if(!isOwner)$("dashboard").classList.add("hidden");
+ if(!isOwner){$("dashboard").classList.add("hidden");$("storeSettings").classList.add("hidden");}
  await loadProducts();if(isOwner)await loadCoupons();
 });
 $("logoutBtn").onclick=async()=>{try{await signOut(auth);$("dashboard").classList.add("hidden");message("status","Logout successful.")}catch(e){message("status",friendlyError(e),true)}};
