@@ -1254,7 +1254,7 @@ async function loadOrders(){
   document.body.append(page);return page.querySelector(".vm-admin-content");
  }
  const productsContent=makePage("vmProductsPage","📦 Manage Products");
- const addContent=makePage("vmAddProductPage","➕ Add / Edit Product","products");
+ const addContent=makePage("vmAddProductPage","➕ Add / Edit Product");
  const couponsContent=makePage("vmCouponsPage","🎟️ Manage Coupons");
  const ordersContent=makePage("vmOrdersPage","🧾 Customer Orders");
  const settingsContent=makePage("vmSettingsPage","⚙️ Store Settings");
@@ -1270,11 +1270,11 @@ async function loadOrders(){
  couponsContent.append(couponIntro);move("couponForm",couponsContent);move("manageCoupons",couponsContent);
  move("loadOrders",ordersContent);move("orders",ordersContent);
  const settings=$id("storeSettings");
- if(settings){settings.classList.remove("settings-page");settingsContent.append(settings);settings.classList.remove("hidden");}
+ if(settings){settings.classList.remove("settings-page","hidden");settings.style.display="block";settings.style.visibility="visible";settings.style.opacity="1";settings.style.width="100%";settingsContent.append(settings);}
  const settingsHeader=settings?.querySelector(".settings-page-head");
  if(settingsHeader){settingsHeader.remove();}
  const settingsInner=settings?.querySelector(".settings-page-inner");
- if(settingsInner){settingsInner.style.maxWidth="none";settingsInner.style.margin="0";settingsInner.style.padding="0";settingsInner.style.border="0";settingsInner.style.boxShadow="none";}
+ if(settingsInner){settingsInner.style.display="block";settingsInner.style.visibility="visible";settingsInner.style.opacity="1";settingsInner.style.width="100%";settingsInner.style.maxWidth="none";settingsInner.style.margin="0";settingsInner.style.padding="0";settingsInner.style.border="0";settingsInner.style.boxShadow="none";}
 
  const pageIds=["vmProductsPage","vmAddProductPage","vmCouponsPage","vmOrdersPage","vmSettingsPage"];
  function closeAll(){pageIds.forEach(id=>$id(id).classList.add("hidden"));$id("dailySpinPanel").classList.add("hidden");$id("dailySpinPanel").classList.remove("spin-page");}
@@ -1283,7 +1283,7 @@ async function loadOrders(){
   const map={products:"vmProductsPage",addProduct:"vmAddProductPage",coupons:"vmCouponsPage",orders:"vmOrdersPage",settings:"vmSettingsPage"};
   if(which==="spin"){$id("dailySpinPanel").classList.remove("hidden");$id("dailySpinPanel").classList.add("spin-page");return}
   const page=$id(map[which]);if(page)page.classList.remove("hidden");
-  if(which==="settings"){fillSettingsForm(window.currentStoreSettings||DEFAULT_STORE_SETTINGS)}
+  if(which==="settings"){const settingsEl=$id("storeSettings");if(settingsEl){settingsEl.classList.remove("hidden");settingsEl.style.display="block";}if(typeof fillSettingsForm==="function"){fillSettingsForm(window.currentStoreSettings||DEFAULT_STORE_SETTINGS)}}
   if(which==="coupons")loadCoupons();
   if(which==="orders")loadOrders();
   if(which==="products")renderManageProducts();
