@@ -1005,8 +1005,13 @@ $("reviewForm").onsubmit=async e=>{
 /* CART */
 function addToCart(id){
  const p=allProducts.find(x=>x.id===id);if(!p)return;
+ const stockKnown=Number.isInteger(p.stock);
+ if(stockKnown&&p.stock<=0){message("status","Ye product filhal out of stock hai.",true);return}
  const i=cart.find(x=>x.id===id);
- if(i)i.qty=Math.min(99,i.qty+1);else cart.push({id,name:productName(p),price:effectivePrice(p),qty:1});
+ const nextQty=(i?.qty||0)+1;
+ if(stockKnown&&nextQty>p.stock){message("status","Sirf "+p.stock+" item(s) available hain.",true);return}
+ if(nextQty>99){message("status","Ek product ke maximum 99 items add ho sakte hain.",true);return}
+ if(i)i.qty=nextQty;else cart.push({id,name:productName(p),price:effectivePrice(p),qty:1});
  renderCart();message("status","Product cart mein add ho gaya.");
 }
 function cartSubtotal(){return cart.reduce((s,i)=>s+i.price*i.qty,0)}
@@ -1039,7 +1044,7 @@ function renderCart(){
   const controls=document.createElement("div");controls.className="rowbtn";
   const minus=document.createElement("button");minus.className="secondary";minus.textContent="−";minus.onclick=()=>{i.qty--;if(i.qty<=0)cart=cart.filter(x=>x.id!==i.id);if(!cart.length)clearCoupon();renderCart()};
   const qty=document.createElement("span");qty.textContent="Qty: "+i.qty;
-  const plus=document.createElement("button");plus.className="secondary";plus.textContent="+";plus.onclick=()=>{const p=allProducts.find(x=>x.id===i.id),stock=Number.isInteger(p?.stock)?p.stock:0;if(i.qty>=stock||i.qty>=99){message("checkoutMessage","Sirf "+stock+" item(s) available hain.",true);return}i.qty++;renderCart()};
+  const plus=document.createElement("button");plus.className="secondary";plus.textContent="+";plus.onclick=()=>{const p=allProducts.find(x=>x.id===i.id),stockKnown=Number.isInteger(p?.stock),stock=stockKnown?p.stock:99;if((stockKnown&&i.qty>=stock)||i.qty>=99){message("checkoutMessage",stockKnown?"Sirf "+stock+" item(s) available hain.":"Maximum 99 items allowed hain.",true);return}i.qty++;renderCart()};
   const remove=document.createElement("button");remove.className="danger";remove.textContent="Remove";remove.onclick=()=>{cart=cart.filter(x=>x.id!==i.id);if(!cart.length)clearCoupon();renderCart()};
   controls.append(minus,qty,plus,remove);r.append(t,controls);$("cartItems").append(r);
  });
@@ -1445,7 +1450,7 @@ header{background:#fff;border-bottom:3px solid #f4c24e;box-shadow:0 7px 22px #55
 .spin-panel .primary{background:linear-gradient(100deg,#ffb52e,#f06a24)!important;color:#35104e!important;box-shadow:0 5px 0 #b74a12,0 9px 18px #f5a52d50!important;font-size:16px;padding:15px 25px;min-width:190px}
 #openSpinPage{display:block;width:min(100% - 28px,520px);margin:18px auto 22px;padding:17px 24px!important;border-radius:18px!important;background:linear-gradient(100deg,#ffcf45,#ff792e)!important;color:#35104e!important;border:2px solid #fff0b7!important;box-shadow:0 5px 0 #b74a12,0 12px 25px #e98a2750!important;font-weight:1000;font-size:19px!important;letter-spacing:.2px;animation:vmSpinPulse 2.2s ease-in-out infinite}
 @keyframes vmSpinPulse{0%,100%{transform:translateY(0);box-shadow:0 5px 0 #b74a12,0 12px 25px #e98a2750}50%{transform:translateY(-2px);box-shadow:0 6px 0 #b74a12,0 16px 30px #e98a2770}}
-.hero-art{min-height:205px}}
+.hero-art{min-height:205px}
 .vm-admin-page{background:radial-gradient(circle at 95% 0%,#fff0c8,transparent 25%),linear-gradient(145deg,#f4eaff,#fffaf2)!important}
 .vm-admin-head{background:#fffaf2!important}
 .vm-admin-head h2{color:#572092!important;font-weight:1000}
@@ -1536,3 +1541,62 @@ footer{background:linear-gradient(100deg,#2d1049,#57209a);color:#fff}
 <script>document.addEventListener("DOMContentLoaded",()=>{const promo=document.getElementById("promoSpinBtn"),open=document.getElementById("openSpinPage");if(promo&&open)promo.addEventListener("click",()=>open.click());});</script>
 </body>
 </html>
+
+
+/* FINAL FIX: horizontal product cards with image on the left */
+.product{
+  display:flex;
+  flex-direction:row;
+  align-items:stretch;
+  min-height:190px;
+}
+.product > img{
+  flex:0 0 36%;
+  width:36%;
+  height:auto;
+  min-height:190px;
+  max-height:260px;
+  object-fit:contain;
+  align-self:stretch;
+  padding:12px;
+  cursor:zoom-in;
+}
+.product > .productbody{
+  flex:1 1 64%;
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:center;
+  padding:15px;
+}
+.product > .productbody h3{min-height:0}
+.product > .productbody .productbuttons{
+  width:100%;
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+}
+.product > .productbody .productbuttons button{
+  flex:1 1 110px;
+}
+@media(max-width:600px){
+  .products{grid-template-columns:1fr}
+  .product{min-height:150px;border-radius:14px}
+  .product > img{
+    flex-basis:38%;
+    width:38%;
+    min-height:150px;
+    max-height:210px;
+    padding:7px;
+  }
+  .product > .productbody{padding:10px}
+  .product > .productbody h3{font-size:13px}
+  .product > .productbody .productbuttons{gap:5px}
+  .product > .productbody .productbuttons button{
+    flex:1 1 100%;
+    width:100%;
+    padding:8px 5px;
+    font-size:10px;
+  }
+}
