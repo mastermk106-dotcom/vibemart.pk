@@ -351,6 +351,50 @@ footer:before{content:"✦  VIBEMART  ✦";display:block;margin-bottom:9px;color
 #openSpinPage{display:block;margin:12px auto 20px;padding:12px 20px}
 @media(max-width:600px){#dashboard,#storeSettings.settings-page,#dailySpinPanel.spin-page{padding:14px!important}#dashboard>.sectionhead{align-items:center}#storeSettings .settings-page-head{align-items:center}}
 
+
+
+/* VIBEMART PREMIUM POLISH — no decorative/product/character images added */
+:root{--p:#5420b5;--dark:#21113c;--bg:#faf8ff;--muted:#6f647e;--border:#e8def4;--vm-gold:#f3bd45}
+body{font-weight:650;background:radial-gradient(ellipse at 8% 0%,#f0e7ff 0,transparent 30%),radial-gradient(ellipse at 95% 14%,#fff1c9 0,transparent 23%),#faf8ff}
+body :is(h1,h2,h3,h4,h5,h6,p,span,label,small,strong,b,a,button,li){font-style:normal}
+body :is(h1,h2,h3,h4,h5,h6,p,label,button,a){font-weight:800}
+.tag,.small,.product p,.hero p,.benefit small{font-weight:650}
+header{background:linear-gradient(110deg,#fff,#fbf7ff 70%,#fff9e9);border-bottom:1px solid #e6d8f5;box-shadow:0 8px 28px #27113e12}
+.logo{font-weight:1000;color:#4b188f;text-shadow:0 2px 0 #f3bd4538}
+.hero{border:1px solid #d8c4f3;box-shadow:0 22px 55px #38156c1b}
+.hero h1{font-weight:1000;letter-spacing:-1.2px}
+.primary,.hero-cta{background:linear-gradient(130deg,#7c3aed,#5420b5 65%,#351064)!important;box-shadow:0 5px 0 #2d0e56,0 12px 25px #5420b544!important}
+.product{border:1px solid #e6d9f5;border-radius:20px;box-shadow:0 9px 24px #28104410}
+.productbody{gap:5px}
+.product h3{font-weight:900;color:#2b1742}
+.price{display:inline-flex;align-items:center;align-self:flex-start;margin-top:3px;padding:7px 11px;border:1px solid #f1d98f;border-radius:11px;background:linear-gradient(120deg,#fff8df,#f5edff);color:#4e1a99;font-size:clamp(19px,2vw,23px);font-weight:1000;box-shadow:inset 0 1px 0 #fff,0 3px 9px #6d28d910}
+.oldprice{font-weight:700}
+.productbuttons button{font-weight:900}
+.sectionhead h2,.panel h2{font-weight:950}
+/* Prominent Spin & Win entry point */
+#openSpinPage{position:relative;display:flex!important;align-items:center;justify-content:center;gap:10px;width:min(100%,560px);min-height:68px;margin:22px auto 26px;padding:17px 24px;border:2px solid #f7d77d;border-radius:18px;background:linear-gradient(105deg,#31134f,#6324bd 55%,#8b45e8)!important;color:#fff!important;font-size:clamp(17px,3vw,22px);font-weight:1000;letter-spacing:.2px;box-shadow:0 6px 0 #32105f,0 15px 30px #5420b54d,inset 0 1px 0 #ffffff55!important;animation:spinInviteGlow 2.4s ease-in-out infinite}
+#openSpinPage:before{content:"🎁";font-size:27px}
+#openSpinPage:after{content:"TAP TO PLAY";display:block;padding:5px 9px;border-radius:99px;background:#f8d875;color:#3b2055;font-size:9px;font-weight:1000;letter-spacing:1px}
+@keyframes spinInviteGlow{0%,100%{filter:brightness(1);box-shadow:0 6px 0 #32105f,0 12px 24px #5420b53d!important}50%{filter:brightness(1.12);box-shadow:0 6px 0 #32105f,0 17px 34px #8b5cf66b!important}}
+#dailySpinPanel.spin-page{background:radial-gradient(circle at 50% 0,#f4e9ff 0,transparent 40%),linear-gradient(145deg,#fff9e9,#f8f3ff 55%,#fff)!important}
+.spin-page-inner{border:1px solid #e6c96f;background:linear-gradient(145deg,#fff,#fffaf0 55%,#f8f2ff);box-shadow:0 22px 60px #3a176c1c}
+.spin-page-inner h2{font-size:clamp(25px,5vw,36px);font-weight:1000;color:#3b1768}
+#spinButton{min-width:min(100%,280px);min-height:58px;padding:15px 28px;border:2px solid #f5d77e;border-radius:16px;font-size:19px;font-weight:1000;box-shadow:0 5px 0 #32105f,0 12px 25px #5420b544!important}
+/* Premium owner dashboard and full-screen admin pages */
+#dashboard{background:radial-gradient(circle at 95% 0,#fff0c8 0,transparent 25%),linear-gradient(145deg,#f4edff,#fff 55%,#fffaf0)!important}
+#dashboard>.sectionhead{background:#fbf8ffed;border-bottom:1px solid #e9def4}
+#dashboard .dashboard-shortcuts button,.vm-admin-menu button{position:relative;min-height:88px;border:1px solid #e5d6f7;background:linear-gradient(145deg,#fff,#f8f2ff);color:#472078;font-weight:950;box-shadow:0 5px 0 #e7dcf4,0 12px 24px #32134f0c;transition:transform .18s,box-shadow .18s}
+#dashboard .dashboard-shortcuts button:hover,.vm-admin-menu button:hover{transform:translateY(-3px);box-shadow:0 6px 0 #d9c6f0,0 17px 28px #32134f18}
+#dashboard .dashboard-shortcuts button[data-page="spin"]{border:2px solid #e9c45c;background:linear-gradient(120deg,#32134f,#6428b7 65%,#8b45e8);color:#fff;box-shadow:0 5px 0 #32105f,0 13px 25px #5420b544}
+#dashboard .dashboard-shortcuts button[data-page="spin"] small{color:#fff0bf}
+.vm-admin-page{background:radial-gradient(circle at 92% 0,#fff0c9 0,transparent 25%),linear-gradient(145deg,#f3ebff,#fff 60%,#fffaf0)!important}
+.vm-admin-head{background:#fbf8ffed!important;border-bottom:1px solid #e8def4}
+.vm-admin-head h2{font-size:clamp(22px,3vw,30px);font-weight:1000;color:#32134f}
+.vm-admin-content{border:1px solid #e5d8f3!important;border-radius:22px!important;box-shadow:0 18px 48px #32134f12!important}
+#storeSettings .settings-page-inner,.settings-card{border-color:#e6d8f4;background:linear-gradient(145deg,#fff,#fcf8ff);box-shadow:0 12px 30px #32134f0b}
+@media(max-width:600px){#openSpinPage{min-height:64px;padding:14px 12px;font-size:16px;gap:7px}#openSpinPage:after{font-size:8px;padding:5px 7px}.price{font-size:18px;padding:6px 8px}.vm-admin-menu button{min-height:76px}}
+@media(prefers-reduced-motion:reduce){#openSpinPage{animation:none}}
+
 </style>
 </head>
 <body>
@@ -1332,5 +1376,48 @@ async function loadOrders(){
 })();
 
 </script>
+
+<style id="vibemart-vibrant-refresh">
+/* Vibemart: cheerful, colourful shopping identity. CSS-only; no new image assets. */
+:root{--p:#7027d8;--dark:#291044;--bg:#fffaf3;--muted:#71647d;--border:#eadcf7;--accent:#ffbf32}
+body{background:radial-gradient(ellipse at 8% 0%,#f2e5ff 0,transparent 31%),radial-gradient(ellipse at 96% 15%,#fff0c7 0,transparent 25%),#fffaf5;color:#2c1940}
+.announcement-bar{background:linear-gradient(90deg,#4c168f,#7629d5 55%,#ef7a22);color:#fff;font-weight:900}
+header{background:#fff;border-bottom:3px solid #f4c24e;box-shadow:0 7px 22px #55218b12}
+.logo{color:#6520bd;text-shadow:1px 2px 0 #ffe19a}
+.tag{color:#a05a13;font-weight:800}
+.primary,.hero-cta{background:linear-gradient(110deg,#7027d8,#a12be0 55%,#ed6b22)!important;border:0!important;box-shadow:0 5px 0 #4d168f,0 9px 18px #7027d83b!important}
+.secondary{background:#fff5d9;color:#55228b;border:1px solid #f4d27a}
+.hero{border:0;border-radius:26px;background:radial-gradient(circle at 85% 15%,#ffcc55 0,transparent 25%),linear-gradient(120deg,#421276 0%,#7427cb 52%,#e66b25 115%);box-shadow:0 16px 32px #6722a52b}
+.hero h1,.hero p{font-weight:900;text-shadow:0 2px 0 #32105b45}
+.hero .hero-cta{background:linear-gradient(110deg,#ffcc43,#ff8b25)!important;color:#38135f!important;box-shadow:0 5px 0 #b34b12,0 9px 18px #ffb22d55!important}
+.benefit{border:1px solid #f2dca7;background:linear-gradient(145deg,#fff,#fff8e8);box-shadow:0 6px 16px #a66c1a0c}
+.benefit-icon{background:linear-gradient(145deg,#fff0bd,#f3dcff);color:#6922bd}
+.panel{border:1px solid #eadcf7;box-shadow:0 8px 24px #58208b0c}
+.panel h2,.sectionhead h2{color:#4b1686;font-weight:900}
+.categories button{background:#fff;border-color:#e6d5f4;color:#54227e;font-weight:900}
+.categories button.active{background:linear-gradient(100deg,#7027d8,#a42cdd);border-color:#7027d8}
+.product{border:1px solid #eadcf7;box-shadow:0 5px 17px #4d1b7c10}
+.product:hover{border-color:#e8b947;box-shadow:0 13px 26px #6d28d921}
+.product img{background:linear-gradient(145deg,#fff9e9,#f5edff)}
+.product h3{color:#32144e;font-weight:900}
+.price{display:inline-block;margin-top:3px;padding:4px 9px;border-radius:9px;background:#fff0c7;color:#8a3c08;font-size:21px;font-weight:1000}
+.oldprice{color:#95889d}
+.saleBadge{background:#ffeadb;color:#b63e0c;border:1px solid #ffd0a8;font-weight:900}
+.productbuttons .primary{background:linear-gradient(100deg,#6e25d1,#a12cdb)!important}
+.spin-panel{border:2px solid #f3c34d;background:radial-gradient(circle at 90% 0%,#ffe6a1 0,transparent 32%),linear-gradient(125deg,#fff,#f5eaff 55%,#fff2d5);box-shadow:0 12px 28px #5b218c17}
+.spin-panel h2{color:#5a1b9d;font-size:clamp(25px,4vw,34px);font-weight:1000}
+.spin-panel .primary{background:linear-gradient(100deg,#ffb52e,#f06a24)!important;color:#35104e!important;box-shadow:0 5px 0 #b74a12,0 9px 18px #f5a52d50!important;font-size:16px;padding:15px 25px;min-width:190px}
+#openSpinPage{background:linear-gradient(100deg,#ffbd32,#f47724)!important;color:#35104e!important;border:2px solid #fff0b7!important;box-shadow:0 4px 0 #b74a12,0 8px 18px #e98a2738!important;font-weight:1000}
+.vm-admin-page{background:radial-gradient(circle at 95% 0%,#fff0c8,transparent 25%),linear-gradient(145deg,#f4eaff,#fffaf2)!important}
+.vm-admin-head{background:#fffaf2!important}
+.vm-admin-head h2{color:#572092!important;font-weight:1000}
+.vm-admin-content{border:2px solid #eadcf7!important;box-shadow:0 12px 28px #55218b12!important}
+.vm-admin-menu button{border:1px solid #e8d8f5;background:linear-gradient(120deg,#fff,#fff7e8);border-radius:15px;font-weight:900}
+.vm-admin-menu button:hover{border-color:#f0bd45;box-shadow:0 8px 18px #6425a21a}
+input:focus,textarea:focus,select:focus{border-color:#8b42dc;box-shadow:0 0 0 3px #8b42dc22}
+footer{background:linear-gradient(100deg,#32104f,#7027c9,#a34a20);color:#fff4dc}
+@media(max-width:600px){.hero{background:linear-gradient(145deg,#421276,#7627c9 62%,#e66b25)}.price{font-size:17px}.spin-panel .primary{width:100%;max-width:290px}}
+</style>
+
 </body>
 </html>
