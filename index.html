@@ -312,6 +312,18 @@ footer:before{content:"✦  VIBEMART  ✦";display:block;margin-bottom:9px;color
 /* READABILITY FIX ONLY — preserves all existing features and app logic */
 .hero p{color:#5b5265!important}
 .hero-note{color:#6b6175!important}
+
+/* CHECKOUT CLOSE + PRODUCT IMAGE PREVIEW */
+#cartModal .modalbox{position:relative;padding-top:54px}
+#cartModal .checkout-close{position:absolute;top:12px;right:14px;width:38px;height:38px;padding:0;border:1px solid #e8ddf7;border-radius:50%;background:#f5efff;color:#4c1d95;font-size:25px;line-height:1;display:grid;place-items:center;z-index:2}
+#cartModal .checkout-close:hover{background:#eadfff}
+.product img{cursor:zoom-in}
+#imagePreviewModal{z-index:120;background:#12091dcc}
+#imagePreviewModal .image-preview-box{position:relative;width:min(100%,1000px);max-height:94vh;padding:48px 14px 14px;background:#171020;border:1px solid #ffffff30;border-radius:18px;display:flex;align-items:center;justify-content:center}
+#imagePreviewModal .image-preview-close{position:absolute;top:8px;right:10px;width:38px;height:38px;padding:0;border-radius:50%;background:#ffffff20;color:white;font-size:25px;line-height:1}
+#imagePreview{display:block;max-width:100%;max-height:78vh;object-fit:contain;border-radius:10px}
+#imagePreviewCaption{position:absolute;left:14px;right:58px;top:17px;color:#fff;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:600px){#cartModal .modalbox{padding-top:52px}#imagePreviewModal .image-preview-box{padding:48px 8px 8px;border-radius:12px}#imagePreview{max-height:80vh}}
 </style>
 </head>
 <body>
@@ -425,8 +437,9 @@ footer:before{content:"✦  VIBEMART  ✦";display:block;margin-bottom:9px;color
  </div>
 </div>
 
-<div class="modal hidden" id="cartModal" role="dialog" aria-modal="true">
+<div class="modal hidden" id="cartModal" role="dialog" aria-modal="true" aria-label="Cart and checkout">
  <div class="modalbox">
+  <button class="checkout-close" id="closeCartX" type="button" aria-label="Close checkout">×</button>
   <h2>🛒 Your Cart</h2><div id="cartItems"></div>
   <div class="summaryrow"><span>Subtotal</span><strong id="cartSubtotal">Rs 0</strong></div>
   <div class="couponbox">
@@ -471,6 +484,14 @@ footer:before{content:"✦  VIBEMART  ✦";display:block;margin-bottom:9px;color
  </div>
 </div>
 
+<div class="modal hidden" id="imagePreviewModal" role="dialog" aria-modal="true" aria-label="Product image preview">
+ <div class="image-preview-box">
+  <button class="image-preview-close" id="closeImagePreview" type="button" aria-label="Close image preview">×</button>
+  <div id="imagePreviewCaption"></div>
+  <img id="imagePreview" alt="Product image preview">
+ </div>
+</div>
+
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
 import{getAuth,onAuthStateChanged,signInWithEmailAndPassword,signOut,sendPasswordResetEmail}from"https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
@@ -496,6 +517,25 @@ try{const saved=JSON.parse(localStorage.getItem("vibemart_wishlist")||"[]");wish
 
 const labels={Pending:"⏳ Pending",Confirmed:"✅ Order Confirmed",Processing:"🧰 Processing",Shipped:"🚚 Shipped",Delivered:"🎉 Delivered",Cancelled:"❌ Cancelled"};
 $("year").textContent=new Date().getFullYear();
+function openImagePreview(src,caption){
+ if(!src)return;
+ $("imagePreview").src=src;
+ $("imagePreview").alt=caption||"Product image preview";
+ $("imagePreviewCaption").textContent=caption||"Product image";
+ $("imagePreviewModal").classList.remove("hidden");
+}
+function closeImagePreview(){
+ $("imagePreviewModal").classList.add("hidden");
+ $("imagePreview").removeAttribute("src");
+}
+$("closeImagePreview").onclick=closeImagePreview;
+$("imagePreviewModal").addEventListener("click",e=>{if(e.target===$("imagePreviewModal"))closeImagePreview()});
+document.addEventListener("keydown",e=>{
+ if(e.key==="Escape"){
+  if(!$("imagePreviewModal").classList.contains("hidden"))closeImagePreview();
+  else if(!$("cartModal").classList.contains("hidden"))$("cartModal").classList.add("hidden");
+ }
+});
 const spinWheel=$("spinWheel");
 SPIN_PRIZES.forEach((p,i)=>{const el=document.createElement("span");el.className="spin-label";el.textContent=p.label;el.style.transform=`rotate(${i*60-60}deg) translateX(10px)`;el.style.marginLeft="0";el.style.textAlign="center";spinWheel.append(el)});
 function spinDay(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
@@ -592,6 +632,7 @@ function renderWishlist(){
  items.forEach(p=>{
   const card=document.createElement("article");card.className="product";
   const img=document.createElement("img");img.loading="lazy";img.alt=productName(p);img.src=safeText(p.imageUrl)||"https://placehold.co/600x450/f0eaff/6d28d9?text=Vibemart";img.onerror=()=>{img.onerror=null;img.src="https://placehold.co/600x450/f0eaff/6d28d9?text=Vibemart"};
+  img.addEventListener("click",()=>openImagePreview(img.src,img.alt));
   const body=document.createElement("div");body.className="productbody";const title=document.createElement("h3");title.textContent=productName(p)||"Product";body.append(title,priceDetails(p));
   const buttons=document.createElement("div");buttons.className="productbuttons";
   const add=document.createElement("button");add.type="button";add.className="primary";add.textContent="🛒 Add to Cart";add.onclick=()=>addToCart(p.id);
@@ -610,6 +651,7 @@ $("dashboardBtn").onclick=openDashboard;
 $("hideDashboard").onclick=()=>{$("dashboard").classList.add("hidden");window.scrollTo({top:0,behavior:"smooth"})};
 $("closeAuth").onclick=closeAuth;
 $("closeCart").onclick=()=>$("cartModal").classList.add("hidden");
+$("closeCartX").onclick=()=>$("cartModal").classList.add("hidden");
 $("cartBtn").onclick=()=>{renderCart();$("cartModal").classList.remove("hidden")};
 $("closeSuccessBtn").onclick=()=>$("successModal").classList.add("hidden");
 
@@ -650,6 +692,7 @@ function renderProducts(){
  list.forEach(p=>{
   const c=document.createElement("article");c.className="product";
   const im=document.createElement("img");im.alt=productName(p);im.loading="lazy";im.src=safeText(p.imageUrl)||"https://placehold.co/600x450/f0eaff/6d28d9?text=Vibemart";im.onerror=()=>{im.onerror=null;im.src="https://placehold.co/600x450/f0eaff/6d28d9?text=Vibemart"};
+  im.addEventListener("click",()=>openImagePreview(im.src,im.alt));
   const b=document.createElement("div");b.className="productbody";
   const t=document.createElement("h3");t.textContent=productName(p)||"Product";
   const cat=document.createElement("p");cat.textContent=safeText(p.category||"Other");
