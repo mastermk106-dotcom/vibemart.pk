@@ -432,6 +432,7 @@ header{background:linear-gradient(110deg,#fff,#fbf7ff 70%,#fff9e9);border-bottom
   <article class="vm-promo-card vm-promo-spin"><span class="vm-promo-icon">🎡</span><div><small>DAILY REWARDS</small><strong>Spin &amp; Win</strong><span>Give your luck a turn!</span><button type="button" class="vm-promo-tag" id="promoSpinBtn">SPIN NOW →</button></div></article>
   <article class="vm-promo-card vm-promo-delivery"><span class="vm-promo-icon">🚚</span><div><small>SHOP WITH EASE</small><strong>Cash on<br>Delivery</strong><span>Pay when your order arrives</span></div><b class="vm-promo-tag">EASY SHOPPING</b></article>
  </section>
+ <section class="vm-mega-sale" aria-label="Mega sale campaign"><div><small>LIMITED-TIME VIBEMART OFFER</small><h2>MEGA SALE <b>UP TO 70% OFF</b></h2><p>Great finds. Bigger savings. Explore today's deals.</p></div><div class="vm-sale-clock"><span>SALE ENDS IN</span><div id="vmSaleCountdown">-- : -- : --</div><small>Daily offer countdown</small></div><button type="button" id="vmSaleShopBtn">SHOP DEALS →</button></section>
 
  <section class="panel" id="trackingPanel">
   <h2>📦 Track Your Order</h2>
@@ -459,9 +460,8 @@ header{background:linear-gradient(110deg,#fff,#fbf7ff 70%,#fff9e9);border-bottom
  <section class="spin-panel hidden" id="dailySpinPanel">
   <div class="spin-page-head"><span style="font-weight:900;color:#4c1d95">VIBEMART REWARDS</span><button class="secondary" id="closeSpinPage" type="button">← Back to Store</button></div><div class="spin-page-inner"><h2>🎡 Daily Spin & Win!</h2><p>Apna email ya phone enter karo. Har identifier ko roz sirf 1 spin milega.</p>
   <div class="field" style="max-width:440px;margin:12px auto"><label for="spinIdentifier">Email ya phone number</label><input id="spinIdentifier" maxlength="120" placeholder="Email ya phone number"></div>
-  <div class="spin-wheel-wrap"><div class="spin-pointer"></div><div class="spin-wheel" id="spinWheel"></div></div>
-  <button class="primary" id="spinButton" type="button">🎁 Spin Now</button><div id="spinMessage" class="spin-message" aria-live="polite"></div><div id="spinResultCard" class="spin-result-card" aria-live="polite"><span class="spin-result-kicker">Your spin result</span><strong id="spinResultValue" class="spin-result-value">—</strong><div id="spinResultNote" class="spin-result-note">Prize result will appear here.</div></div>
-  <p class="small">Prizes: 10% OFF, Rs 100 OFF, Rs 50 OFF, 15% OFF, Rs 200 OFF, Try Again. Discount order subtotal par apply hota hai.</p></div>
+  <div class="vm-spin-layout"><div class="vm-spin-wheel-side"><div class="spin-wheel-wrap"><div class="spin-pointer"></div><div class="spin-wheel" id="spinWheel"></div></div><button class="primary" id="spinButton" type="button">🎁 Spin Now</button></div><aside class="vm-spin-prizes"><h3>🎁 Your Possible Gifts</h3><p>Har din ek chance — spin karo aur reward dekho!</p><div class="vm-prize-grid"><span>🏷️ 5% OFF</span><span>🎟️ Rs 50 OFF</span><span>✨ 10% OFF</span><span>🍀 Try Again</span><span>💜 15% OFF</span><span>💰 Rs 100 OFF</span><span>👑 20% OFF</span><span>🎉 Rs 200 OFF</span><span>🍀 Try Again</span><span>🎊 Try Again</span></div></aside></div><div id="spinMessage" class="spin-message" aria-live="polite"></div><div id="spinResultCard" class="spin-result-card" aria-live="polite"><span class="spin-result-kicker">Your spin result</span><strong id="spinResultValue" class="spin-result-value">—</strong><div id="spinResultNote" class="spin-result-note">Prize result will appear here.</div></div>
+  <p class="small">Prize result spin ke baad confirm hoga. Discount eligible order subtotal par apply hota hai.</p></div>
  </section>
  <div class="searchrow"><input id="search" placeholder="🔎 Search products..."><button class="primary" id="searchBtn">Search</button></div>
  <div class="categories" id="categories">
@@ -620,7 +620,13 @@ const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app),$
 
 let isOwner=false,allProducts=[],cart=[],activeCategory="All",searchText="",busy=false,lastOrderId="",appliedCoupon=null,wishlist=[],activeReviewProduct=null,reviewCache={};
 let spinPrize=null,spinClaimId="";
-const SPIN_PRIZES=[{label:"10% OFF",type:"percent",value:10},{label:"Rs 100 OFF",type:"fixed",value:100},{label:"Rs 50 OFF",type:"fixed",value:50},{label:"15% OFF",type:"percent",value:15},{label:"Rs 200 OFF",type:"fixed",value:200},{label:"Try Again",type:"none",value:0}];
+const SPIN_PRIZES=[
+ {label:"5% OFF",type:"percent",value:5},{label:"Rs 50 OFF",type:"fixed",value:50},
+ {label:"10% OFF",type:"percent",value:10},{label:"Try Again",type:"none",value:0},
+ {label:"Rs 100 OFF",type:"fixed",value:100},{label:"15% OFF",type:"percent",value:15},
+ {label:"Try Again",type:"none",value:0},{label:"Rs 200 OFF",type:"fixed",value:200},
+ {label:"20% OFF",type:"percent",value:20},{label:"Try Again",type:"none",value:0}
+];
 try{const saved=JSON.parse(localStorage.getItem("vibemart_wishlist")||"[]");wishlist=Array.isArray(saved)?saved.filter(x=>typeof x==="string"):[]}catch{wishlist=[]}
 
 const labels={Pending:"⏳ Pending",Confirmed:"✅ Order Confirmed",Processing:"🧰 Processing",Shipped:"🚚 Shipped",Delivered:"🎉 Delivered",Cancelled:"❌ Cancelled"};
@@ -645,7 +651,8 @@ document.addEventListener("keydown",e=>{
  }
 });
 const spinWheel=$("spinWheel");
-SPIN_PRIZES.forEach((p,i)=>{const el=document.createElement("span");el.className="spin-label";el.textContent=p.label;el.style.transform=`rotate(${i*60-60}deg) translateX(10px)`;el.style.marginLeft="0";el.style.textAlign="center";spinWheel.append(el)});
+SPIN_PRIZES.forEach((p,i)=>{const el=document.createElement("span");el.className="spin-label";el.textContent=p.label;el.style.transform=`rotate(${i*36-90}deg) translateX(10px)`;el.style.marginLeft="0";el.style.textAlign="center";spinWheel.append(el)});
+spinWheel.style.background="conic-gradient("+SPIN_PRIZES.map((p,i)=>`${["#6d28d9","#f59e0b","#db2777","#16a34a","#2563eb"][i%5]} ${i*36}deg ${(i+1)*36}deg`).join(",")+")";
 function spinDay(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
 async function spinHash(v){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(v));return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,"0")).join("")}
 function cleanSpinId(v){v=v.trim().toLowerCase();if(v.includes("@"))return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)?v:"";const n=v.replace(/\D/g,"");return n.length>=7&&n.length<=15?n:""}
@@ -653,9 +660,10 @@ let spinWheelRotation=0;
 function rotateWheelToPrize(prizeLabel,animate=true){
  const idx=SPIN_PRIZES.findIndex(p=>p.label===prizeLabel);
  if(idx<0)return;
- // The wheel, labels, and saved prize all use the same six-item order.
+ // The wheel, labels, and saved prize all use the same ten-item order.
  // The fixed pointer is at 12 o'clock; align the selected slice centre to it.
- const desired=((360-(idx*60+30))%360+360)%360;
+ const slice=360/SPIN_PRIZES.length;
+ const desired=((360-(idx*slice+slice/2))%360+360)%360;
  let target;
  if(animate){
    const current=((spinWheelRotation%360)+360)%360;
@@ -753,6 +761,9 @@ $("wishlistBtn").onclick=()=>{renderWishlist();$("wishlistPanel").classList.remo
 $("closeWishlistBtn").onclick=()=>$("wishlistPanel").classList.add("hidden");
 saveWishlist();
 $("exploreBtn").onclick=()=>goTo("shop");
+if($("vmSaleShopBtn"))$("vmSaleShopBtn").onclick=()=>goTo("shop");
+function updateVmSaleClock(){const now=new Date(),end=new Date(now);end.setHours(24,0,0,0);let left=Math.max(0,end-now);const h=String(Math.floor(left/3600000)).padStart(2,"0"),m=String(Math.floor(left%3600000/60000)).padStart(2,"0"),sec=String(Math.floor(left%60000/1000)).padStart(2,"0");if($("vmSaleCountdown"))$("vmSaleCountdown").textContent=`${h} : ${m} : ${sec}`}
+updateVmSaleClock();setInterval(updateVmSaleClock,1000);
 $("trackBtn").onclick=()=>goTo("trackingPanel");
 $("loginBtn").onclick=()=>isOwner?openDashboard():showAuth();
 $("dashboardBtn").onclick=openDashboard;
@@ -1505,6 +1516,18 @@ footer{background:linear-gradient(100deg,#2d1049,#57209a);color:#fff}
 @keyframes vmSpark{50%{opacity:.35;transform:scale(.75) rotate(25deg)}}
 @media(max-width:760px){.vm-promo-grid{grid-template-columns:1fr;gap:10px}.vm-promo-card{min-height:135px;padding:16px}.vm-promo-icon{width:52px;height:52px;flex-basis:52px;font-size:27px}.vm-tracking-visual{min-height:125px;padding:12px}.vm-delivery-truck{width:55%}.vm-tracking-copy{max-width:42%}}
 @media(prefers-reduced-motion:reduce){.vm-promo-spin .vm-promo-icon,.vm-delivery-truck,.vm-truck-spark{animation:none}}
+
+/* Exact campaign/product layout polish requested: countdown, mega-sale, 10-prize split spin, right-side CTA */
+.vm-mega-sale{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:24px;margin:18px 0 24px;padding:22px 26px;border:1px solid #f1cf68;border-radius:22px;color:#fff;background:radial-gradient(circle at 90% 10%,#a66bff88,transparent 32%),linear-gradient(110deg,#26103f,#55209a 58%,#8a35c5);box-shadow:0 16px 34px #32105225;position:relative;overflow:hidden}
+.vm-mega-sale:after{content:"✦  ✧  ✦";position:absolute;right:18px;top:8px;color:#ffdc78;font-size:24px;letter-spacing:12px;opacity:.75;pointer-events:none}
+.vm-mega-sale small{font-size:10px;font-weight:950;letter-spacing:1.6px;color:#ffe18a}.vm-mega-sale h2{margin:7px 0;color:#fff;font-size:clamp(23px,3vw,36px);font-weight:1000}.vm-mega-sale h2 b{color:#ffd24e}.vm-mega-sale p{margin:0;color:#eee2ff;font-size:13px}
+.vm-sale-clock{min-width:170px;text-align:center;padding:12px 16px;border:1px solid #ffffff55;border-radius:15px;background:#ffffff16;backdrop-filter:blur(6px)}.vm-sale-clock span{display:block;color:#ffe18a;font-size:9px;font-weight:950;letter-spacing:1.5px}.vm-sale-clock div{margin:5px 0;font-size:clamp(22px,3vw,30px);font-weight:1000;letter-spacing:2px;color:#fff}.vm-sale-clock small{color:#eee2ff;font-size:9px}
+#vmSaleShopBtn{position:relative;z-index:1;padding:13px 18px;border:0;border-radius:12px;background:linear-gradient(100deg,#ffdc64,#ffad2e);color:#32134f;font-weight:1000;box-shadow:0 5px 0 #a95d17,0 10px 20px #18082e44}
+.vm-spin-layout{display:grid;grid-template-columns:minmax(280px,1fr) minmax(240px,.82fr);align-items:center;gap:24px;margin:20px auto;max-width:900px}.vm-spin-wheel-side{display:flex;flex-direction:column;align-items:center}.vm-spin-prizes{padding:20px;border:1px solid #f0d078;border-radius:20px;background:linear-gradient(145deg,#fff,#fff7df 60%,#f4eaff);box-shadow:0 12px 26px #4c1d9518;text-align:left}.vm-spin-prizes h3{margin:0 0 7px;color:#4c1884;font-size:20px;font-weight:1000}.vm-spin-prizes p{margin:0 0 14px;color:#766b85;font-size:12px}.vm-prize-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.vm-prize-grid span{padding:10px 9px;border:1px solid #eadcf7;border-radius:11px;background:#fff;color:#4b1d7a;font-size:12px;font-weight:900;box-shadow:0 3px 9px #3210520b}
+/* Product photo stays prominent; price/details left, purchase actions aligned to the right like large marketplaces. */
+.productbody{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;column-gap:10px;row-gap:7px}.productbody h3,.productbody>p,.productbody .ratingSummary{grid-column:1/-1}.productbody .product-price-wrap,.productbody .priceDetails{grid-column:1}.productbody .productbuttons{grid-column:2;grid-row:4 / span 4;display:flex;flex-direction:column;align-self:center;min-width:112px;margin:0}.productbuttons button{min-width:108px;white-space:nowrap}.productbody .priceDetails{min-width:0}.productbody .priceDetails .price{font-size:clamp(18px,2vw,23px)}
+@media(max-width:760px){.vm-mega-sale{grid-template-columns:1fr;gap:12px;padding:18px}.vm-sale-clock{width:auto}.vm-mega-sale #vmSaleShopBtn{width:100%}.vm-spin-layout{grid-template-columns:1fr;gap:14px}.vm-spin-prizes{width:100%;box-sizing:border-box}.productbody{grid-template-columns:minmax(0,1fr) auto;column-gap:6px}.productbody .productbuttons{min-width:88px}.productbuttons button{min-width:84px;padding:9px 5px;font-size:10px}.productbody .productbuttons{grid-row:4 / span 4}.productbody .priceDetails .price{font-size:17px}}
+@media(max-width:420px){.vm-prize-grid{gap:6px}.vm-prize-grid span{font-size:10px;padding:8px 6px}.productbody{grid-template-columns:1fr}.productbody .productbuttons{grid-column:1;grid-row:auto;flex-direction:row;flex-wrap:wrap;margin-top:8px}.productbuttons button{flex:1;min-width:0}.productbody h3,.productbody>p,.productbody .ratingSummary{grid-column:1}}
 </style>
 
 <script>document.addEventListener("DOMContentLoaded",()=>{const promo=document.getElementById("promoSpinBtn"),open=document.getElementById("openSpinPage");if(promo&&open)promo.addEventListener("click",()=>open.click());});</script>
