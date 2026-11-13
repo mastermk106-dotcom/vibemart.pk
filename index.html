@@ -419,7 +419,7 @@ header{background:linear-gradient(110deg,#fff,#fbf7ff 70%,#fff9e9);border-bottom
    <p>Discover products you'll love, explore special deals, and shop simply with Cash on Delivery.</p>
    <div class="hero-actions"><button class="hero-cta" id="exploreBtn">Explore the store <span aria-hidden="true">→</span></button><span class="hero-note">Easy browsing · Simple ordering</span></div>
   </div>
-  <div class="hero-art" aria-label="Vibemart shopping mascot illustration"><div class="hero-orbit orbit-one"></div><div class="hero-orbit orbit-two"></div><div class="hero-spark spark-one">✦</div><div class="hero-spark spark-two">✧</div><div class="hero-bag"><div class="bag-handle"></div><div class="bag-logo">v<span>✦</span></div><div class="bag-caption">YOUR VIBE</div></div><div class="vm-mascot" aria-hidden="true"><svg viewBox="0 0 180 250" role="img" aria-label="Vibemart mascot"><ellipse cx="91" cy="239" rx="57" ry="8" fill="#35104f" opacity=".16"/><path d="M57 169 L48 226 Q47 237 61 237 L79 237 L91 183 L103 237 L126 237 Q139 235 134 224 L122 169Z" fill="#332052"/><path d="M62 104 Q90 89 119 105 L133 174 Q91 194 48 174Z" fill="#ffb52e" stroke="#fff" stroke-width="5"/><text x="90" y="146" text-anchor="middle" font-size="13" font-weight="900" fill="#4c1d95">VIBEMART</text><path d="M56 119 Q33 126 27 157" fill="none" stroke="#f0b98c" stroke-width="15" stroke-linecap="round"/><path d="M124 119 Q145 108 151 83" fill="none" stroke="#f0b98c" stroke-width="15" stroke-linecap="round"/><circle cx="153" cy="73" r="17" fill="#ffb52e" stroke="#fff" stroke-width="4"/><path d="M66 100 Q50 72 61 42 Q70 14 97 18 Q130 20 132 56 Q135 82 115 104Z" fill="#5b2a1b"/><ellipse cx="91" cy="69" rx="34" ry="39" fill="#f2bd91"/><path d="M61 58 Q69 17 103 28 Q123 33 128 55 Q105 43 89 46 Q76 48 61 58Z" fill="#5b2a1b"/><circle cx="79" cy="69" r="4" fill="#32144e"/><circle cx="104" cy="69" r="4" fill="#32144e"/><path d="M83 85 Q92 93 103 84" fill="none" stroke="#a64a42" stroke-width="3" stroke-linecap="round"/><path d="M72 231 L58 246 L85 246 L93 232 M108 232 L119 246 L145 246 L130 230" fill="#f5f0ff" stroke="#332052" stroke-width="3" stroke-linejoin="round"/></svg><span>YOUR VIBEMART GUIDE</span></div><div class="float-pill pill-deal">✦ Great finds</div><div class="float-pill pill-shop">♡ Pick your favourite</div></div>
+  <div class="hero-art" aria-label="Vibemart shopping mascot illustration"><div class="hero-orbit orbit-one"></div><div class="hero-orbit orbit-two"></div><div class="hero-spark spark-one">✦</div><div class="hero-spark spark-two">✧</div><div class="hero-bag"><div class="bag-handle"></div><div class="bag-logo">v<span>✦</span></div><div class="bag-caption">YOUR VIBE</div></div><div class="float-pill pill-deal">✦ Great finds</div><div class="float-pill pill-shop">♡ Pick your favourite</div></div>
  </section>
  <section class="benefits" aria-label="Shopping benefits">
   <div class="benefit"><span class="benefit-icon">🚚</span><div><strong>Cash on Delivery</strong><small>Pay when it arrives</small></div></div>
@@ -1337,7 +1337,7 @@ async function loadOrders(){
  shortcuts.querySelectorAll("[data-page]").forEach(btn=>btn.onclick=()=>{
   if(!isOwner||auth.currentUser?.uid!==OWNER_UID)return;
   const which=btn.dataset.page;
-  if(which==="spin")spinOpenedFromDashboard=true;
+  if(which==="spin"){spinOpenedFromDashboard=true;$id("closeSpinPage").textContent="← Back to Dashboard";}
   if(which==="addProduct"){resetProductForm();$id("formTitle").textContent="Add New Product";$id("saveProductBtn").textContent="Save Product";}
   openPage(which);
  });
@@ -1346,12 +1346,12 @@ async function loadOrders(){
  $id("closeSettingsPage").onclick=()=>{closeAll();dashboard.classList.remove("hidden")};
  $id("goProductsAdmin").onclick=()=>openPage("products");
  $id("goOrdersAdmin").onclick=()=>openPage("orders");
- $id("openSpinFromDashboard").onclick=()=>{spinOpenedFromDashboard=true;openPage("spin")};
+ $id("openSpinFromDashboard").onclick=()=>{spinOpenedFromDashboard=true;$id("closeSpinPage").textContent="← Back to Dashboard";openPage("spin")};
  $id("addProductBtn").onclick=()=>{if(!isOwner)return;resetProductForm();$id("formTitle").textContent="Add New Product";$id("saveProductBtn").textContent="Save Product";openPage("addProduct");$id("pName").focus({preventScroll:true})};
  $id("hideDashboard").onclick=()=>{dashboard.classList.add("hidden");closeAll()};
  $id("dashboardBtn").onclick=()=>{closeAll();dashboard.classList.remove("hidden")};
  $id("loginBtn").onclick=()=>isOwner?($id("dashboard").classList.remove("hidden")):showAuth();
- $id("openSpinPage").onclick=()=>{spinOpenedFromDashboard=false;openPage("spin")};
+ $id("openSpinPage").onclick=()=>{spinOpenedFromDashboard=false;$id("closeSpinPage").textContent="← Back to Store";openPage("spin")};
  $id("closeSpinPage").onclick=()=>{const fromDashboard=spinOpenedFromDashboard;closeAll();spinOpenedFromDashboard=false;if(fromDashboard)dashboard.classList.remove("hidden")};
  // Product edits are routed to the dedicated product form page.
  const originalRender=renderManageProducts;
@@ -1410,8 +1410,7 @@ header{background:#fff;border-bottom:3px solid #f4c24e;box-shadow:0 7px 22px #55
 .spin-panel .primary{background:linear-gradient(100deg,#ffb52e,#f06a24)!important;color:#35104e!important;box-shadow:0 5px 0 #b74a12,0 9px 18px #f5a52d50!important;font-size:16px;padding:15px 25px;min-width:190px}
 #openSpinPage{display:block;width:min(100% - 28px,520px);margin:18px auto 22px;padding:17px 24px!important;border-radius:18px!important;background:linear-gradient(100deg,#ffcf45,#ff792e)!important;color:#35104e!important;border:2px solid #fff0b7!important;box-shadow:0 5px 0 #b74a12,0 12px 25px #e98a2750!important;font-weight:1000;font-size:19px!important;letter-spacing:.2px;animation:vmSpinPulse 2.2s ease-in-out infinite}
 @keyframes vmSpinPulse{0%,100%{transform:translateY(0);box-shadow:0 5px 0 #b74a12,0 12px 25px #e98a2750}50%{transform:translateY(-2px);box-shadow:0 6px 0 #b74a12,0 16px 30px #e98a2770}}
-.vm-mascot{position:absolute;right:8%;bottom:3%;width:clamp(112px,20vw,178px);z-index:3;filter:drop-shadow(0 12px 12px #32104f35);text-align:center}.vm-mascot svg{width:100%;height:auto;display:block}.vm-mascot span{display:inline-block;background:#fff;color:#5b2192;border:1px solid #ead8ff;border-radius:999px;padding:5px 10px;font-size:9px;font-weight:1000;letter-spacing:.8px;box-shadow:0 5px 14px #32104f18}
-@media(max-width:600px){.vm-mascot{right:1%;bottom:0;width:112px}.hero-art{min-height:205px}}
+.hero-art{min-height:205px}}
 .vm-admin-page{background:radial-gradient(circle at 95% 0%,#fff0c8,transparent 25%),linear-gradient(145deg,#f4eaff,#fffaf2)!important}
 .vm-admin-head{background:#fffaf2!important}
 .vm-admin-head h2{color:#572092!important;font-weight:1000}
@@ -1421,6 +1420,43 @@ header{background:#fff;border-bottom:3px solid #f4c24e;box-shadow:0 7px 22px #55
 input:focus,textarea:focus,select:focus{border-color:#8b42dc;box-shadow:0 0 0 3px #8b42dc22}
 footer{background:linear-gradient(100deg,#32104f,#7027c9,#a34a20);color:#fff4dc}
 @media(max-width:600px){.hero{background:linear-gradient(145deg,#421276,#7627c9 62%,#e66b25)}.price{font-size:17px}.spin-panel .primary{width:100%;max-width:290px}}
+
+/* CONFIRMED VIBEMART LOOK — inspired by numbered concepts 7–20 */
+:root{--vm-purple:#57209a;--vm-deep:#241044;--vm-gold:#ffc83d;--vm-lilac:#f4edff;--vm-line:#e5d8f4}
+body{background:linear-gradient(180deg,#f8f4ff 0%,#fff 42%,#fffaf0 100%);color:#25133f}
+.announcement-bar{background:linear-gradient(90deg,#321052,#6221a8 52%,#8a35ce);color:#fff;font-weight:900}
+header{background:linear-gradient(100deg,#fff,#f8f2ff);border-bottom:2px solid #f3ca58;box-shadow:0 7px 22px #32105216}
+.logo{color:#54208f;text-shadow:0 1px 0 #f8df9c}
+.tag{color:#72518e}
+.hero{background:radial-gradient(circle at 88% 12%,#ffd56b 0,transparent 23%),linear-gradient(120deg,#2b1048,#59209b 58%,#7932b9);border:1px solid #d7c0f1;box-shadow:0 17px 36px #35105230}
+.hero h1,.hero p{font-weight:950}
+.hero .hero-cta{background:linear-gradient(100deg,#ffdc68,#ffb52f)!important;color:#32134f!important;border:1px solid #ffe9a5!important;box-shadow:0 5px 0 #b36b18,0 10px 22px #e7a52d55!important}
+.benefit,.panel,.product,.settings-card,.vm-admin-content{background:linear-gradient(145deg,#fff,#fbf8ff);border:1px solid var(--vm-line);box-shadow:0 8px 22px #3210520e}
+.benefit-icon{background:linear-gradient(145deg,#f0e5ff,#fff0bf);color:#6423a7}
+.panel h2,.sectionhead h2,.spin-panel h2{color:#4c1884;font-weight:950}
+.categories button{background:#fff;border:1px solid #e4d7f2;color:#4e2476;font-weight:900}
+.categories button.active{background:linear-gradient(100deg,#57209a,#8736cb);color:#fff;border-color:#57209a}
+.product{border-radius:17px;overflow:hidden;transition:transform .18s,box-shadow .18s}
+.product:hover{transform:translateY(-3px);box-shadow:0 15px 28px #54208f20;border-color:#efc65b}
+.product img{background:linear-gradient(145deg,#fff,#f4edff)}
+.product h3{color:#2c1745;font-weight:950}
+.price{display:inline-block;padding:6px 10px;border:1px solid #f0d47d;border-radius:10px;background:linear-gradient(110deg,#fff5d6,#f2eaff);color:#4d1687;font-size:clamp(18px,2vw,23px);font-weight:1000;box-shadow:0 3px 9px #5c239512}
+.oldprice{color:#8b8295}
+.productbuttons .primary,.primary{background:linear-gradient(110deg,#58209a,#812cc6)!important;box-shadow:0 4px 0 #35105f,0 9px 18px #57209a35!important;font-weight:950}
+.secondary{background:#fff;color:#4d1b7e;border:1px solid #e2d3f1;font-weight:850}
+.spin-panel{border:2px solid #f0ca62;background:radial-gradient(circle at 92% 0,#ffe7a0 0,transparent 30%),linear-gradient(135deg,#fff,#f4eaff 58%,#fff8e6);box-shadow:0 14px 34px #54208f17}
+.spin-panel h2{font-size:clamp(25px,4vw,35px)}
+.spin-wheel{border:8px solid #fff;outline:2px solid #efc75a;box-shadow:0 12px 30px #25104438}
+#openSpinPage{background:linear-gradient(100deg,#ffda57,#ffb52d)!important;color:#32134f!important;border:2px solid #fff0b4!important;border-radius:17px!important;box-shadow:0 5px 0 #a95d17,0 13px 26px #e6a42d55!important;font-weight:1000;min-height:68px}
+#dashboard,.vm-admin-page{background:radial-gradient(circle at 95% 0,#fff0bd 0,transparent 24%),linear-gradient(145deg,#f3ebff,#fff 65%,#fff9e9)!important}
+#dashboard .dashboard-shortcuts button,.vm-admin-menu button{background:linear-gradient(145deg,#fff,#f7f0ff);border:1px solid #e3d3f2;color:#4c1b7e;border-radius:16px;font-weight:950;box-shadow:0 5px 0 #e9dff1,0 12px 22px #32105210}
+#dashboard .dashboard-shortcuts button[data-page="spin"],#openSpinFromDashboard{background:linear-gradient(110deg,#32104f,#6324a8)!important;color:#fff!important;border:2px solid #f4d16c!important;box-shadow:0 5px 0 #210b38,0 13px 25px #54208f45!important}
+#storeSettings.settings-page,.vm-admin-page{background:linear-gradient(145deg,#f5efff,#fff 60%,#fff9eb)!important}
+.vm-admin-head{background:#fff!important;border-bottom:1px solid #e7daf2}
+input:focus,textarea:focus,select:focus{border-color:#8c45c8;box-shadow:0 0 0 3px #8c45c822}
+footer{background:linear-gradient(100deg,#2d1049,#57209a);color:#fff}
+/* Back button label and destination are set from the page that opened Spin. */
+@media(max-width:600px){.price{font-size:17px;padding:5px 8px}.spin-panel{padding:17px 11px}#openSpinPage{width:100%;font-size:17px!important}}
 </style>
 
 </body>
