@@ -324,6 +324,17 @@ footer:before{content:"✦  VIBEMART  ✦";display:block;margin-bottom:9px;color
 #imagePreview{display:block;max-width:100%;max-height:78vh;object-fit:contain;border-radius:10px}
 #imagePreviewCaption{position:absolute;left:14px;right:58px;top:17px;color:#fff;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media(max-width:600px){#cartModal .modalbox{padding-top:52px}#imagePreviewModal .image-preview-box{padding:48px 8px 8px;border-radius:12px}#imagePreview{max-height:80vh}}
+
+
+/* OWNER STORE SETTINGS */
+.settings-card{margin:18px 0;padding:18px;border:1px solid #e8def4;border-radius:17px;background:linear-gradient(145deg,#fff,#fbf7ff)}
+.settings-card h3{margin-top:0!important}
+#settingsForm{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 14px}
+#settingsForm .field{min-width:0;margin:6px 0}
+#settingsForm .rowbtn{grid-column:1/-1}
+#settingsMessage{margin-top:10px;font-size:13px}
+@media(max-width:700px){#settingsForm{grid-template-columns:1fr}#settingsForm .rowbtn{grid-column:1}}
+
 </style>
 </head>
 <body>
@@ -389,6 +400,20 @@ footer:before{content:"✦  VIBEMART  ✦";display:block;margin-bottom:9px;color
   <div class="sectionhead"><h2>👑 Owner Dashboard</h2><button class="secondary" id="hideDashboard">Close</button></div>
   <p id="ownerEmail"></p>
   <div class="notice">Products, flash sales, coupons aur customer orders yahan manage karo.</div>
+  <section class="settings-card" id="storeSettings">
+   <h3>⚙️ Store Settings</h3>
+   <p class="small">Yahan ki changes website par customers ko bhi nazar aayengi.</p>
+   <form id="settingsForm">
+    <div class="field"><label for="settingStoreName">Store name</label><input id="settingStoreName" maxlength="50" required></div>
+    <div class="field"><label for="settingTagline">Tagline</label><input id="settingTagline" maxlength="100"></div>
+    <div class="field"><label for="settingAnnouncement">Announcement bar message</label><input id="settingAnnouncement" maxlength="140"></div>
+    <div class="field"><label for="settingPhone">Contact phone (optional)</label><input id="settingPhone" type="tel" maxlength="25"></div>
+    <div class="field"><label for="settingEmail">Support email (optional)</label><input id="settingEmail" type="email" maxlength="120"></div>
+    <div class="field"><label for="settingTikTok">TikTok profile URL (optional)</label><input id="settingTikTok" type="url" maxlength="300" placeholder="https://www.tiktok.com/@yourusername"></div>
+    <div class="rowbtn"><button class="primary" type="submit" id="saveSettingsBtn">Save Store Settings</button><button class="secondary" type="button" id="resetSettingsBtn">Reset to Defaults</button></div>
+   </form>
+   <div id="settingsMessage" aria-live="polite"></div>
+  </section>
   <button class="primary" id="addProductBtn">➕ Add Product</button>
   <div id="productEditor">
    <h3 id="formTitle">Add New Product</h3>
@@ -669,6 +694,93 @@ $("forgotBtn").onclick=async()=>{
  catch(e){message("authMessage",friendlyError(e),true)}
 };
 
+
+/* STORE SETTINGS — saved in Firestore and displayed on the public storefront */
+const DEFAULT_STORE_SETTINGS={
+ storeName:"vibemart.pk",
+ tagline:"Your Vibe, Your Choice!",
+ announcement:"Smart finds, friendly prices • Cash on Delivery available • Shop your vibe",
+ phone:"",
+ email:"",
+ tiktok:""
+};
+function readSettingsForm(){
+ return {
+  storeName:$("settingStoreName").value.trim(),
+  tagline:$("settingTagline").value.trim(),
+  announcement:$("settingAnnouncement").value.trim(),
+  phone:$("settingPhone").value.trim(),
+  email:$("settingEmail").value.trim(),
+  tiktok:$("settingTikTok").value.trim()
+ };
+}
+function fillSettingsForm(v={}){
+ const x={...DEFAULT_STORE_SETTINGS,...v};
+ $("settingStoreName").value=x.storeName;
+ $("settingTagline").value=x.tagline;
+ $("settingAnnouncement").value=x.announcement;
+ $("settingPhone").value=x.phone;
+ $("settingEmail").value=x.email;
+ $("settingTikTok").value=x.tiktok;
+}
+function applyStoreSettings(v={}){
+ const x={...DEFAULT_STORE_SETTINGS,...v};
+ document.querySelector("header .logo").textContent="💜 "+x.storeName;
+ document.querySelector("header .tag").textContent=x.tagline;
+ const bar=document.querySelector(".announcement-bar");
+ bar.textContent=x.announcement;
+ const footer=document.querySelector("footer");
+ footer.replaceChildren();
+ const copyright=document.createElement("div");
+ copyright.textContent="© "+new Date().getFullYear()+" "+x.storeName+" · "+x.tagline;
+ footer.append(copyright);
+ const contact=document.createElement("div");
+ contact.style.marginTop="8px";
+ const parts=[];
+ if(x.phone)parts.push("Phone: "+x.phone);
+ if(x.email)parts.push("Email: "+x.email);
+ if(parts.length)contact.textContent=parts.join(" · ");
+ if(parts.length)footer.append(contact);
+ if(x.tiktok){
+  const link=document.createElement("a");
+  link.href=x.tiktok;link.target="_blank";link.rel="noopener noreferrer";
+  link.textContent="Visit our TikTok";
+  link.style.cssText="display:inline-block;margin-top:9px;color:#ffe19a;font-weight:800";
+  footer.append(link);
+ }
+ document.title=x.storeName+" — "+x.tagline;
+}
+async function loadStoreSettings(){
+ try{
+  const snap=await getDoc(doc(db,"storeSettings","main"));
+  const settings=snap.exists()?snap.data():DEFAULT_STORE_SETTINGS;
+  applyStoreSettings(settings);
+  fillSettingsForm(settings);
+ }catch(e){
+  applyStoreSettings(DEFAULT_STORE_SETTINGS);
+  fillSettingsForm(DEFAULT_STORE_SETTINGS);
+  console.warn("Store settings read failed:",e);
+ }
+}
+$("settingsForm").onsubmit=async e=>{
+ e.preventDefault();
+ if(!isOwner||auth.currentUser?.uid!==OWNER_UID){message("settingsMessage","Sirf owner settings save kar sakta hai.",true);return}
+ const v=readSettingsForm();
+ if(!v.storeName||v.storeName.length>50){message("settingsMessage","Store name zaroor likho (maximum 50 characters).",true);return}
+ if(v.tiktok){
+  try{const u=new URL(v.tiktok);if(u.protocol!=="https:")throw Error();}catch{message("settingsMessage","TikTok URL https:// se start honi chahiye.",true);return}
+ }
+ const btn=$("saveSettingsBtn");btn.disabled=true;message("settingsMessage","Settings save ho rahi hain...");
+ try{
+  await setDoc(doc(db,"storeSettings","main"),{...v,updatedAt:serverTimestamp()},{merge:true});
+  applyStoreSettings(v);
+  message("settingsMessage","Settings successfully save ho gayi!");
+ }catch(e){message("settingsMessage","Save nahi hui: "+friendlyError(e),true)}
+ finally{btn.disabled=false}
+};
+$("resetSettingsBtn").onclick=()=>{fillSettingsForm(DEFAULT_STORE_SETTINGS);message("settingsMessage","Default values set ho gayi hain. Save button dabao.")};
+
+loadStoreSettings();
 onAuthStateChanged(auth,async u=>{
  isOwner=!!u&&u.uid===OWNER_UID;
  $("loginBtn").classList.toggle("hidden",isOwner);$("dashboardBtn").classList.toggle("hidden",!isOwner);$("logoutBtn").classList.toggle("hidden",!u);
