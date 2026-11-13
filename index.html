@@ -427,12 +427,33 @@ header{background:linear-gradient(110deg,#fff,#fbf7ff 70%,#fff9e9);border-bottom
   <div class="benefit"><span class="benefit-icon">📦</span><div><strong>Order tracking</strong><small>Check your order status</small></div></div>
   <div class="benefit"><span class="benefit-icon">🎁</span><div><strong>Daily Spin & Win</strong><small>Try your luck</small></div></div>
  </section>
+ <section class="vm-promo-grid" aria-label="Vibemart highlights">
+  <article class="vm-promo-card vm-promo-sale"><span class="vm-promo-icon">✦</span><div><small>VIBEMART SPECIAL</small><strong>Big Deals<br><em>Bigger Smiles!</em></strong><span>Shop smart • Save more</span></div><b class="vm-promo-tag">SHOP NOW →</b></article>
+  <article class="vm-promo-card vm-promo-spin"><span class="vm-promo-icon">🎡</span><div><small>DAILY REWARDS</small><strong>Spin &amp; Win</strong><span>Give your luck a turn!</span><button type="button" class="vm-promo-tag" id="promoSpinBtn">SPIN NOW →</button></div></article>
+  <article class="vm-promo-card vm-promo-delivery"><span class="vm-promo-icon">🚚</span><div><small>SHOP WITH EASE</small><strong>Cash on<br>Delivery</strong><span>Pay when your order arrives</span></div><b class="vm-promo-tag">EASY SHOPPING</b></article>
+ </section>
 
  <section class="panel" id="trackingPanel">
   <h2>📦 Track Your Order</h2>
   <p class="notice">Apna Order ID enter karo aur delivery status check karo.</p>
   <div class="searchrow"><input id="trackingId" placeholder="Order ID yahan paste karo" autocomplete="off"><button class="primary" id="trackOrderBtn">Track Order</button></div>
   <div id="trackingResult" aria-live="polite"></div>
+  <div class="vm-tracking-visual" aria-label="Vibemart delivery truck illustration">
+   <div class="vm-tracking-copy"><strong>Your order is on its way!</strong><span>Track it every step of the journey.</span></div>
+   <svg class="vm-delivery-truck" viewBox="0 0 360 150" role="img" aria-label="Purple Vibemart delivery truck">
+    <defs><linearGradient id="vmTruckBody" x1="0" x2="1"><stop stop-color="#8b42ee"/><stop offset="1" stop-color="#5520b5"/></linearGradient><linearGradient id="vmTruckCab" x1="0" x2="1"><stop stop-color="#ffd86b"/><stop offset="1" stop-color="#f2a900"/></linearGradient></defs>
+    <ellipse cx="177" cy="132" rx="150" ry="10" fill="#29134f" opacity=".13"/>
+    <path d="M28 39 Q28 29 40 29 H224 Q235 29 235 40 V111 H28Z" fill="url(#vmTruckBody)" stroke="#42118d" stroke-width="3"/>
+    <path d="M235 60 H285 Q294 60 300 70 L327 101 V111 H235Z" fill="url(#vmTruckCab)" stroke="#bd7b00" stroke-width="3"/>
+    <path d="M263 68 H283 Q289 68 293 75 L307 94 H263Z" fill="#e8f6ff" stroke="#fff" stroke-width="3"/>
+    <path d="M41 43 H219 V100 H41Z" fill="#fff" opacity=".10"/>
+    <text x="130" y="75" text-anchor="middle" font-size="23" font-weight="900" fill="#fff">Vibemart</text><text x="130" y="91" text-anchor="middle" font-size="9" font-weight="800" letter-spacing="2" fill="#ffe08a">YOUR VIBE, YOUR CHOICE</text>
+    <path d="M235 111 H330" stroke="#4b2379" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="86" cy="113" r="20" fill="#28163e"/><circle cx="86" cy="113" r="9" fill="#e8e2f1"/><circle cx="282" cy="113" r="20" fill="#28163e"/><circle cx="282" cy="113" r="9" fill="#e8e2f1"/>
+    <path d="M22 118 H338" stroke="#a78bfa" stroke-width="3" stroke-linecap="round" opacity=".7"/>
+   </svg>
+   <span class="vm-truck-spark vm-spark-a">✦</span><span class="vm-truck-spark vm-spark-b">✧</span>
+  </div>
  </section>
  <button class="primary" id="openSpinPage" type="button">🎡 Open Daily Spin & Win</button>
  <section class="spin-panel hidden" id="dailySpinPanel">
@@ -1457,7 +1478,35 @@ input:focus,textarea:focus,select:focus{border-color:#8c45c8;box-shadow:0 0 0 3p
 footer{background:linear-gradient(100deg,#2d1049,#57209a);color:#fff}
 /* Back button label and destination are set from the page that opened Spin. */
 @media(max-width:600px){.price{font-size:17px;padding:5px 8px}.spin-panel{padding:17px 11px}#openSpinPage{width:100%;font-size:17px!important}}
+
+/* Vibemart campaign cards + illustrated delivery truck, inspired by selected 7–20 concepts */
+.vm-promo-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:18px 0 24px}
+.vm-promo-card{position:relative;isolation:isolate;min-height:174px;overflow:hidden;display:flex;align-items:center;gap:14px;padding:20px;border:1px solid #e7d8ff;border-radius:20px;color:#fff;background:linear-gradient(125deg,#281044,#5720ad 65%,#8b43e8);box-shadow:0 12px 28px #3a17651c}
+.vm-promo-card:before{content:"";position:absolute;z-index:-1;width:190px;height:190px;right:-55px;top:-75px;border:1px solid #ffffff35;border-radius:50%;box-shadow:0 0 0 18px #ffffff08,0 0 45px #d6aaff35}
+.vm-promo-card:after{content:"✦";position:absolute;right:22px;bottom:12px;color:#ffdc77;font-size:25px;text-shadow:0 0 16px #ffd76c}
+.vm-promo-icon{flex:0 0 62px;width:62px;height:62px;display:grid;place-items:center;border-radius:18px;background:linear-gradient(145deg,#fff4c9,#f7bf37);color:#54209a;font-size:32px;box-shadow:inset 0 2px 0 #fff,0 7px 0 #a66d14,0 12px 24px #16082c55}
+.vm-promo-card small{display:block;margin-bottom:7px;color:#ffe08b;font-size:9px;font-weight:950;letter-spacing:1.3px}
+.vm-promo-card strong{display:block;font-size:clamp(19px,2vw,25px);line-height:1.03;font-weight:1000;letter-spacing:-.5px}
+.vm-promo-card strong em{font-style:normal;color:#ffd45e}
+.vm-promo-card span:not(.vm-promo-icon){display:block;margin-top:8px;color:#eee4ff;font-size:11px;font-weight:650}
+.vm-promo-tag{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;margin-top:12px;padding:9px 13px;border:1px solid #ffdf81;border-radius:999px;background:linear-gradient(135deg,#ffe47b,#f7b51d);color:#32134f;font-size:10px;font-weight:1000;box-shadow:0 4px 0 #a66d14,0 8px 16px #16082c35}
+.vm-promo-spin{background:linear-gradient(125deg,#32104e,#6b20be 62%,#a34cf0)}
+.vm-promo-spin .vm-promo-icon{background:conic-gradient(#ffdc6a,#fff1ad,#ffb62e,#fff1ad,#ffdc6a);border-radius:50%;animation:vmGlow 2.8s ease-in-out infinite}
+.vm-promo-delivery{background:linear-gradient(125deg,#24113e,#4b1c91 60%,#7c3ed2)}
+.vm-tracking-visual{position:relative;display:flex;align-items:center;justify-content:space-between;gap:15px;min-height:150px;margin-top:18px;padding:15px 22px;overflow:hidden;border:1px solid #e4d5fb;border-radius:18px;background:radial-gradient(circle at 80% 30%,#fff0bd 0,transparent 27%),linear-gradient(110deg,#f5edff,#fff 62%,#fff7df)}
+.vm-tracking-copy{position:relative;z-index:1;display:flex;flex-direction:column;gap:7px;max-width:230px}
+.vm-tracking-copy strong{color:#351451;font-size:clamp(17px,2.3vw,23px);font-weight:1000}
+.vm-tracking-copy span{color:#79688d;font-size:12px;font-weight:700}
+.vm-delivery-truck{position:relative;z-index:1;width:min(52%,360px);height:auto;filter:drop-shadow(0 12px 9px #36165b25);animation:vmTruckFloat 3.2s ease-in-out infinite}
+.vm-truck-spark{position:absolute;color:#e6a900;text-shadow:0 0 12px #ffc83d;font-size:25px;animation:vmSpark 2s ease-in-out infinite}
+.vm-spark-a{right:8%;top:13%}.vm-spark-b{right:42%;bottom:15%;animation-delay:.7s}
+@keyframes vmGlow{50%{box-shadow:0 0 0 8px #ffdc6a22,0 0 28px #ffd75c99}}
+@keyframes vmTruckFloat{50%{transform:translateY(-5px)}}
+@keyframes vmSpark{50%{opacity:.35;transform:scale(.75) rotate(25deg)}}
+@media(max-width:760px){.vm-promo-grid{grid-template-columns:1fr;gap:10px}.vm-promo-card{min-height:135px;padding:16px}.vm-promo-icon{width:52px;height:52px;flex-basis:52px;font-size:27px}.vm-tracking-visual{min-height:125px;padding:12px}.vm-delivery-truck{width:55%}.vm-tracking-copy{max-width:42%}}
+@media(prefers-reduced-motion:reduce){.vm-promo-spin .vm-promo-icon,.vm-delivery-truck,.vm-truck-spark{animation:none}}
 </style>
 
+<script>document.addEventListener("DOMContentLoaded",()=>{const promo=document.getElementById("promoSpinBtn"),open=document.getElementById("openSpinPage");if(promo&&open)promo.addEventListener("click",()=>open.click());});</script>
 </body>
 </html>
