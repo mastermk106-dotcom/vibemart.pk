@@ -1216,6 +1216,120 @@ async function loadOrders(){
   });
  }catch(e){box.textContent="Orders load nahi hue: "+friendlyError(e)}
 }
+
+/* DASHBOARD SUB-PAGES: checkout-style full-screen interfaces */
+(function(){
+ const $id=id=>document.getElementById(id);
+ const dashboard=$id("dashboard");
+ if(!dashboard)return;
+
+ // Replace the dashboard shortcuts with a clear menu.
+ const shortcuts=dashboard.querySelector(".dashboard-shortcuts");
+ shortcuts.innerHTML=`
+  <button type="button" data-page="products">📦 Manage Products<small>Add, edit and remove products</small></button>
+  <button type="button" data-page="addProduct">➕ Add Product<small>Open the product form</small></button>
+  <button type="button" data-page="coupons">🎟️ Manage Coupons<small>Create and manage discount codes</small></button>
+  <button type="button" data-page="orders">🧾 Customer Orders<small>View and update orders</small></button>
+  <button type="button" data-page="settings">⚙️ Store Settings<small>Store name, contact and announcement</small></button>
+  <button type="button" data-page="spin">🎡 Daily Spin & Win<small>Open the spin interface</small></button>`;
+
+ const style=document.createElement("style");
+ style.textContent=`
+ .vm-admin-page{position:fixed;inset:0;z-index:1400;overflow:auto;background:linear-gradient(145deg,#f8f4ff,#fff);padding:clamp(14px,3vw,34px)}
+ .vm-admin-inner{max-width:1000px;margin:0 auto}
+ .vm-admin-head{display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:-1px;z-index:2;padding:12px 0 18px;background:#faf7ff}
+ .vm-admin-head h2{margin:0;color:#32164e}
+ .vm-admin-content{padding:clamp(16px,3vw,28px);border:1px solid #e8def4;border-radius:20px;background:#fff;box-shadow:0 12px 35px #4c1d9510}
+ .vm-admin-menu small{display:block;margin-top:6px;color:#847791;font-size:11px;font-weight:500}
+ .vm-admin-menu button{text-align:left;min-height:78px}
+ @media(max-width:600px){.vm-admin-page{padding:12px}.vm-admin-head{align-items:center}.vm-admin-content{padding:13px}}
+ `;
+ document.head.append(style);
+
+ function makePage(id,title,backTarget="dashboard"){
+  const page=document.createElement("section");
+  page.id=id;page.className="vm-admin-page hidden";
+  page.innerHTML=`<div class="vm-admin-inner"><div class="vm-admin-head"><h2>${title}</h2><button class="secondary" type="button">← Back to Dashboard</button></div><div class="vm-admin-content"></div></div>`;
+  page.querySelector("button").onclick=()=>{page.classList.add("hidden");if(backTarget==="dashboard")dashboard.classList.remove("hidden");else openPage(backTarget)};
+  document.body.append(page);return page.querySelector(".vm-admin-content");
+ }
+ const productsContent=makePage("vmProductsPage","📦 Manage Products");
+ const addContent=makePage("vmAddProductPage","➕ Add / Edit Product","products");
+ const couponsContent=makePage("vmCouponsPage","🎟️ Manage Coupons");
+ const ordersContent=makePage("vmOrdersPage","🧾 Customer Orders");
+ const settingsContent=makePage("vmSettingsPage","⚙️ Store Settings");
+
+ // Move the original working controls/forms into their own pages (IDs and listeners stay intact).
+ const move=(id,target)=>{const el=$id(id);if(el)target.append(el)};
+ const productsTitle=document.createElement("p");productsTitle.className="small";productsTitle.textContent="Yahan se products edit ya delete karein.";
+ productsContent.append(productsTitle);move("manageProducts",productsContent);
+ const addIntro=document.createElement("p");addIntro.className="small";addIntro.textContent="Product ki details fill karein aur Save Product dabayein.";
+ addContent.append(addIntro);move("productEditor",addContent);
+ move("addProductBtn",productsContent);
+ const couponIntro=document.createElement("p");couponIntro.className="small";couponIntro.textContent="Discount coupon create karein ya existing coupons manage karein.";
+ couponsContent.append(couponIntro);move("couponForm",couponsContent);move("manageCoupons",couponsContent);
+ move("loadOrders",ordersContent);move("orders",ordersContent);
+ const settings=$id("storeSettings");
+ if(settings){settings.classList.remove("settings-page");settingsContent.append(settings);settings.classList.remove("hidden");}
+ const settingsHeader=settings?.querySelector(".settings-page-head");
+ if(settingsHeader){settingsHeader.remove();}
+ const settingsInner=settings?.querySelector(".settings-page-inner");
+ if(settingsInner){settingsInner.style.maxWidth="none";settingsInner.style.margin="0";settingsInner.style.padding="0";settingsInner.style.border="0";settingsInner.style.boxShadow="none";}
+
+ const pageIds=["vmProductsPage","vmAddProductPage","vmCouponsPage","vmOrdersPage","vmSettingsPage"];
+ function closeAll(){pageIds.forEach(id=>$id(id).classList.add("hidden"));$id("dailySpinPanel").classList.add("hidden");$id("dailySpinPanel").classList.remove("spin-page");}
+ function openPage(which){
+  closeAll();dashboard.classList.add("hidden");
+  const map={products:"vmProductsPage",addProduct:"vmAddProductPage",coupons:"vmCouponsPage",orders:"vmOrdersPage",settings:"vmSettingsPage"};
+  if(which==="spin"){$id("dailySpinPanel").classList.remove("hidden");$id("dailySpinPanel").classList.add("spin-page");return}
+  const page=$id(map[which]);if(page)page.classList.remove("hidden");
+  if(which==="settings"){fillSettingsForm(window.currentStoreSettings||DEFAULT_STORE_SETTINGS)}
+  if(which==="coupons")loadCoupons();
+  if(which==="orders")loadOrders();
+  if(which==="products")renderManageProducts();
+ }
+ dashboard.querySelector(".dashboard-shortcuts").classList.add("vm-admin-menu");
+ shortcuts.querySelectorAll("[data-page]").forEach(btn=>btn.onclick=()=>{
+  if(!isOwner||auth.currentUser?.uid!==OWNER_UID)return;
+  const which=btn.dataset.page;
+  if(which==="addProduct"){resetProductForm();$id("formTitle").textContent="Add New Product";$id("saveProductBtn").textContent="Save Product";}
+  openPage(which);
+ });
+ // Any legacy dashboard settings shortcut opens the dedicated settings page.
+ $id("openSettingsPage").onclick=()=>openPage("settings");
+ $id("closeSettingsPage").onclick=()=>{closeAll();dashboard.classList.remove("hidden")};
+ $id("goProductsAdmin").onclick=()=>openPage("products");
+ $id("goOrdersAdmin").onclick=()=>openPage("orders");
+ $id("openSpinFromDashboard").onclick=()=>openPage("spin");
+ $id("addProductBtn").onclick=()=>{if(!isOwner)return;resetProductForm();$id("formTitle").textContent="Add New Product";$id("saveProductBtn").textContent="Save Product";openPage("addProduct");$id("pName").focus({preventScroll:true})};
+ $id("hideDashboard").onclick=()=>{dashboard.classList.add("hidden");closeAll()};
+ $id("dashboardBtn").onclick=()=>{closeAll();dashboard.classList.remove("hidden")};
+ $id("loginBtn").onclick=()=>isOwner?($id("dashboard").classList.remove("hidden")):showAuth();
+ $id("openSpinPage").onclick=()=>openPage("spin");
+ $id("closeSpinPage").onclick=()=>{closeAll()};
+ // Product edits are routed to the dedicated product form page.
+ const originalRender=renderManageProducts;
+ renderManageProducts=function(){
+  originalRender();
+  $id("manageProducts").querySelectorAll("button").forEach(btn=>{
+   if(btn.textContent==="Edit"){
+    const old=btn.onclick;
+    btn.onclick=function(){old.call(this);openPage("addProduct");};
+   }
+  });
+ };
+ // After successful save, return to Manage Products; failed saves stay on the form.
+ const productForm=$id("productForm");
+ productForm.addEventListener("submit",()=>{
+  setTimeout(()=>{
+   const status=$id("status").textContent||"";
+   if(status.includes("successfully save"))openPage("products");
+  },900);
+ });
+ // Clear Form acts as a safe way back to the products list.
+ $id("cancelEdit").onclick=()=>{resetProductForm();openPage("products")};
+})();
+
 </script>
 </body>
 </html>
