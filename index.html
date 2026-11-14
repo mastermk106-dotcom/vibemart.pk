@@ -674,7 +674,17 @@ document.addEventListener("keydown",e=>{
  }
 });
 const spinWheel=$("spinWheel");
-SPIN_PRIZES.forEach((p,i)=>{const el=document.createElement("span");el.className="spin-label";el.textContent=p.label;el.style.transform=`rotate(${i*(360/SPIN_PRIZES.length)-90}deg) translateX(10px)`;el.style.marginLeft="0";el.style.textAlign="center";spinWheel.append(el)});
+SPIN_PRIZES.forEach((p,i)=>{
+ const el=document.createElement("span");
+ el.className="spin-label";
+ el.textContent=p.label;
+ const angle=((i+0.5)*(360/SPIN_PRIZES.length)-90)*Math.PI/180;
+ el.style.left=(50+Math.cos(angle)*30)+"%";
+ el.style.top=(50+Math.sin(angle)*30)+"%";
+ el.style.transform="translate(-50%,-50%)";
+ el.style.textAlign="center";
+ spinWheel.append(el);
+});
 spinWheel.style.background="conic-gradient("+SPIN_PRIZES.map((p,i)=>`${["#6d28d9","#f59e0b","#db2777","#16a34a","#2563eb","#9333ea","#ea580c","#0d9488"][i%8]} ${i*(360/SPIN_PRIZES.length)}deg ${(i+1)*(360/SPIN_PRIZES.length)}deg`).join(",")+")";
 function spinDay(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
 async function spinHash(v){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(v));return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,"0")).join("")}
@@ -1397,17 +1407,33 @@ async function loadOrders(){
   openPage(which);
  });
  // Any legacy dashboard settings shortcut opens the dedicated settings page.
- $id("openSettingsPage").onclick=()=>openPage("settings");
+ const legacySettings=$id("openSettingsPage");if(legacySettings)legacySettings.onclick=()=>openPage("settings");
  $id("closeSettingsPage").onclick=()=>{closeAll();dashboard.classList.remove("hidden")};
- $id("goProductsAdmin").onclick=()=>openPage("products");
- $id("goOrdersAdmin").onclick=()=>openPage("orders");
- $id("openSpinFromDashboard").onclick=()=>{spinOpenedFromDashboard=true;$id("dailySpinPanel").dataset.returnTo="dashboard";openPage("spin")};
- $id("addProductBtn").onclick=()=>{if(!isOwner)return;resetProductForm();$id("formTitle").textContent="Add New Product";$id("saveProductBtn").textContent="Save Product";openPage("addProduct");$id("pName").focus({preventScroll:true})};
+ const legacyProducts=$id("goProductsAdmin");if(legacyProducts)legacyProducts.onclick=()=>openPage("products");
+ const legacyOrders=$id("goOrdersAdmin");if(legacyOrders)legacyOrders.onclick=()=>openPage("orders");
+ const legacyDashboardSpin=$id("openSpinFromDashboard");
+ if(legacyDashboardSpin)legacyDashboardSpin.onclick=()=>{spinOpenedFromDashboard=true;$id("dailySpinPanel").dataset.returnTo="dashboard";openPage("spin")};
+ const addProductControl=$id("addProductBtn");if(addProductControl)addProductControl.onclick=()=>{if(!isOwner)return;resetProductForm();$id("formTitle").textContent="Add New Product";$id("saveProductBtn").textContent="Save Product";openPage("addProduct");$id("pName").focus({preventScroll:true})};
  $id("hideDashboard").onclick=()=>{dashboard.classList.add("hidden");closeAll()};
  $id("dashboardBtn").onclick=()=>{closeAll();dashboard.classList.remove("hidden")};
  $id("loginBtn").onclick=()=>isOwner?($id("dashboard").classList.remove("hidden")):showAuth();
  $id("openSpinPage").onclick=()=>{spinOpenedFromDashboard=false;$id("dailySpinPanel").dataset.returnTo="store";openPage("spin")};
- $id("closeSpinPage").onclick=()=>{const fromDashboard=$id("dailySpinPanel").dataset.returnTo==="dashboard";closeAll();spinOpenedFromDashboard=false;delete $id("dailySpinPanel").dataset.returnTo;if(fromDashboard){dashboard.classList.remove("hidden");dashboard.scrollIntoView({block:"start",behavior:"instant"})}};
+ $id("closeSpinPage").onclick=()=>{
+  const fromDashboard=$id("dailySpinPanel").dataset.returnTo==="dashboard" || spinOpenedFromDashboard;
+  closeAll();
+  delete $id("dailySpinPanel").dataset.returnTo;
+  spinOpenedFromDashboard=false;
+  if(fromDashboard){
+   dashboard.classList.remove("hidden");
+   dashboard.style.display="block";
+   dashboard.scrollIntoView({block:"start",behavior:"instant"});
+  }else{
+   dashboard.classList.add("hidden");
+   const main=document.querySelector("main");
+   if(main)main.style.display="block";
+   window.scrollTo({top:0,behavior:"instant"});
+  }
+ };
  // Product edits are routed to the dedicated product form page.
  const originalRender=renderManageProducts;
  renderManageProducts=function(){
@@ -1510,6 +1536,10 @@ header{background:linear-gradient(100deg,#fff,#f8f2ff);border-bottom:2px solid #
 .vm-admin-head{background:#fff!important;border-bottom:1px solid #e7daf2}
 input:focus,textarea:focus,select:focus{border-color:#8c45c8;box-shadow:0 0 0 3px #8c45c822}
 footer{background:linear-gradient(100deg,#2d1049,#57209a);color:#fff}
+/* Keep each prize label centred inside its own matching wheel slice. */
+.spin-label{position:absolute;left:50%;top:50%;width:29%;max-width:82px;min-width:0;transform:translate(-50%,-50%);font-size:clamp(8px,2.2vw,11px);line-height:1.12;font-weight:1000;text-align:center;color:#fff;text-shadow:0 1px 3px #241044,0 0 2px #241044;white-space:normal;overflow-wrap:anywhere;pointer-events:none}
+.spin-wheel{overflow:hidden}
+
 /* Spin page uses a simple close cross instead of a Back label. */
 .vm-spin-close{width:38px;height:38px;min-width:38px;padding:0!important;display:grid;place-items:center;border-radius:50%!important;font-size:23px!important;line-height:1;font-weight:900;color:#5b2194!important;background:#fff!important;border:1px solid #e7d8f5!important;box-shadow:0 3px 9px #32105218!important}
 .vm-spin-close:hover{background:#f4eaff!important;transform:scale(1.04)}
