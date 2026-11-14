@@ -1670,5 +1670,76 @@ document.addEventListener("DOMContentLoaded",()=>{
  if(source&&mirror){const sync=()=>mirror.textContent=source.textContent;sync();new MutationObserver(sync).observe(source,{childList:true,characterData:true,subtree:true});}
 });
 </script>
+
+<script>
+/*
+ * VIBEMART SPIN & WIN NAVIGATION FIX
+ * Remember which screen opened Spin & Win, then return to that exact screen.
+ */
+document.addEventListener("DOMContentLoaded", function () {
+  const dashboard = document.getElementById("dashboard");
+  const spinPage = document.getElementById("dailySpinPanel");
+  const closeSpin = document.getElementById("closeSpinPage");
+
+  if (!dashboard || !spinPage || !closeSpin) return;
+
+  // Capture the origin before the existing button handlers hide their page.
+  document.addEventListener("click", function (event) {
+    const trigger = event.target.closest(
+      '#dashboard [data-page="spin"], #openSpinFromDashboard, #openSpinPage'
+    );
+    if (!trigger) return;
+
+    if (trigger.id === "openSpinPage") {
+      spinPage.dataset.returnTo = "store";
+    } else {
+      spinPage.dataset.returnTo = "dashboard";
+    }
+  }, true);
+
+  // Replace the old close handler with one reliable return path.
+  closeSpin.onclick = function (event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    const returnTo = spinPage.dataset.returnTo || "store";
+
+    // Close Spin & Win and all dashboard sub-pages.
+    spinPage.classList.add("hidden");
+    spinPage.classList.remove("spin-page");
+
+    [
+      "vmProductsPage",
+      "vmAddProductPage",
+      "vmCouponsPage",
+      "vmOrdersPage",
+      "vmSettingsPage"
+    ].forEach(function (id) {
+      const page = document.getElementById(id);
+      if (page) page.classList.add("hidden");
+    });
+
+    if (returnTo === "dashboard") {
+      // Return to the owner dashboard, never to the storefront.
+      dashboard.classList.remove("hidden");
+      dashboard.style.removeProperty("display");
+      dashboard.style.removeProperty("visibility");
+      dashboard.scrollTop = 0;
+      window.scrollTo({ top: 0, behavior: "instant" });
+    } else {
+      // Spin was opened from the public storefront.
+      dashboard.classList.add("hidden");
+      const main = document.querySelector("main");
+      if (main) main.style.removeProperty("display");
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
+
+    delete spinPage.dataset.returnTo;
+  };
+});
+</script>
+
 </body>
 </html>
