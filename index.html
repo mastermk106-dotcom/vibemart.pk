@@ -536,6 +536,33 @@ header{background:linear-gradient(110deg,#fff,#fbf7ff 70%,#fff9e9);border-bottom
   }
 }
 
+
+/* VIBEMART POLISH PACK — refined shop toolbar, soft depth and quick navigation */
+.vm-shop-tools{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:12px 0 18px;padding:14px 16px;border:1px solid #e9def8;border-radius:17px;background:linear-gradient(115deg,#fff 0%,#faf6ff 60%,#fff9e8 100%);box-shadow:0 8px 24px rgba(49,22,83,.055)}
+.vm-shop-tools-copy{display:flex;flex-direction:column;gap:3px;min-width:0}
+.vm-shop-tools-copy strong{font-size:14px;color:#35145c}
+.vm-shop-tools-copy small{font-size:11px;color:#82758f}
+.vm-shop-tools-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.vm-sort-label{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:800;color:#5b21b6;white-space:nowrap}
+.vm-sort-label select{width:auto;min-width:155px;padding:9px 30px 9px 10px;border:1px solid #e5d8f6;border-radius:10px;background:#fff;color:#35204b;font-size:12px;font-weight:700}
+.vm-stock-toggle{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:800;color:#514064;white-space:nowrap}
+.vm-stock-toggle input{width:16px;height:16px;accent-color:#6d28d9}
+#vmBackTop{position:fixed;right:18px;bottom:18px;z-index:80;width:46px;height:46px;padding:0;border:1px solid #ffffff80;border-radius:15px;background:linear-gradient(145deg,#7c3aed,#4c1d95);color:#fff;font-size:25px;box-shadow:0 8px 22px #32105240;opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .2s,transform .2s,visibility .2s}
+#vmBackTop.vm-visible{opacity:1;visibility:visible;transform:translateY(0)}
+#products .product,#wishlistProducts .product{border:1px solid #ece5f5;box-shadow:0 8px 22px rgba(45,20,75,.055);transition:border-color .2s,box-shadow .2s,transform .2s}
+#products .product:hover,#wishlistProducts .product:hover{border-color:#d6c2f2;box-shadow:0 13px 28px rgba(45,20,75,.10)}
+#products .product > img,#wishlistProducts .product > img{border-right:1px solid #f0e9f8}
+#shop .sectionhead{margin:12px 0}
+@media(max-width:650px){
+ .vm-shop-tools{align-items:flex-start;flex-direction:column;padding:12px}
+ .vm-shop-tools-actions{width:100%;justify-content:space-between;gap:8px}
+ .vm-sort-label{flex:1;min-width:0}
+ .vm-sort-label select{flex:1;min-width:0;max-width:190px}
+ .vm-stock-toggle{font-size:11px}
+ #vmBackTop{right:12px;bottom:12px;width:42px;height:42px}
+}
+@media(prefers-reduced-motion:reduce){#vmBackTop{transition:none}}
+
 </style>
 </head>
 <body>
@@ -612,6 +639,21 @@ header{background:linear-gradient(110deg,#fff,#fbf7ff 70%,#fff9e9);border-bottom
  <div class="categories" id="categories">
   <button class="active" data-cat="All">All</button><button data-cat="Fashion">Fashion</button><button data-cat="Home">Home</button><button data-cat="Beauty">Beauty</button><button data-cat="Accessories">Accessories</button><button data-cat="Electronics">Electronics</button><button data-cat="Other">Other</button>
  </div>
+
+ <section class="vm-shop-tools" aria-label="Product display options">
+  <div class="vm-shop-tools-copy"><strong>Find your favourite</strong><small>Sort products and quickly filter availability</small></div>
+  <div class="vm-shop-tools-actions">
+   <label class="vm-sort-label" for="sortProducts">Sort:
+    <select id="sortProducts" aria-label="Sort products">
+     <option value="featured">Featured</option>
+     <option value="low">Price: Low to High</option>
+     <option value="high">Price: High to Low</option>
+     <option value="az">Name: A to Z</option>
+    </select>
+   </label>
+   <label class="vm-stock-toggle"><input id="inStockOnly" type="checkbox"> In stock only</label>
+  </div>
+ </section>
  <section id="shop">
   <div class="sectionhead"><h2>Our Products 🛍️</h2><span id="productCount"></span></div>
   <div id="status">Products load ho rahe hain...</div>
@@ -676,6 +718,7 @@ header{background:linear-gradient(110deg,#fff,#fbf7ff 70%,#fff9e9);border-bottom
  </section>
 </main>
 <footer>© <span id="year"></span> Vibemart.pk · Your Vibe, Your Choice!</footer>
+<button type="button" id="vmBackTop" aria-label="Back to top" title="Back to top">↑</button>
 
 <div class="modal hidden" id="authModal" role="dialog" aria-modal="true">
  <div class="modalbox">
@@ -1060,7 +1103,12 @@ async function loadProducts(){
 
 /* PRODUCTS — Add to Cart button is explicitly appended to the card */
 function renderProducts(){
- const list=allProducts.filter(p=>(activeCategory==="All"||p.category===activeCategory)&&(productName(p)+" "+safeText(p.description)+" "+safeText(p.category)).toLowerCase().includes(searchText.toLowerCase()));
+ let list=allProducts.filter(p=>(activeCategory==="All"||p.category===activeCategory)&&(productName(p)+" "+safeText(p.description)+" "+safeText(p.category)).toLowerCase().includes(searchText.toLowerCase()));
+ if($("inStockOnly")?.checked)list=list.filter(p=>Number(p.stock)>0);
+ const sortMode=$("sortProducts")?.value||"featured";
+ if(sortMode==="low")list.sort((a,b)=>effectivePrice(a)-effectivePrice(b));
+ else if(sortMode==="high")list.sort((a,b)=>effectivePrice(b)-effectivePrice(a));
+ else if(sortMode==="az")list.sort((a,b)=>productName(a).localeCompare(productName(b)));
  $("productCount").textContent=list.length+" products";$("products").replaceChildren();
  if(!list.length){const x=document.createElement("div");x.className="panel";x.textContent="Is category mein abhi products nahi mile.";$("products").append(x);return}
  list.forEach(p=>{
@@ -1106,6 +1154,8 @@ $("categories").onclick=e=>{const b=e.target.closest("button[data-cat]");if(!b)r
 function searchProducts(){searchText=$("search").value.trim();renderProducts()}
 $("searchBtn").onclick=searchProducts;
 $("search").onkeydown=e=>{if(e.key==="Enter")searchProducts()};
+$("sortProducts").onchange=renderProducts;
+$("inStockOnly").onchange=renderProducts;
 
 /* CUSTOMER REVIEWS */
 async function loadReviewSummary(productId){
@@ -1864,6 +1914,18 @@ document.addEventListener("DOMContentLoaded", function () {
     delete spinPage.dataset.returnTo;
   };
 });
+</script>
+
+
+<script>
+(function(){
+ const button=document.getElementById("vmBackTop");
+ if(!button)return;
+ const update=()=>button.classList.toggle("vm-visible",window.scrollY>420);
+ window.addEventListener("scroll",update,{passive:true});
+ button.addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}));
+ update();
+})();
 </script>
 
 </body>
