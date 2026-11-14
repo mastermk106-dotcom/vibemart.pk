@@ -1386,12 +1386,13 @@ async function loadOrders(){
  if(settingsInner){settingsInner.style.display="block";settingsInner.style.visibility="visible";settingsInner.style.opacity="1";settingsInner.style.width="100%";settingsInner.style.maxWidth="none";settingsInner.style.margin="0";settingsInner.style.padding="0";settingsInner.style.border="0";settingsInner.style.boxShadow="none";}
 
  const pageIds=["vmProductsPage","vmAddProductPage","vmCouponsPage","vmOrdersPage","vmSettingsPage"];
- let spinOpenedFromDashboard=false;
+ // One source of truth for Spin navigation: dailySpinPanel.dataset.returnTo.
+ // Do not keep a second boolean state; it could become stale between openings.
  function closeAll(){pageIds.forEach(id=>$id(id).classList.add("hidden"));$id("dailySpinPanel").classList.add("hidden");$id("dailySpinPanel").classList.remove("spin-page");}
  function openPage(which){
   closeAll();dashboard.classList.add("hidden");
   const map={products:"vmProductsPage",addProduct:"vmAddProductPage",coupons:"vmCouponsPage",orders:"vmOrdersPage",settings:"vmSettingsPage"};
-  if(which==="spin"){$id("dailySpinPanel").dataset.returnTo=spinOpenedFromDashboard?"dashboard":"store";$id("dailySpinPanel").classList.remove("hidden");$id("dailySpinPanel").classList.add("spin-page");return}
+  if(which==="spin"){$id("dailySpinPanel").classList.remove("hidden");$id("dailySpinPanel").classList.add("spin-page");return}
   const page=$id(map[which]);if(page)page.classList.remove("hidden");
   if(which==="settings"){const settingsEl=$id("storeSettings");if(settingsEl){settingsEl.classList.remove("hidden");settingsEl.style.display="block";}if(typeof fillSettingsForm==="function"){fillSettingsForm(window.currentStoreSettings||DEFAULT_STORE_SETTINGS)}}
   if(which==="coupons")loadCoupons();
@@ -1402,7 +1403,7 @@ async function loadOrders(){
  shortcuts.querySelectorAll("[data-page]").forEach(btn=>btn.onclick=()=>{
   if(!isOwner||auth.currentUser?.uid!==OWNER_UID)return;
   const which=btn.dataset.page;
-  if(which==="spin"){spinOpenedFromDashboard=true;$id("dailySpinPanel").dataset.returnTo="dashboard";}
+  if(which==="spin"){$id("dailySpinPanel").dataset.returnTo="dashboard";}
   if(which==="addProduct"){resetProductForm();$id("formTitle").textContent="Add New Product";$id("saveProductBtn").textContent="Save Product";}
   openPage(which);
  });
@@ -1411,26 +1412,26 @@ async function loadOrders(){
  $id("closeSettingsPage").onclick=()=>{closeAll();dashboard.classList.remove("hidden")};
  const legacyProducts=$id("goProductsAdmin");if(legacyProducts)legacyProducts.onclick=()=>openPage("products");
  const legacyOrders=$id("goOrdersAdmin");if(legacyOrders)legacyOrders.onclick=()=>openPage("orders");
- const legacyDashboardSpin=$id("openSpinFromDashboard");
- if(legacyDashboardSpin)legacyDashboardSpin.onclick=()=>{spinOpenedFromDashboard=true;$id("dailySpinPanel").dataset.returnTo="dashboard";openPage("spin")};
+ // The old #openSpinFromDashboard node is replaced above; the new data-page button handles it.
  const addProductControl=$id("addProductBtn");if(addProductControl)addProductControl.onclick=()=>{if(!isOwner)return;resetProductForm();$id("formTitle").textContent="Add New Product";$id("saveProductBtn").textContent="Save Product";openPage("addProduct");$id("pName").focus({preventScroll:true})};
  $id("hideDashboard").onclick=()=>{dashboard.classList.add("hidden");closeAll()};
  $id("dashboardBtn").onclick=()=>{closeAll();dashboard.classList.remove("hidden")};
  $id("loginBtn").onclick=()=>isOwner?($id("dashboard").classList.remove("hidden")):showAuth();
- $id("openSpinPage").onclick=()=>{spinOpenedFromDashboard=false;$id("dailySpinPanel").dataset.returnTo="store";openPage("spin")};
- $id("closeSpinPage").onclick=()=>{
-  const fromDashboard=$id("dailySpinPanel").dataset.returnTo==="dashboard" || spinOpenedFromDashboard;
+ $id("openSpinPage").onclick=()=>{$id("dailySpinPanel").dataset.returnTo="store";openPage("spin")};
+ $id("closeSpinPage").onclick=(event)=>{
+  event?.preventDefault?.();event?.stopPropagation?.();
+  const returnTo=$id("dailySpinPanel").dataset.returnTo;
   closeAll();
   delete $id("dailySpinPanel").dataset.returnTo;
-  spinOpenedFromDashboard=false;
-  if(fromDashboard){
+  if(returnTo==="dashboard"){
+   // Restore the actual owner dashboard, not the storefront.
    dashboard.classList.remove("hidden");
-   dashboard.style.display="block";
+   dashboard.style.removeProperty("display");
    dashboard.scrollIntoView({block:"start",behavior:"instant"});
   }else{
    dashboard.classList.add("hidden");
    const main=document.querySelector("main");
-   if(main)main.style.display="block";
+   if(main)main.style.removeProperty("display");
    window.scrollTo({top:0,behavior:"instant"});
   }
  };
