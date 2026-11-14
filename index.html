@@ -428,11 +428,15 @@ header{background:linear-gradient(110deg,#fff,#fbf7ff 70%,#fff9e9);border-bottom
   <div class="benefit"><span class="benefit-icon">🎁</span><div><strong>Daily Spin & Win</strong><small>Try your luck</small></div></div>
  </section>
  <section class="vm-promo-grid" aria-label="Vibemart highlights">
-  <article class="vm-promo-card vm-promo-sale"><span class="vm-promo-icon">✦</span><div><small>VIBEMART SPECIAL</small><strong>Big Deals<br><em>Bigger Smiles!</em></strong><span>Shop smart • Save more</span></div><b class="vm-promo-tag">SHOP NOW →</b></article>
-  <article class="vm-promo-card vm-promo-spin"><span class="vm-promo-icon">🎡</span><div><small>DAILY REWARDS</small><strong>Spin &amp; Win</strong><span>Give your luck a turn!</span><button type="button" class="vm-promo-tag" id="promoSpinBtn">SPIN NOW →</button></div></article>
-  <article class="vm-promo-card vm-promo-delivery"><span class="vm-promo-icon">🚚</span><div><small>SHOP WITH EASE</small><strong>Cash on<br>Delivery</strong><span>Pay when your order arrives</span></div><b class="vm-promo-tag">EASY SHOPPING</b></article>
- </section>
- <section class="vm-mega-sale" aria-label="Mega sale campaign"><div><small>LIMITED-TIME VIBEMART OFFER</small><h2>MEGA SALE <b>UP TO 70% OFF</b></h2><p>Great finds. Bigger savings. Explore today's deals.</p></div><div class="vm-sale-clock"><span>SALE ENDS IN</span><div id="vmSaleCountdown">-- : -- : --</div><small>Daily offer countdown</small></div><button type="button" id="vmSaleShopBtn">SHOP DEALS →</button></section>
+   <article class="vm-promo-card vm-promo-sale"><span class="vm-promo-icon">👑</span><div><small>VIBEMART SPECIAL</small><strong>Big Deals<br><em>Bigger Smiles!</em></strong><span>Shop smart • Save more</span><button type="button" class="vm-promo-tag" data-vm-action="shop">SHOP NOW →</button></div></article>
+   <article class="vm-promo-card vm-promo-best"><span class="vm-promo-icon">⭐</span><div><small>OUR PICK</small><strong>Best Option</strong><span>Top choice for you!</span><button type="button" class="vm-promo-tag" data-vm-action="shop">EXPLORE NOW →</button></div></article>
+   <article class="vm-promo-card vm-promo-pattern"><span class="vm-promo-icon">💜</span><div><small>VIBEMART STYLE</small><strong>Mixed Pattern</strong><span>Shop • Save • Enjoy</span><button type="button" class="vm-promo-tag" data-vm-action="shop">SHOP NOW →</button></div></article>
+   <article class="vm-promo-card vm-promo-quality"><span class="vm-promo-icon">🛡️</span><div><small>SHOP WITH CONFIDENCE</small><strong>Premium Quality</strong><span>Carefully selected finds</span><button type="button" class="vm-promo-tag" data-vm-action="shop">SHOP NOW →</button></div></article>
+   <article class="vm-promo-card vm-promo-limited"><span class="vm-promo-icon">⏰</span><div><small>LIMITED TIME OFFER</small><strong>Grab It Fast!</strong><span>Daily deal ends in <b id="vmPromoCountdown">--:--:--</b></span><button type="button" class="vm-promo-tag" data-vm-action="shop">VIEW DEALS →</button></div></article>
+   <article class="vm-promo-card vm-promo-spin"><span class="vm-promo-icon">🎡</span><div><small>DAILY REWARDS</small><strong>Spin &amp; Win</strong><span>Win coupons &amp; discounts</span><button type="button" class="vm-promo-tag" id="promoSpinBtn">SPIN NOW →</button></div></article>
+   <article class="vm-promo-card vm-promo-delivery"><span class="vm-promo-icon">🚚</span><div><small>SHOP WITH EASE</small><strong>Cash on Delivery</strong><span>Shop now, pay when it arrives</span><button type="button" class="vm-promo-tag" data-vm-action="track">LEARN MORE →</button></div></article>
+  </section>
+  <section class="vm-mega-sale" aria-label="Mega sale campaign"><div><small>LIMITED-TIME VIBEMART OFFER</small><h2>MEGA SALE <b>UP TO 70% OFF</b></h2><p>Great finds. Bigger savings. Explore today's deals.</p></div><div class="vm-sale-clock"><span>SALE ENDS IN</span><div id="vmSaleCountdown">-- : -- : --</div><small>Daily offer countdown</small></div><button type="button" id="vmSaleShopBtn">SHOP DEALS →</button></section>
 
  <section class="panel" id="trackingPanel">
   <h2>📦 Track Your Order</h2>
@@ -1445,7 +1449,7 @@ header{background:#fff;border-bottom:3px solid #f4c24e;box-shadow:0 7px 22px #55
 .spin-panel .primary{background:linear-gradient(100deg,#ffb52e,#f06a24)!important;color:#35104e!important;box-shadow:0 5px 0 #b74a12,0 9px 18px #f5a52d50!important;font-size:16px;padding:15px 25px;min-width:190px}
 #openSpinPage{display:block;width:min(100% - 28px,520px);margin:18px auto 22px;padding:17px 24px!important;border-radius:18px!important;background:linear-gradient(100deg,#ffcf45,#ff792e)!important;color:#35104e!important;border:2px solid #fff0b7!important;box-shadow:0 5px 0 #b74a12,0 12px 25px #e98a2750!important;font-weight:1000;font-size:19px!important;letter-spacing:.2px;animation:vmSpinPulse 2.2s ease-in-out infinite}
 @keyframes vmSpinPulse{0%,100%{transform:translateY(0);box-shadow:0 5px 0 #b74a12,0 12px 25px #e98a2750}50%{transform:translateY(-2px);box-shadow:0 6px 0 #b74a12,0 16px 30px #e98a2770}}
-.hero-art{min-height:205px}}
+.hero-art{min-height:205px}
 .vm-admin-page{background:radial-gradient(circle at 95% 0%,#fff0c8,transparent 25%),linear-gradient(145deg,#f4eaff,#fffaf2)!important}
 .vm-admin-head{background:#fffaf2!important}
 .vm-admin-head h2{color:#572092!important;font-weight:1000}
@@ -1531,8 +1535,90 @@ footer{background:linear-gradient(100deg,#2d1049,#57209a);color:#fff}
 .productbody{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;column-gap:10px;row-gap:7px}.productbody h3,.productbody>p,.productbody .ratingSummary{grid-column:1/-1}.productbody .product-price-wrap,.productbody .priceDetails{grid-column:1}.productbody .productbuttons{grid-column:2;grid-row:4 / span 4;display:flex;flex-direction:column;align-self:center;min-width:112px;margin:0}.productbuttons button{min-width:108px;white-space:nowrap}.productbody .priceDetails{min-width:0}.productbody .priceDetails .price{font-size:clamp(18px,2vw,23px)}
 @media(max-width:760px){.vm-mega-sale{grid-template-columns:1fr;gap:12px;padding:18px}.vm-sale-clock{width:auto}.vm-mega-sale #vmSaleShopBtn{width:100%}.vm-spin-layout{grid-template-columns:1fr;gap:14px}.vm-spin-prizes{width:100%;box-sizing:border-box}.productbody{grid-template-columns:minmax(0,1fr) auto;column-gap:6px}.productbody .productbuttons{min-width:88px}.productbuttons button{min-width:84px;padding:9px 5px;font-size:10px}.productbody .productbuttons{grid-row:4 / span 4}.productbody .priceDetails .price{font-size:17px}}
 @media(max-width:420px){.vm-prize-grid{gap:6px}.vm-prize-grid span{font-size:10px;padding:8px 6px}.productbody{grid-template-columns:1fr}.productbody .productbuttons{grid-column:1;grid-row:auto;flex-direction:row;flex-wrap:wrap;margin-top:8px}.productbuttons button{flex:1;min-width:0}.productbody h3,.productbody>p,.productbody .ratingSummary{grid-column:1}}
+
+/* NUMBERED CONCEPTS 2–20: visual layer only; original Firebase and store actions remain intact */
+.vm-promo-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.vm-promo-card{min-height:168px;padding:17px;align-items:center}
+.vm-promo-card>div{min-width:0;position:relative;z-index:1}
+.vm-promo-card .vm-promo-tag{cursor:pointer}
+.vm-promo-best{background:radial-gradient(circle at 90% 10%,#b879ff,transparent 32%),linear-gradient(130deg,#291044,#6320b5 65%,#8a3be0)}
+.vm-promo-pattern{background:linear-gradient(135deg,#251044,#5220a3 48%,#30206c);border-color:#9b7bea}
+.vm-promo-quality{background:linear-gradient(130deg,#21103b,#492080 58%,#176b62)}
+.vm-promo-limited{background:radial-gradient(circle at 85% 20%,#ffb34b,transparent 30%),linear-gradient(130deg,#7d1e28,#d64225 60%,#681d36)}
+.vm-promo-limited .vm-promo-icon{background:linear-gradient(145deg,#fff1c4,#ffb43c);color:#9c2e17}
+.vm-promo-limited span b{color:#ffe27c;font-size:14px;letter-spacing:1px}
+.vm-promo-spin{background:radial-gradient(circle at 85% 20%,#9d5aff,transparent 30%),linear-gradient(130deg,#271044,#6220ad 65%,#9b45e8)}
+.vm-promo-delivery{background:linear-gradient(130deg,#21103b,#4d218e 60%,#7a3bc5)}
+.vm-promo-card strong{font-size:clamp(18px,1.8vw,24px)}
+.vm-promo-card .vm-promo-icon{flex-basis:54px;width:54px;height:54px;font-size:27px}
+.vm-promo-card:after{pointer-events:none}
+.vm-mega-sale{min-height:190px}
+#dashboard{background:radial-gradient(circle at 95% 0,#fff0bd 0,transparent 25%),linear-gradient(145deg,#f2eaff,#fff 60%,#fff9e9)!important}
+#dashboard>.sectionhead{padding:12px 16px;border-radius:15px;background:#fff;box-shadow:0 5px 18px #32105210}
+#dashboard .dashboard-shortcuts{grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
+#dashboard .dashboard-shortcuts button{min-height:112px;text-align:left;padding:17px 14px;font-size:14px}
+#dashboard .dashboard-shortcuts button small{display:block;margin-top:8px;color:#82738f;font-size:11px;line-height:1.5}
+#dashboard .dashboard-shortcuts button[data-page="spin"]{background:linear-gradient(130deg,#32104f,#6c25bd)!important;color:#fff!important}
+#dashboard .dashboard-shortcuts button[data-page="spin"] small{color:#ffedb2}
+.vm-admin-page{padding:clamp(14px,3vw,30px)!important}
+.vm-admin-head{max-width:1120px;margin:0 auto 16px;padding:15px 18px;border-radius:16px}
+.vm-admin-content{max-width:1120px;margin:0 auto;padding:clamp(16px,3vw,28px)}
+#productEditor,#couponForm,#manageProducts,#manageCoupons,#orders{border-radius:16px}
+.product{display:flex;flex-direction:row;align-items:stretch;min-height:190px}
+.product>img{flex:0 0 36%;width:36%;height:auto;min-height:190px;max-height:260px;object-fit:contain;align-self:stretch;padding:12px}
+.product>.productbody{flex:1 1 64%;min-width:0;display:grid;grid-template-columns:minmax(0,1fr) auto;align-content:center;align-items:center;padding:14px;gap:7px}
+.productbody h3,.productbody>p,.productbody .ratingSummary{grid-column:1/-1}
+.productbody .price{grid-column:1;align-self:start}
+.productbody .productbuttons{grid-column:2;grid-row:4/span 4;display:flex;flex-direction:column;align-self:center;min-width:112px;margin:0}
+.productbody .productbuttons button{min-width:104px;white-space:normal}
+.productbody .price .oldprice{font-size:12px}
+#cartModal .modalbox,#reviewsModal .modalbox,#successModal .modalbox{border:2px solid #e5d5f5;box-shadow:0 24px 75px #24104455}
+#cartModal h2,#reviewsModal h2,#successModal h2{color:#4c1884;font-weight:1000}
+#cartItems>*,.reviewItem{border:1px solid #e9def6;border-radius:14px;background:linear-gradient(145deg,#fff,#faf6ff);padding:13px;margin:10px 0}
+#checkoutForm{padding:16px;border:1px solid #eadcf7;border-radius:16px;background:linear-gradient(145deg,#fff,#fbf7ff)}
+#trackingPanel{position:relative;overflow:hidden}
+#trackingPanel h2{font-weight:1000}
+#trackingId{border:1px solid #d9c9ef}
+#trackOrderBtn{min-width:150px}
+#reviewsModal .ratingSummary{padding:10px;border-radius:12px;background:#fff6d9;color:#68431b;font-weight:850}
+#reviewForm{padding:14px;border-radius:15px;background:#faf7ff}
+@media(max-width:900px){
+ .vm-promo-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #dashboard .dashboard-shortcuts{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:600px){
+ .vm-promo-grid{grid-template-columns:1fr}
+ .vm-promo-card{min-height:132px}
+ #dashboard .dashboard-shortcuts{grid-template-columns:1fr}
+ #dashboard .dashboard-shortcuts button{min-height:78px}
+ .product{min-height:155px;border-radius:14px}
+ .product>img{flex-basis:38%;width:38%;min-height:155px;max-height:220px;padding:7px}
+ .product>.productbody{padding:10px;grid-template-columns:minmax(0,1fr) auto;gap:5px}
+ .productbody h3{font-size:13px}
+ .productbody .productbuttons{min-width:84px}
+ .productbody .productbuttons button{min-width:80px;padding:8px 5px;font-size:10px}
+ #trackingPanel .searchrow input,#trackingPanel .searchrow button{width:100%;min-width:0}
+}
+@media(max-width:420px){
+ .product>.productbody{grid-template-columns:1fr}
+ .productbody .productbuttons{grid-column:1;grid-row:auto;flex-direction:row;flex-wrap:wrap;margin-top:7px}
+ .productbody .productbuttons button{flex:1;min-width:0}
+}
+
 </style>
 
-<script>document.addEventListener("DOMContentLoaded",()=>{const promo=document.getElementById("promoSpinBtn"),open=document.getElementById("openSpinPage");if(promo&&open)promo.addEventListener("click",()=>open.click());});</script>
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+ const promo=document.getElementById("promoSpinBtn"),open=document.getElementById("openSpinPage");
+ if(promo&&open)promo.addEventListener("click",()=>open.click());
+ document.querySelectorAll("[data-vm-action]").forEach(button=>button.addEventListener("click",()=>{
+  const action=button.getAttribute("data-vm-action");
+  if(action==="shop")document.getElementById("exploreBtn")?.click();
+  if(action==="track")document.getElementById("trackBtn")?.click();
+ }));
+ const source=document.getElementById("vmSaleCountdown"),mirror=document.getElementById("vmPromoCountdown");
+ if(source&&mirror){const sync=()=>mirror.textContent=source.textContent;sync();new MutationObserver(sync).observe(source,{childList:true,characterData:true,subtree:true});}
+});
+</script>
 </body>
 </html>
