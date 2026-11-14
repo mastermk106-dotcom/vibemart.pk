@@ -478,7 +478,7 @@ header{background:linear-gradient(110deg,#fff,#fbf7ff 70%,#fff9e9);border-bottom
  </section>
  <button class="primary" id="openSpinPage" type="button">🎡 Open Daily Spin & Win</button>
  <section class="spin-panel hidden" id="dailySpinPanel">
-  <div class="spin-page-head"><span style="font-weight:900;color:#4c1d95">VIBEMART REWARDS</span><button class="secondary" id="closeSpinPage" type="button">← Back to Store</button></div><div class="spin-page-inner"><h2>🎡 Daily Spin & Win!</h2><p>Apna email ya phone enter karo. Har identifier ko roz sirf 1 spin milega.</p>
+  <div class="spin-page-head"><span style="font-weight:900;color:#4c1d95">VIBEMART REWARDS</span><button class="secondary vm-spin-close" id="closeSpinPage" type="button" aria-label="Close Spin page" title="Close">✕</button></div><div class="spin-page-inner"><h2>🎡 Daily Spin & Win!</h2><p>Apna email ya phone enter karo. Har identifier ko roz sirf 1 spin milega.</p>
   <div class="field" style="max-width:440px;margin:12px auto"><label for="spinIdentifier">Email ya phone number</label><input id="spinIdentifier" maxlength="120" placeholder="Email ya phone number"></div>
   <div class="vm-spin-layout"><div class="vm-spin-wheel-side"><div class="spin-wheel-wrap"><div class="spin-pointer"></div><div class="spin-wheel" id="spinWheel"></div></div><button class="primary" id="spinButton" type="button">🎁 Spin Now</button></div><aside class="vm-spin-prizes"><h3>🎁 Your Possible Gifts</h3><p>Har din ek chance — spin karo aur reward dekho!</p><div class="vm-prize-grid"><span>🏷️ 5% OFF</span><span>🎟️ Rs 50 OFF</span><span>✨ 10% OFF</span><span>🍀 Try Again</span><span>💰 Rs 100 OFF</span><span>💜 15% OFF</span><span>🎉 Rs 200 OFF</span><span>👑 20% OFF</span></div></aside></div><div id="spinMessage" class="spin-message" aria-live="polite"></div><div id="spinResultCard" class="spin-result-card" aria-live="polite"><span class="spin-result-kicker">Your spin result</span><strong id="spinResultValue" class="spin-result-value">—</strong><div id="spinResultNote" class="spin-result-note">Prize result will appear here.</div></div>
   <p class="small">Prize result spin ke baad confirm hoga. Discount eligible order subtotal par apply hota hai.</p></div>
@@ -1381,7 +1381,7 @@ async function loadOrders(){
  function openPage(which){
   closeAll();dashboard.classList.add("hidden");
   const map={products:"vmProductsPage",addProduct:"vmAddProductPage",coupons:"vmCouponsPage",orders:"vmOrdersPage",settings:"vmSettingsPage"};
-  if(which==="spin"){$id("dailySpinPanel").dataset.returnTo=spinOpenedFromDashboard?"dashboard":"store";$id("dailySpinPanel").classList.remove("hidden");$id("dailySpinPanel").classList.add("spin-page");$id("closeSpinPage").textContent=$id("dailySpinPanel").dataset.returnTo==="dashboard"?"← Back to Dashboard":"← Back to Store";return}
+  if(which==="spin"){$id("dailySpinPanel").dataset.returnTo=spinOpenedFromDashboard?"dashboard":"store";$id("dailySpinPanel").classList.remove("hidden");$id("dailySpinPanel").classList.add("spin-page");return}
   const page=$id(map[which]);if(page)page.classList.remove("hidden");
   if(which==="settings"){const settingsEl=$id("storeSettings");if(settingsEl){settingsEl.classList.remove("hidden");settingsEl.style.display="block";}if(typeof fillSettingsForm==="function"){fillSettingsForm(window.currentStoreSettings||DEFAULT_STORE_SETTINGS)}}
   if(which==="coupons")loadCoupons();
@@ -1392,7 +1392,7 @@ async function loadOrders(){
  shortcuts.querySelectorAll("[data-page]").forEach(btn=>btn.onclick=()=>{
   if(!isOwner||auth.currentUser?.uid!==OWNER_UID)return;
   const which=btn.dataset.page;
-  if(which==="spin"){spinOpenedFromDashboard=true;$id("dailySpinPanel").dataset.returnTo="dashboard";$id("closeSpinPage").textContent="← Back to Dashboard";}
+  if(which==="spin"){spinOpenedFromDashboard=true;$id("dailySpinPanel").dataset.returnTo="dashboard";}
   if(which==="addProduct"){resetProductForm();$id("formTitle").textContent="Add New Product";$id("saveProductBtn").textContent="Save Product";}
   openPage(which);
  });
@@ -1401,12 +1401,12 @@ async function loadOrders(){
  $id("closeSettingsPage").onclick=()=>{closeAll();dashboard.classList.remove("hidden")};
  $id("goProductsAdmin").onclick=()=>openPage("products");
  $id("goOrdersAdmin").onclick=()=>openPage("orders");
- $id("openSpinFromDashboard").onclick=()=>{spinOpenedFromDashboard=true;$id("dailySpinPanel").dataset.returnTo="dashboard";$id("closeSpinPage").textContent="← Back to Dashboard";openPage("spin")};
+ $id("openSpinFromDashboard").onclick=()=>{spinOpenedFromDashboard=true;$id("dailySpinPanel").dataset.returnTo="dashboard";openPage("spin")};
  $id("addProductBtn").onclick=()=>{if(!isOwner)return;resetProductForm();$id("formTitle").textContent="Add New Product";$id("saveProductBtn").textContent="Save Product";openPage("addProduct");$id("pName").focus({preventScroll:true})};
  $id("hideDashboard").onclick=()=>{dashboard.classList.add("hidden");closeAll()};
  $id("dashboardBtn").onclick=()=>{closeAll();dashboard.classList.remove("hidden")};
  $id("loginBtn").onclick=()=>isOwner?($id("dashboard").classList.remove("hidden")):showAuth();
- $id("openSpinPage").onclick=()=>{spinOpenedFromDashboard=false;$id("dailySpinPanel").dataset.returnTo="store";$id("closeSpinPage").textContent="← Back to Store";openPage("spin")};
+ $id("openSpinPage").onclick=()=>{spinOpenedFromDashboard=false;$id("dailySpinPanel").dataset.returnTo="store";openPage("spin")};
  $id("closeSpinPage").onclick=()=>{const fromDashboard=$id("dailySpinPanel").dataset.returnTo==="dashboard";closeAll();spinOpenedFromDashboard=false;delete $id("dailySpinPanel").dataset.returnTo;if(fromDashboard){dashboard.classList.remove("hidden");dashboard.scrollIntoView({block:"start",behavior:"instant"})}};
  // Product edits are routed to the dedicated product form page.
  const originalRender=renderManageProducts;
@@ -1510,6 +1510,9 @@ header{background:linear-gradient(100deg,#fff,#f8f2ff);border-bottom:2px solid #
 .vm-admin-head{background:#fff!important;border-bottom:1px solid #e7daf2}
 input:focus,textarea:focus,select:focus{border-color:#8c45c8;box-shadow:0 0 0 3px #8c45c822}
 footer{background:linear-gradient(100deg,#2d1049,#57209a);color:#fff}
+/* Spin page uses a simple close cross instead of a Back label. */
+.vm-spin-close{width:38px;height:38px;min-width:38px;padding:0!important;display:grid;place-items:center;border-radius:50%!important;font-size:23px!important;line-height:1;font-weight:900;color:#5b2194!important;background:#fff!important;border:1px solid #e7d8f5!important;box-shadow:0 3px 9px #32105218!important}
+.vm-spin-close:hover{background:#f4eaff!important;transform:scale(1.04)}
 /* Back button label and destination are set from the page that opened Spin. */
 @media(max-width:600px){.price{font-size:17px;padding:5px 8px}.spin-panel{padding:17px 11px}#openSpinPage{width:100%;font-size:17px!important}}
 
