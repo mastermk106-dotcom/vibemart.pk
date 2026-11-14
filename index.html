@@ -1381,7 +1381,7 @@ async function loadOrders(){
  function openPage(which){
   closeAll();dashboard.classList.add("hidden");
   const map={products:"vmProductsPage",addProduct:"vmAddProductPage",coupons:"vmCouponsPage",orders:"vmOrdersPage",settings:"vmSettingsPage"};
-  if(which==="spin"){$id("dailySpinPanel").classList.remove("hidden");$id("dailySpinPanel").classList.add("spin-page");$id("closeSpinPage").textContent=spinOpenedFromDashboard?"← Back to Dashboard":"← Back to Store";return}
+  if(which==="spin"){$id("dailySpinPanel").dataset.returnTo=spinOpenedFromDashboard?"dashboard":"store";$id("dailySpinPanel").classList.remove("hidden");$id("dailySpinPanel").classList.add("spin-page");$id("closeSpinPage").textContent=$id("dailySpinPanel").dataset.returnTo==="dashboard"?"← Back to Dashboard":"← Back to Store";return}
   const page=$id(map[which]);if(page)page.classList.remove("hidden");
   if(which==="settings"){const settingsEl=$id("storeSettings");if(settingsEl){settingsEl.classList.remove("hidden");settingsEl.style.display="block";}if(typeof fillSettingsForm==="function"){fillSettingsForm(window.currentStoreSettings||DEFAULT_STORE_SETTINGS)}}
   if(which==="coupons")loadCoupons();
@@ -1392,7 +1392,7 @@ async function loadOrders(){
  shortcuts.querySelectorAll("[data-page]").forEach(btn=>btn.onclick=()=>{
   if(!isOwner||auth.currentUser?.uid!==OWNER_UID)return;
   const which=btn.dataset.page;
-  if(which==="spin"){spinOpenedFromDashboard=true;$id("closeSpinPage").textContent="← Back to Dashboard";}
+  if(which==="spin"){spinOpenedFromDashboard=true;$id("dailySpinPanel").dataset.returnTo="dashboard";$id("closeSpinPage").textContent="← Back to Dashboard";}
   if(which==="addProduct"){resetProductForm();$id("formTitle").textContent="Add New Product";$id("saveProductBtn").textContent="Save Product";}
   openPage(which);
  });
@@ -1401,13 +1401,13 @@ async function loadOrders(){
  $id("closeSettingsPage").onclick=()=>{closeAll();dashboard.classList.remove("hidden")};
  $id("goProductsAdmin").onclick=()=>openPage("products");
  $id("goOrdersAdmin").onclick=()=>openPage("orders");
- $id("openSpinFromDashboard").onclick=()=>{spinOpenedFromDashboard=true;$id("closeSpinPage").textContent="← Back to Dashboard";openPage("spin")};
+ $id("openSpinFromDashboard").onclick=()=>{spinOpenedFromDashboard=true;$id("dailySpinPanel").dataset.returnTo="dashboard";$id("closeSpinPage").textContent="← Back to Dashboard";openPage("spin")};
  $id("addProductBtn").onclick=()=>{if(!isOwner)return;resetProductForm();$id("formTitle").textContent="Add New Product";$id("saveProductBtn").textContent="Save Product";openPage("addProduct");$id("pName").focus({preventScroll:true})};
  $id("hideDashboard").onclick=()=>{dashboard.classList.add("hidden");closeAll()};
  $id("dashboardBtn").onclick=()=>{closeAll();dashboard.classList.remove("hidden")};
  $id("loginBtn").onclick=()=>isOwner?($id("dashboard").classList.remove("hidden")):showAuth();
- $id("openSpinPage").onclick=()=>{spinOpenedFromDashboard=false;$id("closeSpinPage").textContent="← Back to Store";openPage("spin")};
- $id("closeSpinPage").onclick=()=>{const fromDashboard=spinOpenedFromDashboard;closeAll();spinOpenedFromDashboard=false;if(fromDashboard)dashboard.classList.remove("hidden")};
+ $id("openSpinPage").onclick=()=>{spinOpenedFromDashboard=false;$id("dailySpinPanel").dataset.returnTo="store";$id("closeSpinPage").textContent="← Back to Store";openPage("spin")};
+ $id("closeSpinPage").onclick=()=>{const fromDashboard=$id("dailySpinPanel").dataset.returnTo==="dashboard";closeAll();spinOpenedFromDashboard=false;delete $id("dailySpinPanel").dataset.returnTo;if(fromDashboard){dashboard.classList.remove("hidden");dashboard.scrollIntoView({block:"start",behavior:"instant"})}};
  // Product edits are routed to the dedicated product form page.
  const originalRender=renderManageProducts;
  renderManageProducts=function(){
