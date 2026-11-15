@@ -640,6 +640,132 @@ main{max-width:1600px;padding:16px 20px 45px}
 @media(max-width:420px){main{padding:10px}.vm-hero{height:210px}.vm-hero-title{font-size:17px}.vm-hero-price{font-size:16px;padding:4px 10px}.vm-hero-price b{font-size:39px}.vm-hero-cta{padding:8px 10px;font-size:10px}.vm-hero-speech{left:15%;font-size:8px}.vm-hero-deal{font-size:9px;right:0}.vm-benefits .benefit{padding:8px 6px;gap:4px}.vm-benefits .benefit-icon{font-size:22px;flex-basis:30px;width:30px}.vm-benefits .benefit strong{font-size:11px}.vm-benefits .benefit small{font-size:9px}.vm-sidebar{grid-template-columns:1fr}.vm-category-head{grid-column:1}.vm-spin-teaser,.vm-coupon-teaser{min-height:78px}.products#products{grid-template-columns:repeat(2,minmax(0,1fr))}#products .productbody{padding:8px!important}#products .productbody h3{font-size:13px!important}#products .productbody .price{font-size:18px!important}#products .productbody .productbuttons button{font-size:9px!important;padding:8px 3px!important}#products .productbody .productbuttons button:nth-child(2){flex-basis:34px!important;width:34px!important}}
 
 </style>
+<style>
+
+/* VIBEMART JUNGLE THEME — STORE AREA ONLY; HOME/WELCOME IS UNCHANGED */
+body.vm-jungle-store{
+ --jungle-ink:#342047;
+ --jungle-purple:#7026c8;
+ --jungle-lilac:#f4e8ff;
+ --jungle-leaf:#2f8b45;
+ --jungle-wood:#b96d2e;
+}
+body.vm-jungle-store .vm-sidebar{
+ background:linear-gradient(180deg,#fffdf6,#f3ffe9)!important;
+ border:2px solid #d9edc8!important;
+ border-radius:22px!important;
+ box-shadow:0 7px 0 #c5dfa9,0 12px 24px #315b2020!important;
+ overflow:hidden;
+}
+body.vm-jungle-store .vm-category-head{
+ background:linear-gradient(100deg,#6c27bb,#8d48d5)!important;
+ color:#fff!important;
+ border:0!important;
+ font-weight:900!important;
+ text-shadow:0 2px #3b1766;
+}
+body.vm-jungle-store #categories button{
+ border-radius:12px!important;
+ margin:4px 7px!important;
+ padding:10px 12px!important;
+ color:#38204b!important;
+ font-weight:800!important;
+ transition:transform .18s,background .18s;
+}
+body.vm-jungle-store #categories button:hover,
+body.vm-jungle-store #categories button.active{
+ background:#e9f8d9!important;
+ color:#4b1a8b!important;
+ transform:translateX(3px);
+}
+body.vm-jungle-store .vm-spin-teaser{
+ background:linear-gradient(120deg,#f4d8ff,#e9c5ff 55%,#fff0a8)!important;
+ border:2px solid #d7b2f2!important;
+ border-radius:20px!important;
+ box-shadow:0 5px 0 #cba4e8!important;
+ color:#5d1c9e!important;
+}
+body.vm-jungle-store .vm-coupon-teaser{
+ background:linear-gradient(135deg,#fffdf4,#efffe6)!important;
+ border:2px dashed #a8d18d!important;
+ border-radius:20px!important;
+ box-shadow:0 5px 0 #d4e9c3!important;
+}
+body.vm-jungle-store .vm-shop-tools{
+ background:linear-gradient(100deg,#f4e5ff,#fff5d9)!important;
+ border:2px solid #dfc5f4!important;
+ border-radius:18px!important;
+ box-shadow:0 4px 0 #d7c0e8!important;
+}
+body.vm-jungle-store #shop{
+ position:relative;
+ isolation:isolate;
+ padding:12px!important;
+ border:2px solid #d9edc8!important;
+ border-radius:22px!important;
+ background:
+  radial-gradient(ellipse at 0 0,#e3f8d5 0,transparent 25%),
+  radial-gradient(ellipse at 100% 0,#f1e0ff 0,transparent 24%),
+  linear-gradient(180deg,#fffdf7,#f8fff3)!important;
+ box-shadow:0 8px 0 #d3e6c3,0 14px 28px #385d2518!important;
+}
+body.vm-jungle-store #shop:before,
+body.vm-jungle-store #shop:after{
+ position:absolute;z-index:-1;pointer-events:none;
+ font-size:clamp(30px,4vw,54px);opacity:.8;
+}
+body.vm-jungle-store #shop:before{content:"🌿 🍃";left:10px;top:4px}
+body.vm-jungle-store #shop:after{content:"🍃 🌿";right:10px;top:4px}
+body.vm-jungle-store #shop .sectionhead{
+ background:linear-gradient(100deg,#6b24bd,#8e42d2)!important;
+ border:3px solid #f2ddff!important;
+ border-radius:16px!important;
+ padding:12px 16px!important;
+ margin:4px 0 14px!important;
+ box-shadow:0 5px 0 #4d187e!important;
+ color:#fff!important;
+}
+body.vm-jungle-store #shop .sectionhead h2{
+ color:#fff!important;
+ text-shadow:0 2px #40116c!important;
+}
+body.vm-jungle-store #shop .vm-view-all{
+ background:#fff!important;color:#6421a8!important;
+ border:2px solid #e3c7f7!important;border-radius:999px!important;
+}
+body.vm-jungle-store #products .product{
+ border:2px solid #dfc5f6!important;
+ border-radius:20px!important;
+ overflow:hidden!important;
+ background:#fff!important;
+ box-shadow:0 5px 0 #e6d5f3,0 10px 20px #48215b12!important;
+ transition:transform .2s,box-shadow .2s;
+}
+body.vm-jungle-store #products .product:hover{
+ transform:translateY(-4px);
+ box-shadow:0 8px 0 #d4b6ed,0 15px 24px #48215b20!important;
+}
+body.vm-jungle-store #products .productbody{
+ background:linear-gradient(180deg,#fff,#fffaff)!important;
+}
+body.vm-jungle-store #products .productbody h3{color:#32174b!important}
+body.vm-jungle-store #products .productbody .price{color:#7026c8!important}
+body.vm-jungle-store #products .productbuttons button{
+ border-radius:12px!important;font-weight:850!important;
+}
+body.vm-jungle-store #products .productbuttons button:first-child{
+ background:linear-gradient(100deg,#7026c8,#9b4be1)!important;
+ box-shadow:0 3px 0 #4b1685!important;color:#fff!important;
+}
+body.vm-jungle-store #products .productbuttons button:not(:first-child){
+ border:1.5px solid #b887e6!important;background:#f7edff!important;color:#5b1c99!important;
+}
+@media(max-width:700px){
+ body.vm-jungle-store #shop{padding:8px!important}
+ body.vm-jungle-store #shop .sectionhead{padding:10px!important}
+}
+
+</style>
 </head>
 <body>
 <div class="announcement-bar"><span class="announce-dot"></span> Smart finds, friendly prices <span class="announce-sep">•</span> Cash on Delivery available <span class="announce-sep">•</span> Shop your vibe</div>
@@ -854,7 +980,7 @@ main{max-width:1600px;padding:16px 20px 45px}
   <div class="sectionhead"><h2 id="reviewsTitle">⭐ Customer Reviews</h2><button class="secondary" id="closeReviews">Close</button></div>
   <div id="reviewProductName" class="notice"></div><div id="reviewSummary" class="ratingSummary"></div>
   <div id="reviewsList" aria-live="polite">Reviews load ho rahe hain...</div>
-  <hr><h3 id="reviewFormHeading">✍️ Write a Review</h3><p class="small">Apna honest review aur rating share karein.</p>
+  <hr><h3>✍️ Write a Review</h3><p class="small">Apna honest review aur rating share karein.</p>
   <form id="reviewForm">
    <div class="field"><label for="reviewName">Your name *</label><input id="reviewName" required maxlength="50" minlength="2" placeholder="Apna naam"></div>
    <div class="field"><label for="reviewRating">Your rating *</label><select id="reviewRating" required><option value="5">★★★★★ — Excellent</option><option value="4">★★★★☆ — Very good</option><option value="3">★★★☆☆ — Good</option><option value="2">★★☆☆☆ — Fair</option><option value="1">★☆☆☆☆ — Poor</option></select></div>
@@ -1224,20 +1350,13 @@ function renderProducts(){
   fav.setAttribute("aria-pressed",String(wishlist.includes(p.id)));
   fav.onclick=()=>toggleWishlist(p.id);
 
-  const addReview=document.createElement("button");
-  addReview.type="button";
-  addReview.className="secondary";
-  addReview.textContent="✍️ Add Review";
-  addReview.onclick=()=>openReviews(p.id,"write");
+  const rev=document.createElement("button");
+  rev.type="button";rev.className="secondary";
+  rev.textContent="⭐ Reviews / Rate";
+  rev.onclick=()=>openReviews(p.id);
 
-  const viewReviews=document.createElement("button");
-  viewReviews.type="button";
-  viewReviews.className="secondary";
-  viewReviews.textContent="👁 View Reviews";
-  viewReviews.onclick=()=>openReviews(p.id,"view");
-
-  // Keep each product action as its own button in the product card.
-  btns.append(add,fav,addReview,viewReviews);
+  // All three buttons are appended. This was the missing line in the earlier code.
+  btns.append(add,fav,rev);
   b.append(t,cat,priceDetails(p),stock,rating,desc,btns);
   c.append(im,b);$("products").append(c);
  });
@@ -1257,16 +1376,12 @@ async function loadReviewSummary(productId){
  const average=reviews.length?reviews.reduce((sum,r)=>sum+Number(r.rating||0),0)/reviews.length:0;
  const summary={average,count:reviews.length};reviewCache[productId]={summary,reviews};return summary;
 }
-async function openReviews(productId,mode="view"){
+async function openReviews(productId){
  const p=allProducts.find(x=>x.id===productId);if(!p)return;
  activeReviewProduct=productId;$("reviewProductName").textContent="Product: "+productName(p);
- $("reviewsTitle").textContent=mode==="write"?"✍️ Add Product Review":"👁 Product Reviews";
- $("reviewsModal").classList.remove("hidden");
+ $("reviewsTitle").textContent="⭐ Customer Reviews";$("reviewsModal").classList.remove("hidden");
  $("reviewsList").textContent="Reviews load ho rahe hain...";$("reviewSummary").textContent="";
- $("reviewForm").reset();message("reviewMessage","");
- await refreshReviews(productId);
- const target=mode==="write"?$("reviewFormHeading"):$("reviewsList");
- requestAnimationFrame(()=>target?.scrollIntoView({behavior:"smooth",block:"center"}));
+ $("reviewForm").reset();message("reviewMessage","");await refreshReviews(productId);
 }
 async function refreshReviews(productId){
  try{
@@ -2110,5 +2225,22 @@ document.addEventListener("DOMContentLoaded",function(){
  document.getElementById("vmViewAll")?.addEventListener("click",()=>document.getElementById("shop")?.scrollIntoView({behavior:"smooth"}));
 });
 </script>
+
+<script>
+/* Only toggle jungle styling while visiting the Store section. */
+document.addEventListener("DOMContentLoaded",function(){
+ const body=document.body;
+ const store=document.getElementById("vmStoreBtn");
+ const home=document.getElementById("vmHomeBtn");
+ const shop=document.getElementById("shop");
+ const enable=()=>body.classList.add("vm-jungle-store");
+ const disable=()=>body.classList.remove("vm-jungle-store");
+ store?.addEventListener("click",enable);
+ home?.addEventListener("click",disable);
+ document.getElementById("vmViewAll")?.addEventListener("click",enable);
+ document.getElementById("vmCouponBtn")?.addEventListener("click",enable);
+});
+</script>
+
 </body>
 </html>
