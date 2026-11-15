@@ -854,7 +854,7 @@ main{max-width:1600px;padding:16px 20px 45px}
   <div class="sectionhead"><h2 id="reviewsTitle">⭐ Customer Reviews</h2><button class="secondary" id="closeReviews">Close</button></div>
   <div id="reviewProductName" class="notice"></div><div id="reviewSummary" class="ratingSummary"></div>
   <div id="reviewsList" aria-live="polite">Reviews load ho rahe hain...</div>
-  <hr><h3>✍️ Write a Review</h3><p class="small">Apna honest review aur rating share karein.</p>
+  <hr><h3 id="reviewFormHeading">✍️ Write a Review</h3><p class="small">Apna honest review aur rating share karein.</p>
   <form id="reviewForm">
    <div class="field"><label for="reviewName">Your name *</label><input id="reviewName" required maxlength="50" minlength="2" placeholder="Apna naam"></div>
    <div class="field"><label for="reviewRating">Your rating *</label><select id="reviewRating" required><option value="5">★★★★★ — Excellent</option><option value="4">★★★★☆ — Very good</option><option value="3">★★★☆☆ — Good</option><option value="2">★★☆☆☆ — Fair</option><option value="1">★☆☆☆☆ — Poor</option></select></div>
@@ -1224,13 +1224,20 @@ function renderProducts(){
   fav.setAttribute("aria-pressed",String(wishlist.includes(p.id)));
   fav.onclick=()=>toggleWishlist(p.id);
 
-  const rev=document.createElement("button");
-  rev.type="button";rev.className="secondary";
-  rev.textContent="⭐ Reviews / Rate";
-  rev.onclick=()=>openReviews(p.id);
+  const addReview=document.createElement("button");
+  addReview.type="button";
+  addReview.className="secondary";
+  addReview.textContent="✍️ Add Review";
+  addReview.onclick=()=>openReviews(p.id,"write");
 
-  // All three buttons are appended. This was the missing line in the earlier code.
-  btns.append(add,fav,rev);
+  const viewReviews=document.createElement("button");
+  viewReviews.type="button";
+  viewReviews.className="secondary";
+  viewReviews.textContent="👁 View Reviews";
+  viewReviews.onclick=()=>openReviews(p.id,"view");
+
+  // Keep each product action as its own button in the product card.
+  btns.append(add,fav,addReview,viewReviews);
   b.append(t,cat,priceDetails(p),stock,rating,desc,btns);
   c.append(im,b);$("products").append(c);
  });
@@ -1250,12 +1257,16 @@ async function loadReviewSummary(productId){
  const average=reviews.length?reviews.reduce((sum,r)=>sum+Number(r.rating||0),0)/reviews.length:0;
  const summary={average,count:reviews.length};reviewCache[productId]={summary,reviews};return summary;
 }
-async function openReviews(productId){
+async function openReviews(productId,mode="view"){
  const p=allProducts.find(x=>x.id===productId);if(!p)return;
  activeReviewProduct=productId;$("reviewProductName").textContent="Product: "+productName(p);
- $("reviewsTitle").textContent="⭐ Customer Reviews";$("reviewsModal").classList.remove("hidden");
+ $("reviewsTitle").textContent=mode==="write"?"✍️ Add Product Review":"👁 Product Reviews";
+ $("reviewsModal").classList.remove("hidden");
  $("reviewsList").textContent="Reviews load ho rahe hain...";$("reviewSummary").textContent="";
- $("reviewForm").reset();message("reviewMessage","");await refreshReviews(productId);
+ $("reviewForm").reset();message("reviewMessage","");
+ await refreshReviews(productId);
+ const target=mode==="write"?$("reviewFormHeading"):$("reviewsList");
+ requestAnimationFrame(()=>target?.scrollIntoView({behavior:"smooth",block:"center"}));
 }
 async function refreshReviews(productId){
  try{
