@@ -755,8 +755,127 @@ footer{background:#29134b!important;color:#f5edff!important}
 @media(prefers-reduced-motion:reduce){body:before{animation:none!important}*{scroll-behavior:auto!important;transition:none!important}}
 
 </style>
+<style id="vm-responsive-refinement">
+
+/* ===== VIBEMART RESPONSIVE REFINEMENT: compact header, hero, spin page ===== */
+html{scroll-padding-top:86px}
+.vm-header{min-height:72px!important;height:auto!important;flex-wrap:nowrap!important;align-items:center!important;gap:clamp(8px,1.2vw,18px)!important;padding:8px clamp(12px,2vw,28px)!important;position:sticky!important;top:0!important;z-index:1000!important}
+.vm-brand{min-width:0!important;flex:0 1 245px!important;gap:8px!important}
+.vm-brand-mark{width:44px!important;height:44px!important;font-size:27px!important;flex:0 0 44px!important}
+.vm-brand .logo{font-size:clamp(18px,1.8vw,25px)!important;letter-spacing:-.6px!important;white-space:nowrap}
+.vm-brand .tag{font-size:10px!important;white-space:nowrap}
+.vm-nav{flex:1 1 auto!important;min-width:0!important;flex-wrap:nowrap!important;gap:2px!important;justify-content:center!important;overflow:visible!important}
+.vm-nav button{padding:9px clamp(7px,.85vw,12px)!important;font-size:12px!important;white-space:nowrap!important;min-height:38px!important}
+.vm-nav #openSpinPage{display:flex!important;position:static!important;width:auto!important;min-width:0!important;min-height:38px!important;margin:0!important;padding:9px clamp(8px,.9vw,13px)!important;border:0!important;border-radius:22px!important;gap:5px!important;font-size:12px!important;letter-spacing:0!important;box-shadow:none!important;animation:none!important;white-space:nowrap!important}
+.vm-nav #openSpinPage:before{font-size:15px!important}
+.vm-nav #openSpinPage:after{content:none!important}
+.vm-head-tools{flex:0 0 auto!important;gap:7px!important;margin-left:0!important}
+.vm-head-search{width:clamp(120px,17vw,220px)!important;height:38px!important}
+.vm-head-search input{display:block!important;font-size:12px!important;padding:7px 10px!important;min-width:0!important}
+.vm-head-search button{width:31px!important;height:31px!important;flex:0 0 31px!important}
+.vm-cart,.vm-profile{width:38px!important;height:38px!important;flex:0 0 38px!important;font-size:16px!important}
+main{padding-top:16px!important}
+.vm-store-hero{min-height:clamp(225px,24vw,310px)!important;height:auto!important;max-height:none!important;padding:clamp(20px,2.8vw,34px)!important;gap:12px!important;border-radius:22px!important}
+.vm-store-hero h1{font-size:clamp(31px,4vw,49px)!important;line-height:1.04!important;letter-spacing:-1px!important;margin:9px 0!important}
+.vm-store-hero p{font-size:14px!important;line-height:1.45!important;margin-bottom:12px!important}
+.vm-hero-trust{margin-top:10px!important;gap:7px 12px!important}
+.vm-store-hero-art{min-height:155px!important;height:155px!important;overflow:visible!important}
+.vm-big-bag{width:142px!important;height:116px!important}
+.vm-big-bag:before{width:58px!important;height:36px!important;top:-38px!important;border-width:8px!important}
+.vm-big-bag span{font-size:32px!important}
+.vm-gift{font-size:35px!important}
+.vm-mini-bag{font-size:40px!important}
+.vm-benefits{margin:12px 0!important;gap:8px!important}
+.vm-store-layout{margin-top:12px!important}
+.product img{height:148px!important;object-fit:contain!important}
+#dailySpinPanel:not(.hidden){position:fixed!important;inset:0!important;z-index:3000!important;display:block!important;overflow-y:auto!important;overscroll-behavior:contain!important;margin:0!important;padding:12px clamp(12px,3vw,28px) 28px!important;border:0!important;border-radius:0!important;max-width:none!important;background:radial-gradient(circle at 85% 10%,#fff0bd,transparent 30%),linear-gradient(145deg,#f8f3ff,#fff)!important}
+#dailySpinPanel:not(.hidden) .spin-page-head{position:sticky!important;top:0!important;z-index:20!important;max-width:850px!important;margin:0 auto!important;padding:8px 0!important;background:#f8f3ffef!important;backdrop-filter:blur(10px)!important}
+#closeSpinPage{display:inline-flex!important;align-items:center!important;justify-content:center!important;position:sticky!important;top:6px!important;z-index:30!important;min-width:44px!important;min-height:44px!important;padding:8px 14px!important;border:2px solid #d9c5f6!important;background:#fff!important;color:#4c1d95!important;font-size:19px!important;box-shadow:0 3px 12px #24104422!important}
+#dailySpinPanel:not(.hidden) .spin-page-inner{margin:8px auto 24px!important;padding:clamp(14px,2.5vw,24px)!important;max-width:760px!important;border-radius:18px!important}
+#dailySpinPanel .vm-spin-layout{gap:16px!important}
+#dailySpinPanel .spin-wheel-wrap{width:min(260px,62vw)!important;height:min(260px,62vw)!important;margin:10px auto 14px!important}
+#dailySpinPanel .vm-spin-prizes{align-self:center!important}
+#dashboard .dashboard-shortcuts button[data-page="store"]{border:2px solid #b99ae8!important;background:linear-gradient(135deg,#fff,#f2eaff)!important;color:#4c1d95!important}
+@media(max-width:900px){
+ .vm-header{flex-wrap:wrap!important;gap:7px!important;padding:8px 12px!important}
+ .vm-brand{flex:1 1 190px!important}
+ .vm-nav{order:3!important;flex:1 1 100%!important;justify-content:flex-start!important;overflow-x:auto!important;padding:2px 0!important}
+ .vm-head-tools{margin-left:auto!important}
+ .vm-head-search{width:min(36vw,190px)!important}
+ .vm-store-hero{grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr)!important}
+}
+@media(max-width:600px){
+ .vm-header{min-height:0!important;gap:6px!important;padding:7px 9px!important}
+ .vm-brand{flex:1 1 auto!important;min-width:0!important}
+ .vm-brand-mark{width:36px!important;height:36px!important;flex-basis:36px!important;font-size:22px!important}
+ .vm-brand .logo{font-size:18px!important}
+ .vm-brand .tag{font-size:9px!important}
+ .vm-head-tools{gap:5px!important}
+ .vm-head-search{width:38px!important;height:36px!important;border:0!important;background:transparent!important}
+ .vm-head-search input{display:none!important}
+ .vm-head-search button{width:36px!important;height:36px!important}
+ .vm-cart{width:36px!important;height:36px!important;flex-basis:36px!important}
+ .vm-profile{display:none!important}
+ .vm-nav{gap:3px!important}
+ .vm-nav button{padding:8px 10px!important;font-size:11px!important;min-height:34px!important}
+ .vm-nav #openSpinPage{padding:8px 10px!important;font-size:11px!important}
+ main{padding:10px 9px 24px!important}
+ .vm-store-hero{grid-template-columns:minmax(0,1fr)!important;min-height:0!important;padding:18px 15px 12px!important;gap:4px!important}
+ .vm-store-hero h1{font-size:clamp(29px,8vw,38px)!important}
+ .vm-store-hero-art{min-height:115px!important;height:115px!important;max-width:280px!important;margin:0 auto!important}
+ .vm-big-bag{width:112px!important;height:90px!important}
+ .vm-big-bag:before{width:46px!important;height:28px!important;top:-30px!important;border-width:7px!important}
+ .vm-big-bag span{font-size:25px!important}
+ .vm-gift{font-size:28px!important}
+ .vm-mini-bag{font-size:32px!important}
+ .vm-benefits{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ .product img{height:112px!important}
+ #dailySpinPanel:not(.hidden){padding:8px 9px 18px!important}
+ #dailySpinPanel:not(.hidden) .spin-page-inner{margin-top:5px!important;padding:12px 10px!important}
+ #dailySpinPanel .vm-spin-layout{grid-template-columns:1fr!important}
+ #dailySpinPanel .spin-wheel-wrap{width:min(220px,62vw)!important;height:min(220px,62vw)!important}
+ #dailySpinPanel .vm-prize-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+
+</style>
 </head>
 <body>
+
+<div id="vmDeviceChooser" class="vm-device-chooser" role="dialog" aria-modal="true" aria-labelledby="vmDeviceTitle">
+ <div class="vm-device-card">
+  <div class="vm-device-mark">🛍️</div><p class="vm-device-kicker">WELCOME TO VIBEMART</p>
+  <h1 id="vmDeviceTitle">Aap kis device par shopping kar rahe hain?</h1>
+  <p class="vm-device-sub">Apna view choose karein. Website aapki screen ke mutabiq bhi adjust hogi.</p>
+  <div class="vm-device-options">
+   <button type="button" data-device-choice="desktop"><span>💻</span><b>Laptop / Desktop</b><small>Wide screen layout</small></button>
+   <button type="button" data-device-choice="mobile"><span>📱</span><b>Mobile</b><small>Compact touch layout</small></button>
+  </div>
+ </div>
+</div>
+<style id="vm-device-chooser-style">
+.vm-device-chooser{position:fixed;inset:0;z-index:5000;display:none;align-items:center;justify-content:center;padding:18px;background:radial-gradient(circle at 15% 10%,#d9c1ff,transparent 38%),linear-gradient(135deg,#32105f,#6d28d9 55%,#9b5de5)}
+.vm-device-chooser.vm-show{display:flex}
+.vm-device-card{width:min(560px,100%);padding:clamp(22px,5vw,38px);border:2px solid #f5d87e;border-radius:25px;background:#fffdf9;text-align:center;box-shadow:0 22px 70px #17052f66}
+.vm-device-mark{font-size:42px}.vm-device-kicker{margin:7px 0;color:#6d28d9;font-size:11px;font-weight:900;letter-spacing:1.4px}.vm-device-card h1{margin:8px 0;color:#32105f;font-size:clamp(23px,5vw,32px);line-height:1.2}.vm-device-sub{color:#6f647e;font-size:14px;line-height:1.5}.vm-device-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:22px}.vm-device-options button{display:flex;flex-direction:column;align-items:center;gap:7px;min-height:145px;padding:18px 10px;border:2px solid #e3d2fa;border-radius:18px;background:linear-gradient(145deg,#fff,#f5edff);color:#4c1d95}.vm-device-options button:hover{border-color:#8b5cf6;transform:translateY(-2px)}.vm-device-options span{font-size:36px}.vm-device-options b{font-size:15px}.vm-device-options small{font-size:12px;color:#77678c}
+@media(max-width:420px){.vm-device-options{grid-template-columns:1fr}.vm-device-options button{min-height:105px;flex-direction:row;justify-content:center}.vm-device-options small{display:none}}
+</style>
+<script>
+(function(){
+ const overlay=document.getElementById('vmDeviceChooser');
+ if(!overlay)return;
+ let saved='';try{saved=localStorage.getItem('vibemart-device-view')||'';}catch(e){}
+ if(!saved)overlay.classList.add('vm-show');
+ overlay.querySelectorAll('[data-device-choice]').forEach(btn=>btn.addEventListener('click',()=>{
+  const choice=btn.getAttribute('data-device-choice');
+  document.body.classList.toggle('vm-device-mobile',choice==='mobile');
+  document.body.classList.toggle('vm-device-desktop',choice==='desktop');
+  try{localStorage.setItem('vibemart-device-view',choice);}catch(e){}
+  overlay.classList.remove('vm-show');
+ }));
+})();
+</script>
+
 <div class="announcement-bar"><span class="announce-dot"></span> Smart finds, friendly prices <span class="announce-sep">•</span> Cash on Delivery available <span class="announce-sep">•</span> Shop your vibe</div>
 <header class="vm-header">
  <a class="vm-brand" href="#" aria-label="Vibemart home"><span class="vm-brand-mark">🛍️</span><span><b class="logo">Vibemart.pk</b><small class="tag">Your Vibe, Your Choice!</small></span></a>
@@ -878,7 +997,7 @@ footer{background:#29134b!important;color:#f5edff!important}
   <div class="sectionhead"><h2>👑 Owner Dashboard</h2><button class="secondary" id="hideDashboard">Close</button></div>
   <p id="ownerEmail"></p>
   <div class="notice">Welcome to your control centre. Har section apne alag page par khulega.</div>
-  <div class="dashboard-shortcuts"><button type="button" id="openSettingsPage">⚙️ Store Settings<br><small>Store name, contact aur announcement</small></button><button type="button" id="openSpinFromDashboard">🎡 Daily Spin Page<br><small>Spin experience preview</small></button><button type="button" id="goProductsAdmin">📦 Manage Products<br><small>Add, edit aur remove products</small></button><button type="button" id="goOrdersAdmin">🧾 Customer Orders<br><small>Orders aur coupons manage karein</small></button></div>
+  <div class="dashboard-shortcuts"><button type="button" data-page="store" id="openStoreFromDashboard">🛍️ Open Store<br><small>Store page aur products dekhein</small></button><button type="button" id="openSettingsPage">⚙️ Store Settings<br><small>Store name, contact aur announcement</small></button><button type="button" id="openSpinFromDashboard">🎡 Daily Spin Page<br><small>Spin experience preview</small></button><button type="button" id="goProductsAdmin">📦 Manage Products<br><small>Add, edit aur remove products</small></button><button type="button" id="goOrdersAdmin">🧾 Customer Orders<br><small>Orders aur coupons manage karein</small></button></div>
   <section class="settings-card hidden" id="storeSettings">
    <div class="settings-page-head"><h2>⚙️ Store Settings</h2><button class="secondary" type="button" id="closeSettingsPage">← Back to Dashboard</button></div><div class="settings-page-inner">
    <p class="small">Yahan ki changes website par customers ko bhi nazar aayengi.</p>
@@ -2232,6 +2351,18 @@ document.addEventListener("DOMContentLoaded",function(){
  document.getElementById("vmSpinTeaser")?.addEventListener("click",()=>document.getElementById("openSpinPage")?.click());
  document.getElementById("vmCouponBtn")?.addEventListener("click",()=>document.getElementById("shop")?.scrollIntoView({behavior:"smooth"}));
  document.getElementById("vmViewAll")?.addEventListener("click",()=>document.getElementById("shop")?.scrollIntoView({behavior:"smooth"}));
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+ const b=document.getElementById('openStoreFromDashboard');
+ if(b)b.addEventListener('click',function(){
+  const dash=document.getElementById('dashboard');if(dash)dash.classList.add('hidden');
+  const settings=document.getElementById('storeSettings');if(settings)settings.classList.add('hidden');
+  const spin=document.getElementById('dailySpinPanel');if(spin){spin.classList.add('hidden');spin.classList.remove('spin-page');}
+  const shop=document.getElementById('shop');if(shop)shop.scrollIntoView({behavior:'smooth',block:'start'});
+ });
 });
 </script>
 </body>
