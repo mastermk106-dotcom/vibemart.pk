@@ -2210,5 +2210,88 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 </script>
 
+
+<style id="vm-welcome-true-fit-v2">
+/* True desktop one-screen welcome layout. The announcement strip is hidden because
+   the previous fixed main height counted only the header and caused page overflow. */
+@media (min-width: 761px) {
+  html, body { width:100%; height:100%; min-height:0; }
+  body.vm-home-view {
+    height:100vh; height:100dvh; min-height:0;
+    overflow:hidden !important;
+    display:flex !important; flex-direction:column !important;
+  }
+  body.vm-home-view .announcement-bar { display:none !important; }
+  body.vm-home-view .vm-header {
+    box-sizing:border-box; flex:0 0 66px !important;
+    height:66px !important; min-height:66px !important;
+    padding:5px clamp(10px,1.8vw,26px) !important;
+    gap:clamp(6px,1vw,14px) !important; flex-wrap:nowrap !important;
+    overflow:visible !important;
+  }
+  body.vm-home-view .vm-brand { flex:0 0 auto; min-width:0 !important; gap:6px !important; }
+  body.vm-home-view .vm-brand-mark { width:42px !important; height:42px !important; font-size:24px !important; }
+  body.vm-home-view .vm-brand .logo { font-size:clamp(17px,1.7vw,24px) !important; line-height:1 !important; }
+  body.vm-home-view .vm-brand .tag { font-size:9px !important; margin-top:2px !important; }
+  body.vm-home-view .vm-nav { flex:1 1 auto !important; min-width:0 !important; gap:2px !important; flex-wrap:nowrap !important; }
+  body.vm-home-view .vm-nav button { white-space:nowrap; padding:7px clamp(5px,.8vw,11px) !important; font-size:clamp(10px,.9vw,13px) !important; }
+  body.vm-home-view .vm-head-tools { flex:0 1 auto; min-width:0; gap:5px !important; }
+  body.vm-home-view .vm-head-search { width:clamp(110px,14vw,190px) !important; height:34px !important; }
+  body.vm-home-view .vm-head-search input { min-width:0; padding:6px 9px !important; font-size:11px !important; }
+  body.vm-home-view .vm-head-search button { width:34px !important; height:34px !important; }
+  body.vm-home-view .vm-cart, body.vm-home-view .vm-profile { width:34px !important; height:34px !important; min-width:34px !important; font-size:18px !important; }
+  body.vm-home-view main {
+    box-sizing:border-box; width:100%; max-width:1600px;
+    flex:1 1 0 !important; min-height:0 !important; height:auto !important;
+    margin:0 auto !important; padding:7px clamp(10px,1.7vw,24px) 8px !important;
+    display:grid !important;
+    grid-template-columns:minmax(0,1fr);
+    grid-template-rows:minmax(0,1fr) auto auto auto !important;
+    gap:clamp(4px,.8vh,8px) !important;
+    overflow:hidden !important;
+  }
+  body.vm-home-view main > .vm-hero { grid-row:1; min-height:0 !important; height:auto !important; max-height:none !important; }
+  body.vm-home-view .vm-hero-art { width:100% !important; height:100% !important; object-fit:cover !important; object-position:center 52% !important; }
+  body.vm-home-view .vm-welcome-copy { width:min(44%,560px) !important; max-height:90%; padding:clamp(8px,1.3vh,15px) clamp(10px,1.4vw,18px) !important; }
+  body.vm-home-view .vm-welcome-copy h1 { font-size:clamp(22px,2.7vw,40px) !important; line-height:1.02 !important; }
+  body.vm-home-view .vm-welcome-copy p { margin:4px 0 7px !important; font-size:clamp(11px,1.1vw,16px) !important; }
+  body.vm-home-view .vm-welcome-kicker { font-size:clamp(8px,.8vw,11px) !important; }
+  body.vm-home-view .vm-welcome-copy .vm-hero-cta { padding:7px 13px !important; font-size:clamp(10px,.9vw,13px) !important; }
+  body.vm-home-view .vm-benefits { grid-row:2; display:grid !important; grid-template-columns:repeat(5,minmax(0,1fr)) !important; gap:6px !important; margin:0 !important; }
+  body.vm-home-view .vm-benefits .benefit { min-height:clamp(38px,6.2vh,54px) !important; padding:4px 7px !important; gap:5px !important; border-radius:10px !important; }
+  body.vm-home-view .vm-benefits .benefit-icon { flex:0 0 26px !important; width:26px !important; font-size:20px !important; }
+  body.vm-home-view .vm-benefits .benefit strong { font-size:clamp(9px,.85vw,12px) !important; line-height:1.05 !important; }
+  body.vm-home-view .vm-benefits .benefit small { font-size:clamp(8px,.72vw,10px) !important; line-height:1.05 !important; }
+  body.vm-home-view .vm-home-categories { grid-row:3; min-height:0 !important; margin:0 !important; }
+  body.vm-home-view .vm-home-section-title { margin:0 0 3px !important; font-size:clamp(12px,1.25vw,17px) !important; }
+  body.vm-home-view .vm-home-category-grid { display:grid !important; grid-template-columns:repeat(6,minmax(0,1fr)) !important; gap:6px !important; }
+  body.vm-home-view .vm-home-category-grid button { min-height:clamp(42px,7vh,62px) !important; padding:4px !important; gap:4px !important; border-radius:10px !important; }
+  body.vm-home-view .vm-home-category-grid button span { font-size:clamp(17px,1.7vw,24px) !important; }
+  body.vm-home-view .vm-home-category-grid button b { font-size:clamp(8px,.78vw,11px) !important; }
+  body.vm-home-view .vm-home-promos { grid-row:4; display:grid !important; grid-template-columns:repeat(3,minmax(0,1fr)) !important; gap:6px !important; min-height:clamp(44px,7.4vh,64px) !important; }
+  body.vm-home-view .vm-home-promo { min-height:clamp(44px,7.4vh,64px) !important; padding:5px 8px !important; column-gap:6px !important; border-radius:10px !important; }
+  body.vm-home-view .vm-home-promo>span { font-size:clamp(20px,2vw,30px) !important; }
+  body.vm-home-view .vm-home-promo b { font-size:clamp(10px,.95vw,13px) !important; }
+  body.vm-home-view .vm-home-promo small { font-size:clamp(8px,.7vw,10px) !important; }
+  body.vm-home-view .vm-store-layout, body.vm-home-view .vm-promo-grid, body.vm-home-view .vm-mega-sale { display:none !important; }
+}
+/* Short laptop displays: compact the header and lower strips further. */
+@media (min-width:761px) and (max-height:800px) {
+  body.vm-home-view .vm-header { flex-basis:58px !important; height:58px !important; min-height:58px !important; }
+  body.vm-home-view main { padding-top:5px !important; padding-bottom:5px !important; gap:4px !important; }
+  body.vm-home-view .vm-benefits .benefit { min-height:36px !important; }
+  body.vm-home-view .vm-home-section-title { margin-bottom:2px !important; }
+  body.vm-home-view .vm-home-category-grid button { min-height:38px !important; }
+  body.vm-home-view .vm-home-promos, body.vm-home-view .vm-home-promo { min-height:40px !important; }
+}
+/* On phones and tablets, preserve natural vertical scrolling rather than squeezing text. */
+@media (max-width:760px) {
+  body.vm-home-view { height:auto !important; min-height:100vh !important; overflow-x:hidden !important; overflow-y:auto !important; display:block !important; }
+  body.vm-home-view .announcement-bar { display:block !important; }
+  body.vm-home-view .vm-header { height:auto !important; min-height:0 !important; flex-wrap:wrap !important; }
+  body.vm-home-view main { height:auto !important; min-height:0 !important; overflow:visible !important; display:block !important; }
+  body.vm-home-view .vm-home-categories, body.vm-home-view .vm-home-promos { display:none !important; }
+}
+</style>
 </body>
 </html>
