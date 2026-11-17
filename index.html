@@ -783,7 +783,7 @@ main{max-width:1600px;padding:16px 20px 45px}
   <label class="vm-head-search"><input id="search" placeholder="Search products..." aria-label="Search products"><button id="searchBtn" type="button" aria-label="Search">⌕</button></label>
   <button class="vm-cart" id="cartBtn" type="button" aria-label="Cart">🛒<i id="cartCount">0</i></button>
   <button class="vm-profile" id="loginBtn" type="button" aria-label="Account">👦</button>
-  <button class="hidden" id="trackBtn" type="button">Track Order</button><button class="hidden" id="logoutBtn" type="button">Logout</button>
+  <button class="vm-track-nav" id="trackBtn" type="button">📦 <span>Track Order</span></button><button class="hidden" id="logoutBtn" type="button">Logout</button>
  </div>
 </header>
 
@@ -820,6 +820,7 @@ main{max-width:1600px;padding:16px 20px 45px}
   <button type="button" class="vm-home-promo vm-home-spin" id="vmHomeSpin"><span>🎡</span><b>Spin &amp; Win</b><small>Try your luck &amp; win prizes!</small></button>
   <button type="button" class="vm-home-promo vm-home-sale" id="vmHomeSale"><span>🐧</span><b>Winter Big Sale</b><small>Discover seasonal deals</small></button>
   <button type="button" class="vm-home-promo vm-home-cart" id="vmHomeCart"><span>🛒</span><b>Your Cart</b><small>View your shopping cart</small></button>
+  <button type="button" class="vm-home-promo vm-home-track" id="vmHomeTrack"><span>📦</span><b>Track Order</b><small>Check your delivery status</small></button>
 </section>
 <section class="vm-promo-grid" aria-label="Vibemart highlights">
    <article class="vm-promo-card vm-promo-sale"><span class="vm-promo-icon">👑</span><div><small>VIBEMART SPECIAL</small><strong>Big Deals<br><em>Bigger Smiles!</em></strong><span>Shop smart • Save more</span><button type="button" class="vm-promo-tag" data-vm-action="shop">SHOP NOW →</button></div></article>
@@ -1195,9 +1196,11 @@ $("closeWishlistBtn").onclick=()=>$("wishlistPanel").classList.add("hidden");
 saveWishlist();
 $("exploreBtn").onclick=()=>goTo("shop");
 if($("vmSaleShopBtn"))$("vmSaleShopBtn").onclick=()=>goTo("shop");
+if($("vmHomeTrack"))$("vmHomeTrack").onclick=openTrackingPanel;
 function updateVmSaleClock(){const now=new Date(),end=new Date(now);end.setHours(24,0,0,0);let left=Math.max(0,end-now);const h=String(Math.floor(left/3600000)).padStart(2,"0"),m=String(Math.floor(left%3600000/60000)).padStart(2,"0"),sec=String(Math.floor(left%60000/1000)).padStart(2,"0");if($("vmSaleCountdown"))$("vmSaleCountdown").textContent=`${h} : ${m} : ${sec}`}
 updateVmSaleClock();setInterval(updateVmSaleClock,1000);
-$("trackBtn").onclick=()=>goTo("trackingPanel");
+function openTrackingPanel(){const panel=$("trackingPanel");panel.style.display="block";goTo("trackingPanel");}
+$("trackBtn").onclick=openTrackingPanel;
 $("loginBtn").onclick=()=>isOwner?openDashboard():showAuth();
 $("dashboardBtn").onclick=openDashboard;
 $("hideDashboard").onclick=()=>{$("dashboard").classList.add("hidden");$("storeSettings").classList.add("hidden")};
@@ -2541,3 +2544,12 @@ document.addEventListener('DOMContentLoaded', function(){
 
 </body>
 </html>
+
+<style id="vm-order-tracking-access-fix">
+.vm-track-nav{display:inline-flex!important;align-items:center;justify-content:center;gap:5px;padding:9px 11px!important;border:1px solid #d9c4f5!important;border-radius:22px!important;background:#f6efff!important;color:#5520a5!important;font-weight:800!important;font-size:12px!important;white-space:nowrap!important;min-height:38px}
+.vm-track-nav:hover{background:#6d28d9!important;color:#fff!important}
+.vm-home-track{background:linear-gradient(135deg,#f5edff,#fff)!important;border-color:#cdb4f3!important}
+#trackingPanel[style*="display: block"]{display:block!important;scroll-margin-top:18px}
+@media(max-width:760px){.vm-track-nav{padding:8px!important;font-size:11px!important}.vm-track-nav span{display:inline}}
+@media(max-width:420px){.vm-track-nav{font-size:10px!important;padding:7px!important}}
+</style>
