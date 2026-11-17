@@ -742,6 +742,31 @@ main{max-width:1600px;padding:16px 20px 45px}
 }
 </style>
 
+
+<style id="vm-navigation-and-close-fix-2026">
+/* Compact top navigation: keep Spin & Win on the same row as the other links. */
+.vm-header{position:sticky;top:0;z-index:1100;min-height:70px;flex-wrap:nowrap;gap:clamp(6px,1.1vw,16px);padding:8px clamp(10px,2.2vw,30px)}
+.vm-brand{flex:0 1 auto;min-width:max-content}
+.vm-nav{flex:1 1 auto;min-width:0;gap:4px;flex-wrap:nowrap;overflow:visible}
+.vm-nav button{flex:0 0 auto;min-height:40px;padding:9px clamp(7px,1vw,13px);font-size:clamp(11px,.95vw,14px);line-height:1.15}
+.vm-nav #openSpinPage{display:inline-flex!important;align-items:center;justify-content:center;gap:5px;width:auto!important;min-width:0;min-height:40px!important;margin:0!important;padding:9px clamp(8px,1vw,13px)!important;border:1px solid #f4d16c!important;border-radius:999px!important;font-size:clamp(11px,.95vw,14px)!important;line-height:1.1;letter-spacing:0;white-space:nowrap;box-shadow:0 2px 0 #a95d17,0 4px 10px #e6a42d30!important;animation:none!important}
+.vm-nav #openSpinPage:before{font-size:15px}
+.vm-nav #openSpinPage:after{content:none!important;display:none!important}
+.vm-head-tools{flex:0 0 auto;min-width:0;gap:7px}
+/* Keep close/back controls above scrolling content on every full-screen panel. */
+#dashboard>.sectionhead{position:sticky!important;top:0!important;z-index:30!important;min-height:54px;padding:10px 12px!important;background:#fbf8fffa!important;backdrop-filter:blur(12px);}
+#dashboard>.sectionhead button,#storeSettings .settings-page-head button,.spin-page-head button{position:relative!important;z-index:40!important;flex:0 0 auto;visibility:visible!important;opacity:1!important}
+#storeSettings .settings-page-head{position:sticky!important;top:0!important;z-index:35!important;padding:10px 12px!important;background:#faf7fffa!important;backdrop-filter:blur(12px);}
+#dailySpinPanel .spin-page-head{position:sticky!important;top:0!important;z-index:35!important;padding:8px 10px!important;background:#f8f3fff2!important;backdrop-filter:blur(12px);}
+#dailySpinPanel .vm-spin-close{position:relative!important;z-index:50!important;flex:0 0 40px!important;visibility:visible!important;opacity:1!important}
+#cartModal .modalbox{position:relative!important;padding-top:58px!important}
+#cartModal .checkout-close{position:sticky!important;top:8px!important;float:right!important;margin-top:-48px!important;margin-right:-6px!important;z-index:100!important;visibility:visible!important;opacity:1!important}
+#authModal .modalbox{position:relative}
+@media(max-width:900px){.vm-header{gap:8px;padding:8px 10px}.vm-brand .logo{font-size:20px}.vm-nav{gap:2px}.vm-nav button{padding:8px 7px;font-size:11px}.vm-nav #openSpinPage{padding:8px 9px!important;font-size:11px!important}.vm-head-tools{gap:5px}}
+@media(max-width:760px){.vm-header{position:relative;flex-wrap:wrap;min-height:0;gap:7px}.vm-brand{flex:1 1 auto}.vm-head-tools{flex:0 1 auto}.vm-nav{order:3;flex:1 0 100%;width:100%;overflow-x:auto;overflow-y:visible;justify-content:flex-start;padding:2px 0 5px;scrollbar-width:thin}.vm-nav button{min-height:38px}.vm-nav #openSpinPage{min-height:38px!important;flex:0 0 auto}.vm-head-tools .vm-head-search{flex:0 0 42px}}
+@media(max-width:420px){.vm-brand .logo{font-size:18px}.vm-brand-mark{width:38px;height:38px}.vm-nav button{font-size:11px;padding:8px 9px}.vm-nav #openSpinPage{font-size:11px!important;padding:8px 10px!important}}
+</style>
+
 </head>
 <body class="vm-home-view">
 <div class="announcement-bar"><span class="announce-dot"></span> Smart finds, friendly prices <span class="announce-sep">•</span> Cash on Delivery available <span class="announce-sep">•</span> Shop your vibe</div>
