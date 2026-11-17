@@ -688,6 +688,60 @@ main{max-width:1600px;padding:16px 20px 45px}
 }
 </style>
 
+
+<style id="vm-wooden-board-text-only-fix">
+/* Only desktop welcome copy: remove the floating paper and place all text on the wooden sign. */
+@media (min-width:761px) {
+  body.vm-home-view .vm-hero { position:relative !important; }
+  body.vm-home-view .vm-hero .vm-welcome-copy {
+    position:absolute !important; left:15.5% !important; top:50% !important;
+    transform:translateY(-50%) !important; width:47% !important; max-width:none !important;
+    max-height:none !important; margin:0 !important; padding:0 1.5% !important;
+    display:flex !important; flex-direction:column !important; align-items:center !important;
+    justify-content:center !important; gap:0 !important; text-align:center !important;
+    background:transparent !important; background-color:transparent !important;
+    border:0 !important; border-radius:0 !important; box-shadow:none !important;
+    backdrop-filter:none !important; -webkit-backdrop-filter:none !important;
+    outline:0 !important; color:#3b1c0b !important;
+  }
+  body.vm-home-view .vm-hero .vm-welcome-copy::before,
+  body.vm-home-view .vm-hero .vm-welcome-copy::after {
+    content:none !important; display:none !important; background:none !important;
+    box-shadow:none !important; border:0 !important;
+  }
+  body.vm-home-view .vm-hero .vm-welcome-kicker {
+    display:block !important; margin:0 0 5px !important; padding:0 !important;
+    background:transparent !important; border:0 !important; border-radius:0 !important;
+    box-shadow:none !important; color:#512b16 !important;
+    font-size:clamp(9px,.9vw,13px) !important; font-weight:900 !important;
+    letter-spacing:1.1px !important; text-shadow:0 1px 2px #f8d99b !important;
+  }
+  body.vm-home-view .vm-hero .vm-welcome-copy h1 {
+    margin:0 !important; padding:0 !important; background:transparent !important;
+    color:#3b1c0b !important; font-size:clamp(25px,3.05vw,45px) !important;
+    font-weight:1000 !important; line-height:1.08 !important; letter-spacing:-1px !important;
+    text-shadow:0 2px 2px #f5d49a, 0 0 5px #f5d49a !important;
+  }
+  body.vm-home-view .vm-hero .vm-welcome-copy h1 span {
+    color:#5420a5 !important; white-space:nowrap !important;
+  }
+  body.vm-home-view .vm-hero .vm-welcome-copy p {
+    margin:7px 0 11px !important; padding:0 !important;
+    color:#3b1c0b !important; background:transparent !important;
+    font-size:clamp(12px,1.25vw,18px) !important; font-weight:950 !important;
+    line-height:1.2 !important; text-shadow:0 1px 2px #f5d49a !important;
+  }
+  body.vm-home-view .vm-hero .vm-welcome-copy .vm-hero-cta {
+    display:inline-flex !important; align-items:center !important; justify-content:center !important;
+    margin:0 !important; padding:9px 20px !important; border:2px solid #f5d49a !important;
+    border-radius:999px !important; background:linear-gradient(135deg,#7026d4,#4c168e) !important;
+    color:#fff !important; font-size:clamp(11px,1vw,15px) !important;
+    font-weight:950 !important; line-height:1.1 !important;
+    box-shadow:0 3px 8px #30140855 !important; text-shadow:none !important;
+  }
+}
+</style>
+
 </head>
 <body class="vm-home-view">
 <div class="announcement-bar"><span class="announce-dot"></span> Smart finds, friendly prices <span class="announce-sep">•</span> Cash on Delivery available <span class="announce-sep">•</span> Shop your vibe</div>
