@@ -1199,7 +1199,12 @@ if($("vmSaleShopBtn"))$("vmSaleShopBtn").onclick=()=>goTo("shop");
 if($("vmHomeTrack"))$("vmHomeTrack").onclick=openTrackingPanel;
 function updateVmSaleClock(){const now=new Date(),end=new Date(now);end.setHours(24,0,0,0);let left=Math.max(0,end-now);const h=String(Math.floor(left/3600000)).padStart(2,"0"),m=String(Math.floor(left%3600000/60000)).padStart(2,"0"),sec=String(Math.floor(left%60000/1000)).padStart(2,"0");if($("vmSaleCountdown"))$("vmSaleCountdown").textContent=`${h} : ${m} : ${sec}`}
 updateVmSaleClock();setInterval(updateVmSaleClock,1000);
-function openTrackingPanel(){const panel=$("trackingPanel");panel.style.display="block";goTo("trackingPanel");}
+function openTrackingPanel(){
+ const panel=$("trackingPanel");
+ document.body.classList.add("vm-tracking-view");
+ panel.style.display="block";
+ goTo("trackingPanel");
+}
 $("trackBtn").onclick=openTrackingPanel;
 $("loginBtn").onclick=()=>isOwner?openDashboard():showAuth();
 $("dashboardBtn").onclick=openDashboard;
@@ -1622,7 +1627,7 @@ $("copyOrderIdBtn").onclick = async () => {
 $("trackNewOrderBtn").onclick = () => {
   $("successModal").classList.add("hidden");
   $("trackingId").value = lastOrderId;
-  goTo("trackingPanel");
+  openTrackingPanel();
   trackOrder();
 };
 
@@ -2242,8 +2247,18 @@ document.addEventListener("DOMContentLoaded", function () {
 <script>
 document.addEventListener("DOMContentLoaded",function(){
  const goTop=()=>window.scrollTo({top:0,behavior:"smooth"});
- document.getElementById("vmHomeBtn")?.addEventListener("click",goTop);
- document.getElementById("vmStoreBtn")?.addEventListener("click",()=>document.getElementById("shop")?.scrollIntoView({behavior:"smooth"}));
+ document.getElementById("vmHomeBtn")?.addEventListener("click",()=>{
+  document.body.classList.remove("vm-tracking-view");
+  const tracking=document.getElementById("trackingPanel");
+  if(tracking)tracking.style.display="none";
+  goTop();
+ });
+ document.getElementById("vmStoreBtn")?.addEventListener("click",()=>{
+  document.body.classList.remove("vm-tracking-view");
+  const tracking=document.getElementById("trackingPanel");
+  if(tracking)tracking.style.display="none";
+  document.getElementById("shop")?.scrollIntoView({behavior:"smooth"});
+ });
  document.getElementById("vmSpinTeaser")?.addEventListener("click",()=>document.getElementById("openSpinPage")?.click());
  document.getElementById("vmCouponBtn")?.addEventListener("click",()=>document.getElementById("shop")?.scrollIntoView({behavior:"smooth"}));
  document.getElementById("vmViewAll")?.addEventListener("click",()=>document.getElementById("shop")?.scrollIntoView({behavior:"smooth"}));
@@ -2565,4 +2580,10 @@ document.addEventListener('DOMContentLoaded', function(){
  #trackingPanel .vm-tracking-copy{flex:0 1 auto!important;width:100%!important;max-width:none!important;text-align:center!important}
  #trackingPanel .vm-delivery-truck{flex:0 1 auto!important;width:min(100%,360px)!important;max-height:none!important;margin:0 auto!important}
 }
+</style>
+<style id="vm-tracking-only-view">
+/* Track Order opens as a focused page: hide all homepage/store sections until Home or Store is selected. */
+body.vm-tracking-view main > :not(#trackingPanel) { display:none !important; }
+body.vm-tracking-view #trackingPanel { display:block !important; width:100%; max-width:100%; margin:0 auto; }
+body.vm-tracking-view main { min-height:calc(100vh - 120px); }
 </style>
