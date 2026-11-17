@@ -2552,4 +2552,17 @@ document.addEventListener('DOMContentLoaded', function(){
 #trackingPanel[style*="display: block"]{display:block!important;scroll-margin-top:18px}
 @media(max-width:760px){.vm-track-nav{padding:8px!important;font-size:11px!important}.vm-track-nav span{display:inline}}
 @media(max-width:420px){.vm-track-nav{font-size:10px!important;padding:7px!important}}
+
+/* Tracking illustration visibility fix: keep the full delivery artwork inside its card. */
+#trackingPanel{height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;padding-bottom:24px!important}
+#trackingPanel .vm-tracking-visual{height:auto!important;min-height:190px!important;max-height:none!important;overflow:visible!important;flex-wrap:wrap!important;align-items:center!important;padding:18px 22px!important;box-sizing:border-box!important}
+#trackingPanel .vm-tracking-copy{flex:1 1 220px!important;max-width:320px!important;min-width:0!important}
+#trackingPanel .vm-delivery-truck{display:block!important;flex:0 1 360px!important;width:min(52%,360px)!important;max-width:100%!important;height:auto!important;max-height:190px!important;object-fit:contain!important}
+#trackingPanel .vm-tracking-visual .vm-truck-spark{z-index:2}
+@media(max-width:760px){
+ #trackingPanel{padding-bottom:18px!important}
+ #trackingPanel .vm-tracking-visual{min-height:0!important;flex-direction:column!important;justify-content:center!important;gap:10px!important;padding:16px 12px!important}
+ #trackingPanel .vm-tracking-copy{flex:0 1 auto!important;width:100%!important;max-width:none!important;text-align:center!important}
+ #trackingPanel .vm-delivery-truck{flex:0 1 auto!important;width:min(100%,360px)!important;max-height:none!important;margin:0 auto!important}
+}
 </style>
