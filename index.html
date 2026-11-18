@@ -952,6 +952,28 @@ main{max-width:1600px;padding:16px 20px 45px}
   <hr><h3>📦 Customer Orders</h3><button class="secondary" id="loadOrders">Load Orders</button><div id="orders"></div>
   <h3>Manage Products</h3><div id="manageProducts"></div>
  </section>
+
+<section class="vm-detail-modal hidden" id="vmProductDetail" role="dialog" aria-modal="true" aria-label="Product details">
+ <div class="vm-detail-backdrop" id="vmDetailBackdrop"></div>
+ <div class="vm-detail-box">
+  <button type="button" class="vm-detail-close" id="vmDetailClose" aria-label="Close product details">✕</button>
+  <div class="vm-detail-grid">
+   <div class="vm-detail-image-wrap"><img id="vmDetailImage" alt="Product image"></div>
+   <div class="vm-detail-info">
+    <span class="vm-detail-kicker">VIBEMART PRODUCT</span>
+    <h2 id="vmDetailName">Product name</h2>
+    <div id="vmDetailPrice" class="vm-detail-price"></div>
+    <div id="vmDetailCategory" class="vm-detail-category"></div>
+    <div id="vmDetailStock" class="vm-detail-stock"></div>
+    <p id="vmDetailDescription"></p>
+    <div class="vm-detail-qty"><span>Quantity</span><button type="button" id="vmDetailMinus">−</button><strong id="vmDetailQty">1</strong><button type="button" id="vmDetailPlus">+</button></div>
+    <div class="vm-detail-actions"><button type="button" class="primary" id="vmDetailAdd">🛒 Add to Cart</button><button type="button" class="secondary" id="vmDetailWishlist">♡ Wishlist</button><button type="button" class="secondary" id="vmDetailReviews">⭐ Reviews</button></div>
+    <small class="vm-detail-note">Cash on Delivery available • Your Vibe, Your Choice!</small>
+   </div>
+  </div>
+ </div>
+</section>
+
 </main>
 <footer>© <span id="year"></span> Vibemart.pk · Your Vibe, Your Choice!</footer>
 <button type="button" id="vmBackTop" aria-label="Back to top" title="Back to top">↑</button>
@@ -1352,6 +1374,34 @@ async function loadProducts(){
 }
 
 /* PRODUCTS — Add to Cart button is explicitly appended to the card */
+
+let vmSelectedDetailProduct = null;
+let vmDetailQuantity = 1;
+function closeVmProductDetail(){
+ const modal=$("vmProductDetail"); if(modal)modal.classList.add("hidden");
+ vmSelectedDetailProduct=null; vmDetailQuantity=1;
+}
+function openVmProductDetail(productId){
+ const p=allProducts.find(x=>x.id===productId); if(!p)return;
+ vmSelectedDetailProduct=p; vmDetailQuantity=1;
+ const image=safeText(p.imageUrl)||"https://placehold.co/900x900/f0eaff/6d28d9?text=Vibemart";
+ $("vmDetailImage").src=image; $("vmDetailImage").alt=productName(p);
+ $("vmDetailName").textContent=productName(p)||"Product";
+ $("vmDetailPrice").replaceChildren(priceDetails(p));
+ $("vmDetailCategory").textContent=safeText(p.category||"Other");
+ $("vmDetailStock").textContent=Number.isInteger(p.stock)?(p.stock>0?"📦 In stock: "+p.stock:"❌ Out of stock"):"Stock information unavailable";
+ $("vmDetailDescription").textContent=safeText(p.description)||"Is product ki mazeed details jald update hongi.";
+ $("vmDetailQty").textContent="1";
+ $("vmProductDetail").classList.remove("hidden");
+}
+$("vmDetailClose")?.addEventListener("click",closeVmProductDetail);
+$("vmDetailBackdrop")?.addEventListener("click",closeVmProductDetail);
+$("vmDetailMinus")?.addEventListener("click",()=>{vmDetailQuantity=Math.max(1,vmDetailQuantity-1);$("vmDetailQty").textContent=String(vmDetailQuantity)});
+$("vmDetailPlus")?.addEventListener("click",()=>{const stock=Number(vmSelectedDetailProduct?.stock);if(Number.isInteger(stock)&&vmDetailQuantity>=stock){message("status","Sirf "+stock+" item(s) available hain.",true);return}vmDetailQuantity=Math.min(99,vmDetailQuantity+1);$("vmDetailQty").textContent=String(vmDetailQuantity)});
+$("vmDetailAdd")?.addEventListener("click",()=>{if(!vmSelectedDetailProduct)return;for(let n=0;n<vmDetailQuantity;n++)addToCart(vmSelectedDetailProduct.id);closeVmProductDetail()});
+$("vmDetailWishlist")?.addEventListener("click",()=>{if(vmSelectedDetailProduct)toggleWishlist(vmSelectedDetailProduct.id)});
+$("vmDetailReviews")?.addEventListener("click",()=>{if(vmSelectedDetailProduct){const id=vmSelectedDetailProduct.id;closeVmProductDetail();openReviews(id)}});
+
 function renderProducts(){
  let list=allProducts.filter(p=>(activeCategory==="All"||p.category===activeCategory)&&(productName(p)+" "+safeText(p.description)+" "+safeText(p.category)).toLowerCase().includes(searchText.toLowerCase()));
  if($("inStockOnly")?.checked)list=list.filter(p=>Number(p.stock)>0);
@@ -1364,7 +1414,7 @@ function renderProducts(){
  list.forEach(p=>{
   const c=document.createElement("article");c.className="product";
   const im=document.createElement("img");im.alt=productName(p);im.loading="lazy";im.src=safeText(p.imageUrl)||"https://placehold.co/600x450/f0eaff/6d28d9?text=Vibemart";im.onerror=()=>{im.onerror=null;im.src="https://placehold.co/600x450/f0eaff/6d28d9?text=Vibemart"};
-  im.addEventListener("click",()=>openImagePreview(im.src,im.alt));
+  im.addEventListener("click",()=>openVmProductDetail(p.id));
   const b=document.createElement("div");b.className="productbody";
   const t=document.createElement("h3");t.textContent=productName(p)||"Product";
   const cat=document.createElement("p");cat.textContent=safeText(p.category||"Other");
@@ -1395,7 +1445,10 @@ function renderProducts(){
   rev.onclick=()=>openReviews(p.id);
 
   // All three buttons are appended. This was the missing line in the earlier code.
-  btns.append(add,fav,rev);
+  const details=document.createElement("button");
+  details.type="button";details.className="secondary";details.textContent="View Details";
+  details.onclick=()=>openVmProductDetail(p.id);
+  btns.append(add,fav,details,rev);
   b.append(t,cat,priceDetails(p),stock,rating,desc,btns);
   c.append(im,b);$("products").append(c);
  });
@@ -1461,7 +1514,7 @@ $("reviewForm").onsubmit=async e=>{
 function addToCart(id){
  const p=allProducts.find(x=>x.id===id);if(!p)return;
  const i=cart.find(x=>x.id===id);
- if(i)i.qty=Math.min(99,i.qty+1);else cart.push({id,name:productName(p),price:effectivePrice(p),qty:1});
+ if(i)i.qty=Math.min(99,i.qty+1);else cart.push({id,name:productName(p),price:effectivePrice(p),imageUrl:safeText(p.imageUrl),qty:1});
  renderCart();message("status","Product cart mein add ho gaya.");
 }
 function cartSubtotal(){return cart.reduce((s,i)=>s+i.price*i.qty,0)}
@@ -1490,13 +1543,17 @@ function renderCart(){
  $("cartCount").textContent=cart.reduce((n,i)=>n+i.qty,0);$("cartItems").replaceChildren();
  if(!cart.length){const p=document.createElement("p");p.textContent="Tumhara cart khaali hai.";$("cartItems").append(p)}
  cart.forEach(i=>{
-  const r=document.createElement("div");r.className="order";const t=document.createElement("strong");t.textContent=i.name+" — "+money(i.price*i.qty);
+  const r=document.createElement("div");r.className="order vm-cart-line";
+  const p=allProducts.find(x=>x.id===i.id);
+  const image=document.createElement("img");image.className="vm-cart-thumb";image.src=i.imageUrl||safeText(p?.imageUrl)||"https://placehold.co/160x160/f0eaff/6d28d9?text=Vibemart";image.alt=i.name;image.onerror=()=>{image.onerror=null;image.src="https://placehold.co/160x160/f0eaff/6d28d9?text=Vibemart"};
+  const details=document.createElement("div");details.className="vm-cart-line-info";
+  const t=document.createElement("strong");t.textContent=i.name+" — "+money(i.price*i.qty);details.append(t);
   const controls=document.createElement("div");controls.className="rowbtn";
   const minus=document.createElement("button");minus.className="secondary";minus.textContent="−";minus.onclick=()=>{i.qty--;if(i.qty<=0)cart=cart.filter(x=>x.id!==i.id);if(!cart.length)clearCoupon();renderCart()};
   const qty=document.createElement("span");qty.textContent="Qty: "+i.qty;
   const plus=document.createElement("button");plus.className="secondary";plus.textContent="+";plus.onclick=()=>{const p=allProducts.find(x=>x.id===i.id),stock=Number.isInteger(p?.stock)?p.stock:0;if(i.qty>=stock||i.qty>=99){message("checkoutMessage","Sirf "+stock+" item(s) available hain.",true);return}i.qty++;renderCart()};
   const remove=document.createElement("button");remove.className="danger";remove.textContent="Remove";remove.onclick=()=>{cart=cart.filter(x=>x.id!==i.id);if(!cart.length)clearCoupon();renderCart()};
-  controls.append(minus,qty,plus,remove);r.append(t,controls);$("cartItems").append(r);
+  controls.append(minus,qty,plus,remove);r.append(image,details,controls);$("cartItems").append(r);
  });
  $("cartSubtotal").textContent=money(cartSubtotal());$("cartDiscount").textContent="- "+money(discountAmount());$("cartTotal").textContent=money(finalTotal());
  $("removeCouponBtn").classList.toggle("hidden",!appliedCoupon);
@@ -2741,6 +2798,110 @@ body:not(.vm-store-view):not(.vm-tracking-view) main > section.vm-hero.vm-home-o
     width:100% !important; height:100% !important; object-fit:cover !important;
     object-position:center 50% !important;
   }
+}
+</style>
+
+
+<style id="vm-purple-dream-final-layout">
+/* Purple Dream refinements — visual layer only; existing Firebase and order logic retained. */
+.vm-header{display:grid!important;grid-template-columns:minmax(205px,260px) minmax(0,1fr) auto!important;align-items:center!important;gap:clamp(8px,1.3vw,20px)!important;min-height:76px!important;height:auto!important;padding:9px clamp(12px,2.4vw,34px)!important;position:sticky!important;top:0!important;z-index:1200!important;overflow:visible!important}
+.vm-brand{grid-column:1;min-width:0!important;width:100%;display:flex!important;align-items:center!important;gap:10px!important}
+.vm-brand .logo,.vm-brand span{min-width:0;overflow-wrap:anywhere}
+.vm-nav{grid-column:2;grid-row:1;display:flex!important;align-items:center!important;justify-content:center!important;gap:clamp(3px,.55vw,9px)!important;min-width:0!important;flex-wrap:nowrap!important;overflow-x:auto!important;overflow-y:visible!important}
+.vm-nav button{flex:0 0 auto!important;white-space:nowrap!important;min-height:40px!important;padding:9px clamp(7px,.85vw,13px)!important;font-size:clamp(10px,.88vw,13px)!important}
+.vm-head-tools{grid-column:3;grid-row:1;display:flex!important;align-items:center!important;justify-content:flex-end!important;gap:6px!important;min-width:0!important}
+.vm-head-tools button{white-space:nowrap!important}
+.vm-head-search{min-width:0!important;width:clamp(115px,16vw,220px)!important}
+.vm-header .vm-nav button{position:relative!important;inset:auto!important;transform:none!important}
+.vm-header .vm-brand{position:relative!important;z-index:2!important}
+.vm-header .vm-nav{position:relative!important;z-index:1!important}
+body.vm-home-view{height:auto!important;min-height:100vh!important;overflow-x:hidden!important;overflow-y:auto!important;display:block!important}
+body.vm-home-view main{height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;display:flex!important;flex-direction:column!important;gap:0!important;padding:18px clamp(12px,2vw,26px) 30px!important}
+body.vm-home-view .vm-hero{display:grid!important;visibility:visible!important;opacity:1!important;flex:0 0 auto!important;order:1!important;width:100%!important;min-height:clamp(245px,28vw,365px)!important;margin:0 0 18px!important}
+body.vm-home-view .vm-hero-art,body.vm-home-view .vm-hero-art-desktop{visibility:visible!important;opacity:1!important}
+body.vm-home-view .vm-benefits{display:grid!important;order:2!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;margin:0 0 18px!important}
+body.vm-home-view .vm-home-promos{display:grid!important;order:3!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:12px!important;margin:0 0 22px!important}
+body.vm-home-view .vm-home-promo{display:grid!important;grid-template-columns:auto minmax(0,1fr) auto!important;align-items:center!important;gap:12px!important;min-width:0!important;min-height:132px!important;padding:14px!important;text-align:left!important}
+body.vm-home-view .vm-home-promo>span{font-size:clamp(34px,4vw,56px)!important;grid-row:1/3}
+body.vm-home-view .vm-home-promo b{font-size:clamp(14px,1.35vw,19px)!important;line-height:1.2}
+body.vm-home-view .vm-home-promo small{font-size:clamp(10px,1vw,13px)!important;line-height:1.4}
+body.vm-home-view .vm-home-categories{display:block!important;order:4!important;margin:0 0 22px!important}
+body.vm-home-view .vm-home-section-title{display:flex!important;align-items:center!important;justify-content:center!important;gap:14px!important;margin:0 0 12px!important;font-size:clamp(22px,2.5vw,34px)!important;font-weight:900!important;color:#6421ce!important;text-align:center!important}
+body.vm-home-view .vm-home-category-grid{display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:12px!important}
+body.vm-home-view .vm-home-category-grid button{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:7px!important;min-width:0!important;min-height:145px!important;padding:12px 8px!important;border:1px solid #dfc9ff!important;border-radius:19px!important;background:linear-gradient(145deg,#fff,#f1e8ff)!important;box-shadow:0 6px 16px #6421ce10!important}
+body.vm-home-view .vm-home-category-grid button span{font-size:clamp(30px,3.3vw,48px)!important;line-height:1.1}
+body.vm-home-view .vm-home-category-grid button b{font-size:clamp(11px,1vw,14px)!important;text-align:center!important}
+body.vm-home-view .vm-promo-grid,body.vm-home-view .vm-mega-sale{display:none!important}
+body.vm-home-view #trackingPanel{display:none!important}
+body.vm-store-view .vm-home-only{display:none!important}
+body.vm-store-view .vm-store-layout{display:grid!important}
+body.vm-store-view main{height:auto!important;max-height:none!important;overflow:visible!important}
+.vm-product-detail-open{overflow:hidden}
+.vm-detail-modal{position:fixed;inset:0;z-index:3000;display:flex;align-items:center;justify-content:center;padding:18px}
+.vm-detail-modal.hidden{display:none!important}
+.vm-detail-backdrop{position:absolute;inset:0;background:#160a2dcc;backdrop-filter:blur(5px)}
+.vm-detail-box{position:relative;z-index:1;width:min(920px,100%);max-height:min(90vh,850px);overflow:auto;padding:25px;background:#fff;border:1px solid #e8dcfa;border-radius:24px;box-shadow:0 25px 90px #160a2d66}
+.vm-detail-close{position:sticky;top:0;float:right;z-index:3;width:40px;height:40px;padding:0;border-radius:50%;background:#f1e8ff;color:#5420b5;font-size:22px}
+.vm-detail-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:start}
+.vm-detail-image-wrap{display:grid;place-items:center;min-height:360px;border:1px solid #eee5fb;border-radius:18px;background:linear-gradient(145deg,#faf8ff,#f0eaff);overflow:hidden}
+.vm-detail-image-wrap img{width:100%;height:100%;max-height:480px;object-fit:contain;padding:14px}
+.vm-detail-kicker{font-size:11px;font-weight:900;letter-spacing:1.4px;color:#7b42d4}
+.vm-detail-info h2{margin:9px 0 12px;font-size:clamp(24px,3vw,34px);line-height:1.2;color:#241044}
+.vm-detail-price{font-size:22px;font-weight:900;color:#6d28d9}
+.vm-detail-category,.vm-detail-stock{margin-top:9px;font-size:13px;font-weight:750;color:#675579}
+.vm-detail-info p{margin:18px 0;color:#62576d;line-height:1.7;white-space:pre-wrap;overflow-wrap:anywhere}
+.vm-detail-qty{display:flex;align-items:center;gap:14px;margin:18px 0}
+.vm-detail-qty span{margin-right:auto;font-weight:800}
+.vm-detail-qty button{width:38px;height:38px;padding:0;border-radius:10px;background:#f0e8ff;color:#5420b5;font-size:20px}
+.vm-detail-actions{display:flex;gap:8px;flex-wrap:wrap}
+.vm-detail-actions button{flex:1 1 130px}
+.vm-detail-note{display:block;margin-top:18px;color:#7c718a}
+.vm-cart-line{display:grid;grid-template-columns:76px minmax(0,1fr) auto;gap:12px;align-items:center}
+.vm-cart-thumb{width:76px;height:76px;object-fit:contain;border-radius:12px;background:#f5f0fc;border:1px solid #ece3f8}
+.vm-cart-line-info{min-width:0;overflow-wrap:anywhere}
+.vm-cart-line .rowbtn{margin-top:0;justify-content:flex-end}
+.vm-cart-line .rowbtn button{padding:8px 10px}
+#products .product{cursor:default}
+#products .product img{cursor:zoom-in}
+#products .productbuttons{display:grid!important;grid-template-columns:1fr 1fr;gap:7px}
+#products .productbuttons button{min-width:0!important}
+#products .productbuttons button:first-child{grid-column:1/-1}
+#dashboard{scroll-margin-top:90px}
+.dashboard-shortcuts{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important}
+.dashboard-shortcuts>button{min-height:90px!important;text-align:left!important;border:1px solid #e6d9f8!important;border-radius:15px!important;background:linear-gradient(145deg,#fff,#f6f0ff)!important;color:#321b50!important;padding:16px!important}
+@media(max-width:1100px){
+ .vm-header{grid-template-columns:minmax(150px,210px) minmax(0,1fr)!important}
+ .vm-nav{grid-column:1/-1;grid-row:2;justify-content:flex-start!important}
+ .vm-head-tools{grid-column:2;grid-row:1}
+ body.vm-home-view .vm-home-category-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+ body.vm-home-view .vm-home-promos{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:760px){
+ .vm-header{display:flex!important;flex-wrap:wrap!important;gap:8px!important;padding:9px 11px!important;min-height:0!important}
+ .vm-brand{flex:1 1 100%!important;max-width:100%!important}
+ .vm-nav{order:2!important;flex:1 1 100%!important;width:100%!important;justify-content:flex-start!important;overflow-x:auto!important;padding:2px 0 5px!important}
+ .vm-head-tools{order:3!important;flex:1 1 100%!important;width:100%!important;justify-content:flex-start!important;flex-wrap:wrap!important}
+ .vm-head-search{flex:1 1 150px!important;width:auto!important}
+ body.vm-home-view main{padding:12px 10px 24px!important}
+ body.vm-home-view .vm-hero{min-height:260px!important;margin-bottom:12px!important}
+ body.vm-home-view .vm-benefits{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;margin-bottom:12px!important}
+ body.vm-home-view .vm-benefits .benefit:last-child{grid-column:auto!important}
+ body.vm-home-view .vm-home-promos{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;margin-bottom:15px!important}
+ body.vm-home-view .vm-home-promo{grid-template-columns:auto minmax(0,1fr)!important;min-height:108px!important;padding:10px!important;gap:7px!important}
+ body.vm-home-view .vm-home-promo>span{grid-row:1/3;font-size:34px!important}
+ body.vm-home-view .vm-home-promo b{font-size:13px!important}
+ body.vm-home-view .vm-home-promo small{font-size:10px!important}
+ body.vm-home-view .vm-home-category-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+ body.vm-home-view .vm-home-category-grid button{min-height:112px!important}
+ .vm-detail-box{padding:16px;border-radius:18px}
+ .vm-detail-grid{grid-template-columns:1fr;gap:15px}
+ .vm-detail-image-wrap{min-height:220px;max-height:300px}
+ .vm-detail-image-wrap img{max-height:280px}
+ .vm-detail-info h2{font-size:24px}
+ .vm-cart-line{grid-template-columns:62px minmax(0,1fr)}
+ .vm-cart-thumb{width:62px;height:62px}
+ .vm-cart-line .rowbtn{grid-column:1/-1;justify-content:flex-start;flex-wrap:wrap}
+ .dashboard-shortcuts{grid-template-columns:1fr!important}
 }
 </style>
 
