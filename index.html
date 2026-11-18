@@ -1404,6 +1404,41 @@ body.vm-store-view button.secondary,
 }
 </style>
 
+
+<style id="vm-design9-mega-menu-layout">
+/* Design 9 — Mega Menu Style. The menu is in normal document flow, never layered over the Welcome artwork. */
+.vm-mega-menu{width:100%;box-sizing:border-box;margin:0 0 14px;padding:clamp(12px,1.5vw,20px);border:1px solid #dfc9ff;border-radius:20px;background:linear-gradient(135deg,#fff 0%,#f8f1ff 52%,#fff9e8 100%);box-shadow:0 8px 24px #5420a312;position:relative;z-index:1}
+.vm-mega-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 12px;padding:0 2px}
+.vm-mega-kicker{display:block;color:#7a38d8;font-size:10px;font-weight:950;letter-spacing:1.4px}
+.vm-mega-heading h2{margin:3px 0 0;color:#2d1747;font-size:clamp(18px,2vw,24px);line-height:1.15}
+.vm-mega-sparkle{font-size:28px;color:#8b43e9}
+.vm-mega-grid{display:grid;grid-template-columns:1.05fr 1fr 1fr 1.15fr;gap:12px;align-items:stretch}
+.vm-mega-column,.vm-mega-sale{min-width:0;padding:12px;border:1px solid #e7d8fb;border-radius:15px;background:#ffffffd9}
+.vm-mega-column h3{margin:0 0 9px;color:#4e2386;font-size:13px;font-weight:950}
+.vm-mega-column>button{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;margin:3px 0;padding:8px 9px;border:0;border-radius:9px;background:#f8f3ff;color:#302047;text-align:left;font-size:12px;font-weight:800;cursor:pointer}
+.vm-mega-column>button:hover{background:#eadcff;color:#6518cb}
+.vm-mega-column>button span{color:#7c3bd4;font-size:17px;line-height:1}
+.vm-mega-info{display:flex;flex-direction:column;gap:2px;padding:7px 8px;margin:3px 0;border-radius:9px;background:#fbf8ff}
+.vm-mega-info b{font-size:12px;color:#2e2042}
+.vm-mega-info small{font-size:10px;color:#766987}
+.vm-mega-sale{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;background:linear-gradient(145deg,#321052,#6822bd 65%,#8c48e6);border:1px solid #7131c4;color:#fff;overflow:hidden}
+.vm-mega-sale-icon{font-size:32px;margin-bottom:4px}
+.vm-mega-sale-tag{font-size:9px;letter-spacing:1.2px;font-weight:950;color:#ffe17a}
+.vm-mega-sale h3{font-size:clamp(17px,1.7vw,23px);line-height:1.1;margin:5px 0;color:#fff}
+.vm-mega-sale p{font-size:11px;line-height:1.45;color:#f3eaff;margin:0 0 12px}
+.vm-mega-sale button{border:0;border-radius:999px;padding:9px 14px;background:#ffd447;color:#35164e;font-size:11px;font-weight:950;cursor:pointer}
+/* Allow the full home page to flow naturally; the Welcome section itself is deliberately untouched. */
+@media(min-width:761px){body.vm-home-view main{height:auto!important;min-height:calc(100svh - 66px)!important;max-height:none!important;overflow:visible!important;display:flex!important;flex-direction:column!important;grid-template-rows:none!important;gap:12px!important}body.vm-home-view main>.vm-hero{flex:0 0 auto!important;width:100%!important}body.vm-home-view main>.vm-mega-menu{flex:0 0 auto!important}}
+@media(max-width:1100px){.vm-mega-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.vm-mega-menu{padding:10px;border-radius:15px;margin-bottom:10px}.vm-mega-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.vm-mega-column,.vm-mega-sale{padding:9px;border-radius:12px}.vm-mega-column h3{font-size:11px}.vm-mega-column>button{font-size:10px;padding:8px 6px}.vm-mega-info{padding:6px}.vm-mega-info b{font-size:10px}.vm-mega-info small{font-size:9px}.vm-mega-sale h3{font-size:17px}.vm-mega-sale p{font-size:10px}}
+@media(max-width:360px){.vm-mega-grid{grid-template-columns:1fr}.vm-mega-sale{min-height:145px}}
+/* Product photos: consistent square frames, complete product visible, no forced cropping. */
+.products .product img{display:block!important;width:100%!important;height:auto!important;aspect-ratio:1/1!important;object-fit:contain!important;object-position:center!important;padding:10px!important;box-sizing:border-box!important;background:#faf8ff!important}
+.vm-detail-image-wrap{display:flex!important;align-items:center!important;justify-content:center!important;min-height:300px}
+.vm-detail-image-wrap img{width:100%!important;max-width:100%!important;max-height:420px!important;aspect-ratio:1/1!important;object-fit:contain!important;object-position:center!important}
+@media(max-width:600px){.products .product img{padding:7px!important}.vm-detail-image-wrap{min-height:220px!important}.vm-detail-image-wrap img{max-height:280px!important}}
+</style>
+
 </head>
 <body class="vm-home-view">
 <div class="announcement-bar"><span class="announce-dot"></span> Smart finds, friendly prices <span class="announce-sep">•</span> Cash on Delivery available <span class="announce-sep">•</span> Shop your vibe</div>
@@ -1435,6 +1470,48 @@ body.vm-store-view button.secondary,
     <button class="vm-hero-cta" id="exploreBtn" type="button">Shop Now <span>→</span></button>
   </div>
 </section>
+
+<section class="vm-mega-menu vm-home-only" id="vmMegaMenu" aria-label="Vibemart quick navigation">
+  <div class="vm-mega-heading">
+    <div><span class="vm-mega-kicker">VIBEMART QUICK MENU</span><h2>Explore Vibemart</h2></div>
+    <span class="vm-mega-sparkle" aria-hidden="true">✦</span>
+  </div>
+  <div class="vm-mega-grid">
+    <div class="vm-mega-column">
+      <h3>🛍️ Shop by Category</h3>
+      <button type="button" data-vm-mega-category="Electronics">🎮 Electronics <span>›</span></button>
+      <button type="button" data-vm-mega-category="Fashion & Style">👗 Fashion &amp; Style <span>›</span></button>
+      <button type="button" data-vm-mega-category="Toys & Games">🧸 Toys &amp; Games <span>›</span></button>
+      <button type="button" data-vm-mega-category="Home & Living">🏠 Home &amp; Living <span>›</span></button>
+      <button type="button" data-vm-mega-category="Gifts & More">🎁 Gifts &amp; More <span>›</span></button>
+      <button type="button" data-vm-mega-category="Kids Corner">🎒 Kids Corner <span>›</span></button>
+    </div>
+    <div class="vm-mega-column">
+      <h3>⚡ Quick Links</h3>
+      <button type="button" data-vm-mega-action="store">Browse Store <span>→</span></button>
+      <button type="button" data-vm-mega-action="cart">🛒 Your Cart <span>→</span></button>
+      <button type="button" data-vm-mega-action="wishlist">♡ My Wishlist <span>→</span></button>
+      <button type="button" data-vm-mega-action="track">📦 Track Order <span>→</span></button>
+      <button type="button" data-vm-mega-action="spin">🎡 Spin &amp; Win <span>→</span></button>
+      <button type="button" data-vm-mega-action="dashboard">▦ Dashboard <span>→</span></button>
+    </div>
+    <div class="vm-mega-column">
+      <h3>💜 Customer Support</h3>
+      <div class="vm-mega-info"><b>🚚 Free Delivery</b><small>On orders above Rs 2999</small></div>
+      <div class="vm-mega-info"><b>💵 Cash on Delivery</b><small>Shop worry-free</small></div>
+      <div class="vm-mega-info"><b>🛡️ Secure Payments</b><small>Your trust, our priority</small></div>
+      <div class="vm-mega-info"><b>🎧 24/7 Support</b><small>We're always here</small></div>
+    </div>
+    <div class="vm-mega-sale">
+      <span class="vm-mega-sale-icon" aria-hidden="true">🎁</span>
+      <span class="vm-mega-sale-tag">SEASONAL SPECIAL</span>
+      <h3>Winter Big Sale</h3>
+      <p>Discover seasonal deals and find something you love.</p>
+      <button type="button" data-vm-mega-action="store">Explore Store →</button>
+    </div>
+  </div>
+</section>
+
 <section class="benefits vm-benefits vm-home-only" aria-label="Shopping benefits">
    <div class="benefit"><span class="benefit-icon">🚚</span><div><strong>Free Delivery</strong><small>On Orders Above 2999</small></div></div>
    <div class="benefit"><span class="benefit-icon">💸</span><div><strong>Cash on Delivery</strong><small>Shop Worry Free</small></div></div>
@@ -3680,6 +3757,32 @@ document.addEventListener('DOMContentLoaded',function(){
   side.addEventListener('click',function(e){const b=e.target.closest('[data-vm-dash]');if(!b)return;const key=b.dataset.vmDash;const ids={orders:'goOrdersAdmin',products:'goProductsAdmin',spin:'openSpinFromDashboard',settings:'openSettingsPage',logout:'logoutBtn'};if(key==='logout'){document.getElementById(ids.logout)?.click();return}if(key==='home'){document.getElementById('storeSettings')?.classList.add('hidden');return}document.getElementById(ids[key])?.click()});
  }
 });
+</script>
+
+
+<script id="vm-design9-mega-menu-actions">
+(function(){
+  function clickExisting(id){var el=document.getElementById(id);if(el)el.click();}
+  document.addEventListener('click',function(event){
+    var category=event.target.closest('[data-vm-mega-category]');
+    if(category){
+      var wanted=(category.getAttribute('data-vm-mega-category')||'').toLowerCase();
+      clickExisting('vmStoreBtn');
+      window.setTimeout(function(){
+        var buttons=Array.from(document.querySelectorAll('#categories button'));
+        var match=buttons.find(function(button){return button.textContent.toLowerCase().includes(wanted);});
+        if(match){match.click();}
+        else{var shop=document.getElementById('shop');if(shop)shop.scrollIntoView({behavior:'smooth',block:'start'});}
+      },180);
+      return;
+    }
+    var action=event.target.closest('[data-vm-mega-action]');
+    if(!action)return;
+    var map={store:'vmStoreBtn',cart:'cartBtn',wishlist:'wishlistBtn',track:'trackBtn',spin:'openSpinPage',dashboard:'dashboardBtn'};
+    var id=map[action.getAttribute('data-vm-mega-action')];
+    if(id)clickExisting(id);
+  });
+})();
 </script>
 
 </body>
