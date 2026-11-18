@@ -2716,5 +2716,33 @@ body.vm-home-view > footer{display:block!important;margin-top:4px!important;padd
 }
 </style>
 
+
+<style id="vm-welcome-visibility-emergency-fix">
+/* Restore the original Welcome banner on the homepage; keep it hidden only in Store/Tracking views. */
+body:not(.vm-store-view):not(.vm-tracking-view) main > section.vm-hero.vm-home-only {
+  display:block !important; visibility:visible !important; opacity:1 !important;
+  position:relative !important; flex:0 0 auto !important; width:100% !important;
+  height:clamp(260px,24vw,350px) !important; min-height:260px !important;
+  max-height:none !important; margin:0 0 2px !important; overflow:hidden !important;
+}
+@media (min-width:761px) {
+  body:not(.vm-store-view):not(.vm-tracking-view) main > section.vm-hero.vm-home-only .vm-hero-art {display:none !important;}
+  body:not(.vm-store-view):not(.vm-tracking-view) main > section.vm-hero.vm-home-only .vm-hero-art-desktop {
+    display:block !important; position:absolute !important; inset:0 !important;
+    width:100% !important; height:100% !important; object-fit:cover !important;
+    object-position:center center !important; padding:0 !important; margin:0 !important;
+  }
+}
+@media (max-width:760px) {
+  body:not(.vm-store-view):not(.vm-tracking-view) main > section.vm-hero.vm-home-only {height:clamp(220px,58vw,340px) !important;min-height:220px !important;}
+  body:not(.vm-store-view):not(.vm-tracking-view) main > section.vm-hero.vm-home-only .vm-hero-art-desktop {display:none !important;}
+  body:not(.vm-store-view):not(.vm-tracking-view) main > section.vm-hero.vm-home-only .vm-hero-art {
+    display:block !important; position:absolute !important; inset:0 !important;
+    width:100% !important; height:100% !important; object-fit:cover !important;
+    object-position:center 50% !important;
+  }
+}
+</style>
+
 </body>
 </html>
