@@ -834,7 +834,10 @@ main{max-width:1600px;padding:16px 20px 45px}
   <section class="vm-mega-sale" aria-label="Mega sale campaign"><div><small>LIMITED-TIME VIBEMART OFFER</small><h2>MEGA SALE <b>UP TO 70% OFF</b></h2><p>Great finds. Bigger savings. Explore today's deals.</p></div><div class="vm-sale-clock"><span>SALE ENDS IN</span><div id="vmSaleCountdown">-- : -- : --</div><small>Daily offer countdown</small></div><button type="button" id="vmSaleShopBtn">SHOP DEALS →</button></section>
 
  <section class="panel" id="trackingPanel">
-  <h2>📦 Track Your Order</h2>
+  <div class="vm-tracking-heading">
+   <h2>📦 Track Your Order</h2>
+   <button type="button" class="vm-tracking-close" id="closeTrackingBtn" aria-label="Close tracking and return to home" title="Back to Home">✕</button>
+  </div>
   <p class="notice">Apna Order ID enter karo aur delivery status check karo.</p>
   <div class="searchrow"><input id="trackingId" placeholder="Order ID yahan paste karo" autocomplete="off"><button class="primary" id="trackOrderBtn">Track Order</button></div>
   <div id="trackingResult" aria-live="polite"></div>
@@ -1205,6 +1208,13 @@ function openTrackingPanel(){
  panel.style.display="block";
  goTo("trackingPanel");
 }
+function closeTrackingPanel(){
+ document.body.classList.remove("vm-tracking-view");
+ const panel=$("trackingPanel");
+ if(panel)panel.style.display="none";
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+$("closeTrackingBtn").onclick=closeTrackingPanel;
 $("trackBtn").onclick=openTrackingPanel;
 $("loginBtn").onclick=()=>isOwner?openDashboard():showAuth();
 $("dashboardBtn").onclick=openDashboard;
@@ -2555,6 +2565,15 @@ document.addEventListener('DOMContentLoaded', function(){
   body.vm-home-view .vm-hero { height:clamp(250px,58vw,390px) !important; }
   body.vm-home-view .vm-hero-art { object-fit:cover !important; object-position:center 50% !important; }
 }
+</style>
+
+
+<style id="vm-tracking-close-button">
+#trackingPanel .vm-tracking-heading{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:0 0 14px}
+#trackingPanel .vm-tracking-heading h2{margin:0;min-width:0}
+#trackingPanel .vm-tracking-close{flex:0 0 42px;width:42px;height:42px;min-width:42px;padding:0;display:grid;place-items:center;border:1px solid #e5d7fa;border-radius:12px;background:#fff;color:#5420b5;font-size:21px;font-weight:900;line-height:1;box-shadow:0 3px 10px #24104412;position:relative;z-index:3}
+#trackingPanel .vm-tracking-close:hover{background:#f3eaff;border-color:#c9aaf5}
+@media(max-width:520px){#trackingPanel .vm-tracking-heading{align-items:flex-start}#trackingPanel .vm-tracking-close{flex-basis:40px;width:40px;height:40px;min-width:40px}}
 </style>
 
 </body>
