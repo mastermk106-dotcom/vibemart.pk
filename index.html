@@ -4194,5 +4194,129 @@ body.vm-home-view:not(.vm-store-view):not(.vm-tracking-view) .vm-hero #exploreBt
 })();
 </script>
 
+
+<style id="vm-welcome-scroll-and-soft-blur-fix">
+/* Final welcome-screen tuning: allow vertical scroll and keep the artwork sharp/full-width. */
+html:has(body.vm-home-view),
+html:has(body.vm-home-view) body,
+body.vm-home-view {
+  height:auto !important;
+  min-height:100% !important;
+  overflow-x:hidden !important;
+  overflow-y:auto !important;
+  overscroll-behavior-y:auto !important;
+  scroll-behavior:smooth;
+}
+body.vm-home-view > main {
+  position:relative !important;
+  display:block !important;
+  width:100% !important;
+  max-width:none !important;
+  height:auto !important;
+  min-height:0 !important;
+  max-height:none !important;
+  margin:0 !important;
+  padding:0 !important;
+  overflow:visible !important;
+}
+body.vm-home-view > main > section.vm-hero.vm-home-only {
+  display:block !important;
+  position:relative !important;
+  isolation:isolate !important;
+  width:100% !important;
+  height:auto !important;
+  min-height:100svh !important;
+  aspect-ratio:1672 / 941 !important;
+  max-height:none !important;
+  margin:0 !important;
+  padding:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  overflow:hidden !important;
+  background:#24104b !important;
+}
+body.vm-home-view > main > section.vm-hero.vm-home-only > img.vm-hero-art {
+  display:block !important;
+  visibility:visible !important;
+  opacity:1 !important;
+  position:absolute !important;
+  inset:0 !important;
+  z-index:1 !important;
+  width:100% !important;
+  height:100% !important;
+  min-width:100% !important;
+  min-height:100% !important;
+  max-width:none !important;
+  max-height:none !important;
+  object-fit:cover !important;
+  object-position:center center !important;
+  margin:0 !important;
+  padding:0 !important;
+}
+/* The side-fill remains only a very soft colour continuation, not a strong blur. */
+body.vm-home-view > main > section.vm-hero.vm-home-only::before {
+  display:block !important;
+  z-index:0 !important;
+  filter:blur(3px) brightness(.94) saturate(1.05) !important;
+  transform:scale(1.01) !important;
+}
+body.vm-home-view > main > section.vm-hero.vm-home-only::after { display:none !important; }
+body.vm-home-view > main > section.vm-hero.vm-home-only > img.vm-hero-art-desktop { display:none !important; }
+body.vm-home-view .vm-welcome-copy {
+  position:absolute !important;
+  inset:0 !important;
+  width:100% !important;
+  height:100% !important;
+  max-width:none !important;
+  max-height:none !important;
+  margin:0 !important;
+  padding:0 !important;
+  transform:none !important;
+  background:transparent !important;
+  border:0 !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+  pointer-events:none !important;
+  z-index:3 !important;
+}
+body.vm-home-view .vm-welcome-copy > :not(#exploreBtn) { display:none !important; }
+body.vm-home-view .vm-welcome-copy #exploreBtn {
+  display:block !important;
+  position:absolute !important;
+  left:61.5% !important;
+  top:66% !important;
+  width:20% !important;
+  height:10% !important;
+  min-height:0 !important;
+  max-width:none !important;
+  margin:0 !important;
+  padding:0 !important;
+  transform:translate(-50%,-50%) !important;
+  border:0 !important;
+  border-radius:22px !important;
+  background:transparent !important;
+  color:transparent !important;
+  box-shadow:none !important;
+  font-size:0 !important;
+  opacity:0 !important;
+  cursor:pointer !important;
+  pointer-events:auto !important;
+}
+@media(max-width:760px) {
+  body.vm-home-view > main > section.vm-hero.vm-home-only {
+    min-height:100svh !important;
+    aspect-ratio:auto !important;
+  }
+  body.vm-home-view .vm-welcome-copy #exploreBtn {
+    left:61.5% !important;
+    top:66% !important;
+    width:25% !important;
+    height:9% !important;
+  }
+}
+</style>
+
 </body>
 </html>
