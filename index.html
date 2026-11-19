@@ -1530,6 +1530,133 @@ body.vm-store-view .vm-store-layout { display:grid !important; }
 }
 </style>
 
+
+<style id="vm-welcome-true-fullscreen-viewport-fix">
+/* Welcome is a genuine full-viewport landing screen. Keep the existing winter artwork and copy. */
+html:has(body.vm-home-view),
+body.vm-home-view {
+  width:100% !important;
+  height:100% !important;
+  min-height:100% !important;
+  margin:0 !important;
+  padding:0 !important;
+  overflow:hidden !important;
+  background:#170b2b !important;
+}
+body.vm-home-view > .announcement-bar,
+body.vm-home-view > .vm-header,
+body.vm-home-view > footer,
+body.vm-home-view > #vmBackTop,
+body.vm-home-view > .vm-back-top {
+  display:none !important;
+}
+body.vm-home-view > main {
+  display:block !important;
+  position:relative !important;
+  width:100vw !important;
+  max-width:none !important;
+  height:100vh !important;
+  height:100svh !important;
+  height:100dvh !important;
+  min-height:100vh !important;
+  min-height:100svh !important;
+  min-height:100dvh !important;
+  max-height:none !important;
+  margin:0 !important;
+  padding:0 !important;
+  overflow:hidden !important;
+}
+body.vm-home-view > main > :not(.vm-hero) {
+  display:none !important;
+}
+body.vm-home-view > main > .vm-hero {
+  display:block !important;
+  position:relative !important;
+  isolation:isolate !important;
+  width:100vw !important;
+  height:100vh !important;
+  height:100svh !important;
+  height:100dvh !important;
+  min-height:100vh !important;
+  min-height:100svh !important;
+  min-height:100dvh !important;
+  max-height:none !important;
+  margin:0 !important;
+  padding:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+  overflow:hidden !important;
+  background:#201044 !important;
+}
+body.vm-home-view .vm-hero-art,
+body.vm-home-view .vm-hero-art-desktop {
+  position:absolute !important;
+  inset:0 !important;
+  display:block !important;
+  width:100% !important;
+  height:100% !important;
+  min-width:100% !important;
+  min-height:100% !important;
+  max-width:none !important;
+  max-height:none !important;
+  margin:0 !important;
+  padding:0 !important;
+  border:0 !important;
+  object-fit:cover !important;
+  object-position:center center !important;
+}
+@media (min-width:761px) {
+  body.vm-home-view .vm-hero-art { display:none !important; }
+  body.vm-home-view .vm-hero-art-desktop { display:block !important; }
+  body.vm-home-view .vm-welcome-copy {
+    left:17.5% !important;
+    top:50% !important;
+    transform:translateY(-50%) !important;
+    width:42% !important;
+    max-width:680px !important;
+    max-height:none !important;
+    padding:clamp(10px,1.3vw,20px) !important;
+  }
+}
+@media (max-width:760px) {
+  body.vm-home-view .vm-hero-art-desktop { display:none !important; }
+  body.vm-home-view .vm-hero-art { display:block !important; }
+  body.vm-home-view .vm-welcome-copy {
+    left:50% !important;
+    top:50% !important;
+    transform:translate(-50%,-50%) !important;
+    width:min(88vw,440px) !important;
+    max-width:calc(100% - 28px) !important;
+    max-height:calc(100% - 36px) !important;
+    padding:clamp(12px,3vw,20px) !important;
+    box-sizing:border-box !important;
+  }
+  body.vm-home-view .vm-welcome-copy h1 {
+    font-size:clamp(25px,7vw,39px) !important;
+    line-height:1.08 !important;
+  }
+  body.vm-home-view .vm-welcome-copy p {
+    font-size:clamp(13px,3.6vw,17px) !important;
+  }
+  body.vm-home-view .vm-welcome-copy .vm-hero-cta {
+    min-height:44px !important;
+    padding:10px 20px !important;
+  }
+}
+/* Once Shop Now opens the store, restore the regular scrolling site layout. */
+body.vm-store-view {
+  height:auto !important;
+  min-height:100vh !important;
+  min-height:100dvh !important;
+  overflow-x:hidden !important;
+  overflow-y:auto !important;
+}
+body.vm-store-view > .announcement-bar { display:block !important; }
+body.vm-store-view > .vm-header { display:flex !important; }
+body.vm-store-view > footer { display:block !important; }
+</style>
+
 </head>
 <body class="vm-home-view">
 <div class="announcement-bar"><span class="announce-dot"></span> Smart finds, friendly prices <span class="announce-sep">•</span> Cash on Delivery available <span class="announce-sep">•</span> Shop your vibe</div>
