@@ -1439,6 +1439,97 @@ body.vm-store-view button.secondary,
 @media(max-width:600px){.products .product img{padding:7px!important}.vm-detail-image-wrap{min-height:220px!important}.vm-detail-image-wrap img{max-height:280px!important}}
 </style>
 
+
+<style id="vm-welcome-first-screen-flow-fix">
+/* FIRST SCREEN: show only the existing Welcome artwork and Shop Now button. */
+#vmMegaMenu { display:none !important; }
+body.vm-home-view {
+  display:block !important;
+  width:100% !important;
+  height:100vh !important;
+  height:100dvh !important;
+  min-height:0 !important;
+  overflow:hidden !important;
+  margin:0 !important;
+}
+body.vm-home-view > .announcement-bar,
+body.vm-home-view > .vm-header,
+body.vm-home-view > footer { display:none !important; }
+body.vm-home-view > main {
+  display:block !important;
+  width:100% !important;
+  max-width:none !important;
+  height:100vh !important;
+  height:100dvh !important;
+  min-height:0 !important;
+  max-height:none !important;
+  margin:0 !important;
+  padding:0 !important;
+  overflow:hidden !important;
+}
+body.vm-home-view > main > :not(.vm-hero) { display:none !important; }
+body.vm-home-view > main > .vm-hero {
+  display:block !important;
+  position:relative !important;
+  width:100% !important;
+  height:100% !important;
+  min-height:0 !important;
+  max-height:none !important;
+  margin:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  overflow:hidden !important;
+}
+body.vm-home-view .vm-hero-art {
+  display:block !important;
+  width:100% !important;
+  height:100% !important;
+  max-width:none !important;
+  max-height:none !important;
+  object-fit:cover !important;
+  object-position:center center !important;
+}
+body.vm-home-view .vm-welcome-copy { z-index:2 !important; }
+
+/* After Shop Now: restore the normal inner-page header and store flow. */
+body.vm-store-view {
+  display:block !important;
+  width:100% !important;
+  height:auto !important;
+  min-height:100vh !important;
+  min-height:100dvh !important;
+  overflow-x:hidden !important;
+  overflow-y:auto !important;
+}
+body.vm-store-view > .announcement-bar { display:flex !important; }
+body.vm-store-view > .vm-header { display:flex !important; }
+body.vm-store-view > main {
+  display:block !important;
+  width:100% !important;
+  max-width:1600px !important;
+  height:auto !important;
+  min-height:0 !important;
+  max-height:none !important;
+  margin:0 auto !important;
+  padding:18px clamp(12px,2vw,26px) 28px !important;
+  overflow:visible !important;
+}
+body.vm-store-view > main > .vm-hero,
+body.vm-store-view > main > .vm-home-only,
+body.vm-store-view > main > #vmMegaMenu { display:none !important; }
+body.vm-store-view .vm-store-layout { display:grid !important; }
+
+@media (max-width:760px) {
+  body.vm-home-view > main > .vm-hero { min-height:0 !important; }
+  body.vm-home-view .vm-welcome-copy {
+    width:min(88vw,440px) !important;
+    max-width:calc(100% - 28px) !important;
+    padding:14px 12px !important;
+  }
+  body.vm-home-view .vm-hero-cta { position:relative; z-index:3; }
+}
+</style>
+
 </head>
 <body class="vm-home-view">
 <div class="announcement-bar"><span class="announce-dot"></span> Smart finds, friendly prices <span class="announce-sep">•</span> Cash on Delivery available <span class="announce-sep">•</span> Shop your vibe</div>
