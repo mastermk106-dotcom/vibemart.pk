@@ -4088,5 +4088,111 @@ document.addEventListener('DOMContentLoaded',function(){
 })();
 </script>
 
+
+<style id="vm-welcome-stable-final-override">
+/* Final authority for the landing screen: override the accumulated older layout patches. */
+html:has(body.vm-home-view:not(.vm-store-view):not(.vm-tracking-view)),
+html:has(body.vm-home-view:not(.vm-store-view):not(.vm-tracking-view)) body {
+  width:100% !important; height:100% !important; min-height:100% !important;
+  margin:0 !important; padding:0 !important; overflow:hidden !important;
+}
+body.vm-home-view:not(.vm-store-view):not(.vm-tracking-view) > .announcement-bar,
+body.vm-home-view:not(.vm-store-view):not(.vm-tracking-view) > .vm-header,
+body.vm-home-view:not(.vm-store-view):not(.vm-tracking-view) > header,
+body.vm-home-view:not(.vm-store-view):not(.vm-tracking-view) > footer,
+body.vm-home-view:not(.vm-store-view):not(.vm-tracking-view) > #vmBackTop,
+body.vm-home-view:not(.vm-store-view):not(.vm-tracking-view) > .vm-back-top {
+  display:none !important; visibility:hidden !important;
+}
+body.vm-home-view:not(.vm-store-view):not(.vm-tracking-view) > main {
+  display:block !important; position:fixed !important; inset:0 !important;
+  width:100vw !important; max-width:none !important;
+  height:100vh !important; height:100svh !important; height:100dvh !important;
+  min-height:100vh !important; min-height:100svh !important; min-height:100dvh !important;
+  max-height:none !important; margin:0 !important; padding:0 !important;
+  overflow:hidden !important; z-index:1 !important;
+}
+body.vm-home-view:not(.vm-store-view):not(.vm-tracking-view) > main > :not(.vm-hero) {
+  display:none !important; visibility:hidden !important;
+}
+body.vm-home-view:not(.vm-store-view):not(.vm-tracking-view) > main > section.vm-hero.vm-home-only {
+  display:block !important; visibility:visible !important; opacity:1 !important;
+  position:relative !important; isolation:isolate !important;
+  width:100vw !important; height:100vh !important; height:100svh !important; height:100dvh !important;
+  min-height:100vh !important; min-height:100svh !important; min-height:100dvh !important;
+  max-height:none !important; margin:0 !important; padding:0 !important;
+  border:0 !important; border-radius:0 !important; overflow:hidden !important;
+  background:#29145b !important; box-shadow:none !important;
+}
+/* Critical correction: there is only one real hero img in the HTML. Never hide it on desktop. */
+body.vm-home-view:not(.vm-store-view):not(.vm-tracking-view) > main > section.vm-hero.vm-home-only > img.vm-hero-art {
+  display:block !important; visibility:visible !important; opacity:1 !important;
+  position:absolute !important; inset:0 !important; z-index:1 !important;
+  width:100% !important; height:100% !important; min-width:0 !important; min-height:0 !important;
+  max-width:none !important; max-height:none !important;
+  object-fit:contain !important; object-position:center center !important;
+  margin:0 !important; padding:0 !important; border:0 !important;
+}
+body.vm-home-view:not(.vm-store-view):not(.vm-tracking-view) > main > section.vm-hero.vm-home-only > img.vm-hero-art-desktop {
+  display:none !important;
+}
+body.vm-home-view:not(.vm-store-view):not(.vm-tracking-view) > main > section.vm-hero.vm-home-only::before {
+  display:block !important; z-index:0 !important;
+}
+/* Artwork already contains its own lettering and Shop Now graphic; retain only a transparent click target. */
+body.vm-home-view:not(.vm-store-view):not(.vm-tracking-view) .vm-hero .vm-welcome-copy {
+  display:block !important; position:absolute !important; inset:0 !important;
+  left:0 !important; top:0 !important; width:100% !important; height:100% !important;
+  max-width:none !important; max-height:none !important; margin:0 !important; padding:0 !important;
+  transform:none !important; border:0 !important; border-radius:0 !important;
+  background:transparent !important; box-shadow:none !important;
+  backdrop-filter:none !important; -webkit-backdrop-filter:none !important;
+  pointer-events:none !important; z-index:3 !important;
+}
+body.vm-home-view:not(.vm-store-view):not(.vm-tracking-view) .vm-hero .vm-welcome-copy > :not(#exploreBtn) {
+  display:none !important;
+}
+body.vm-home-view:not(.vm-store-view):not(.vm-tracking-view) .vm-hero #exploreBtn {
+  display:block !important; position:absolute !important;
+  left:calc(50% + 22.3dvh) !important; top:63dvh !important;
+  transform:translate(-50%,-50%) !important;
+  width:36.4dvh !important; height:11.7dvh !important;
+  min-height:0 !important; max-width:none !important; margin:0 !important; padding:0 !important;
+  border:0 !important; border-radius:18px !important; background:transparent !important;
+  color:transparent !important; box-shadow:none !important; font-size:0 !important;
+  opacity:0 !important; cursor:pointer !important; pointer-events:auto !important;
+}
+@media (max-width:760px) {
+  body.vm-home-view:not(.vm-store-view):not(.vm-tracking-view) .vm-hero #exploreBtn {
+    left:63.5vw !important; top:calc(50% + 7vw) !important;
+    width:21.5vw !important; height:7.5vw !important;
+    transform:translate(-50%,-50%) !important;
+  }
+}
+</style>
+<script id="vm-welcome-shopnow-final-binding">
+(function () {
+  function bindWelcomeShopNow() {
+    const button = document.getElementById('exploreBtn');
+    const shop = document.getElementById('shop');
+    if (!button || button.dataset.vmStableBound === '1') return;
+    button.dataset.vmStableBound = '1';
+    button.onclick = function () {
+      document.body.classList.remove('vm-home-view');
+      document.body.classList.add('vm-store-view');
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      window.setTimeout(function () {
+        if (shop) shop.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 60);
+    };
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bindWelcomeShopNow, { once: true });
+  } else {
+    bindWelcomeShopNow();
+  }
+})();
+</script>
+
 </body>
 </html>
