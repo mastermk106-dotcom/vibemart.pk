@@ -4318,5 +4318,171 @@ body.vm-home-view .vm-welcome-copy #exploreBtn {
 }
 </style>
 
+
+<style id="vm-welcome-final-layout-fix-20261119">
+/* Final Welcome layout correction:
+   - remove the enlarged blurred duplicate behind the artwork
+   - show the complete, sharp artwork at its natural 16:9 ratio
+   - keep the page scrollable on shorter laptop screens
+   - preserve the original artwork and Shop Now click target
+*/
+html, body {
+  width:100% !important;
+  min-height:100% !important;
+  height:auto !important;
+  overflow-x:hidden !important;
+  overflow-y:auto !important;
+  overscroll-behavior-y:auto !important;
+}
+body.vm-home-view:not(.vm-store-view):not(.vm-tracking-view) {
+  display:block !important;
+  width:100% !important;
+  height:auto !important;
+  min-height:100svh !important;
+  max-height:none !important;
+  overflow-x:hidden !important;
+  overflow-y:auto !important;
+  background:#dce8ff !important;
+}
+body.vm-home-view:not(.vm-store-view):not(.vm-tracking-view) > main {
+  display:block !important;
+  position:relative !important;
+  width:100% !important;
+  height:auto !important;
+  min-height:0 !important;
+  max-height:none !important;
+  margin:0 !important;
+  padding:0 !important;
+  overflow:visible !important;
+}
+body.vm-home-view:not(.vm-store-view):not(.vm-tracking-view) > main > section.vm-hero.vm-home-only {
+  display:block !important;
+  position:relative !important;
+  isolation:isolate !important;
+  width:100vw !important;
+  height:auto !important;
+  min-height:0 !important;
+  max-height:none !important;
+  aspect-ratio:1672 / 941 !important;
+  margin:0 !important;
+  padding:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  overflow:hidden !important;
+  background:#dce8ff !important;
+}
+/* The background pseudo-element was creating the distracting blurred side panels. */
+body.vm-home-view:not(.vm-store-view):not(.vm-tracking-view) > main > section.vm-hero.vm-home-only::before,
+body.vm-home-view:not(.vm-store-view):not(.vm-tracking-view) > main > section.vm-hero.vm-home-only::after {
+  content:none !important;
+  display:none !important;
+  background:none !important;
+  filter:none !important;
+}
+body.vm-home-view:not(.vm-store-view):not(.vm-tracking-view) > main > section.vm-hero.vm-home-only > img.vm-hero-art {
+  display:block !important;
+  visibility:visible !important;
+  opacity:1 !important;
+  position:absolute !important;
+  inset:0 !important;
+  z-index:1 !important;
+  width:100% !important;
+  height:100% !important;
+  min-width:0 !important;
+  min-height:0 !important;
+  max-width:none !important;
+  max-height:none !important;
+  object-fit:contain !important;
+  object-position:center center !important;
+  margin:0 !important;
+  padding:0 !important;
+  border:0 !important;
+}
+body.vm-home-view:not(.vm-store-view):not(.vm-tracking-view) > main > section.vm-hero.vm-home-only > img.vm-hero-art-desktop {
+  display:none !important;
+}
+body.vm-home-view:not(.vm-store-view):not(.vm-tracking-view) .vm-hero .vm-welcome-copy {
+  display:block !important;
+  position:absolute !important;
+  inset:0 !important;
+  z-index:5 !important;
+  width:100% !important;
+  height:100% !important;
+  max-width:none !important;
+  max-height:none !important;
+  margin:0 !important;
+  padding:0 !important;
+  transform:none !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+  pointer-events:none !important;
+}
+body.vm-home-view:not(.vm-store-view):not(.vm-tracking-view) .vm-hero .vm-welcome-copy > :not(#exploreBtn) {
+  display:none !important;
+}
+body.vm-home-view:not(.vm-store-view):not(.vm-tracking-view) .vm-hero #exploreBtn {
+  display:block !important;
+  position:absolute !important;
+  left:61.5% !important;
+  top:66% !important;
+  width:20% !important;
+  height:10% !important;
+  min-width:0 !important;
+  min-height:0 !important;
+  max-width:none !important;
+  margin:0 !important;
+  padding:0 !important;
+  transform:translate(-50%,-50%) !important;
+  border:0 !important;
+  border-radius:22px !important;
+  background:transparent !important;
+  color:transparent !important;
+  box-shadow:none !important;
+  opacity:0 !important;
+  cursor:pointer !important;
+  pointer-events:auto !important;
+}
+/* Laptop/desktop: make the artwork large enough to scroll on short screens,
+   while keeping its full image ratio so no sign or characters are cropped. */
+@media (min-width:761px) {
+  body.vm-home-view:not(.vm-store-view):not(.vm-tracking-view) > main > section.vm-hero.vm-home-only {
+    width:100vw !important;
+    height:max(100svh, 56.28vw, 760px) !important;
+    min-height:max(100svh, 56.28vw, 760px) !important;
+    aspect-ratio:auto !important;
+  }
+  body.vm-home-view:not(.vm-store-view):not(.vm-tracking-view) > main > section.vm-hero.vm-home-only > img.vm-hero-art {
+    object-fit:contain !important;
+  }
+}
+/* Phones: use the full-width original image at its natural ratio and allow
+   normal page scrolling instead of pinning the image to the viewport. */
+@media (max-width:760px) {
+  body.vm-home-view:not(.vm-store-view):not(.vm-tracking-view) > main > section.vm-hero.vm-home-only {
+    width:100vw !important;
+    height:auto !important;
+    min-height:0 !important;
+    aspect-ratio:1672 / 941 !important;
+  }
+  body.vm-home-view:not(.vm-store-view):not(.vm-tracking-view) > main > section.vm-hero.vm-home-only > img.vm-hero-art {
+    position:absolute !important;
+    inset:0 !important;
+    width:100% !important;
+    height:100% !important;
+    object-fit:contain !important;
+  }
+  body.vm-home-view:not(.vm-store-view):not(.vm-tracking-view) .vm-hero #exploreBtn {
+    left:61.5% !important;
+    top:66% !important;
+    width:20% !important;
+    height:10% !important;
+  }
+}
+</style>
+
 </body>
 </html>
