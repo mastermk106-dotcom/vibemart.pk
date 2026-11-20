@@ -4743,5 +4743,73 @@ body.vm-store-view .vm-product-stock:has(+ .ratingSummary){margin-bottom:8px!imp
  body.vm-store-view .vm-winter-bear-banner .vm-view-all{margin-left:auto!important}
 }
 </style>
-\n</body>
+\n
+<style id="vm-winter-bear-full-display-fix">
+/* Store-only: show the complete polar-bear artwork prominently, like the Welcome hero.
+   The original artwork is low-resolution, so a soft blurred backdrop fills the banner
+   while the foreground keeps the complete image visible without cropping. */
+body.vm-store-view .vm-winter-bear-banner{
+  position:relative!important;isolation:isolate!important;display:flex!important;
+  align-items:center!important;justify-content:space-between!important;
+  gap:clamp(14px,2vw,26px)!important;min-height:270px!important;
+  padding:14px clamp(14px,2vw,24px)!important;overflow:hidden!important;
+  border:1px solid #d8c6ef!important;border-radius:18px!important;
+  background:linear-gradient(110deg,#eaf3ff,#f7efff 55%,#fff8e9)!important;
+}
+body.vm-store-view .vm-winter-bear-banner::before{
+  content:""!important;position:absolute!important;inset:-18px!important;z-index:-2!important;
+  background-image:var(--vm-bear-backdrop)!important;background-position:center!important;
+  background-size:cover!important;filter:blur(13px)!important;opacity:.52!important;
+  transform:scale(1.04)!important;
+}
+body.vm-store-view .vm-winter-bear-banner::after{
+  content:""!important;position:absolute!important;inset:0!important;z-index:-1!important;
+  background:linear-gradient(90deg,rgba(245,241,255,.10),rgba(255,255,255,.68) 54%,rgba(255,248,232,.84))!important;
+}
+body.vm-store-view .vm-winter-bear-banner>img{
+  position:relative!important;z-index:1!important;display:block!important;
+  flex:0 1 50%!important;width:50%!important;max-width:520px!important;
+  height:238px!important;aspect-ratio:308/171!important;object-fit:contain!important;
+  object-position:center!important;margin:0 auto!important;padding:0!important;
+  border:2px solid rgba(255,255,255,.95)!important;border-radius:14px!important;
+  background:rgba(255,255,255,.24)!important;
+  box-shadow:0 5px 18px rgba(42,22,73,.18)!important;
+}
+body.vm-store-view .vm-winter-bear-copy{
+  position:relative!important;z-index:1!important;min-width:0!important;flex:1 1 40%!important;
+  padding:12px 16px!important;border:1px solid rgba(255,255,255,.8)!important;
+  border-radius:16px!important;background:rgba(255,255,255,.78)!important;
+  box-shadow:0 4px 14px rgba(69,35,116,.09)!important;backdrop-filter:blur(5px)!important;
+}
+body.vm-store-view .vm-winter-bear-copy h2{font-size:clamp(22px,2.4vw,34px)!important}
+body.vm-store-view .vm-winter-bear-banner .vm-view-all{position:relative!important;z-index:2!important;flex:0 0 auto!important}
+@media(max-width:760px){
+  body.vm-store-view .vm-winter-bear-banner{flex-wrap:wrap!important;min-height:0!important;padding:10px!important;gap:8px!important}
+  body.vm-store-view .vm-winter-bear-banner>img{flex:0 0 100%!important;width:100%!important;max-width:100%!important;height:auto!important;max-height:230px!important;object-fit:contain!important}
+  body.vm-store-view .vm-winter-bear-copy{flex:1 1 100%!important;text-align:center!important;padding:10px!important}
+  body.vm-store-view .vm-winter-bear-banner .vm-view-all{margin:0 auto!important}
+}
+</style>
+<script id="vm-winter-bear-backdrop-init">
+(function(){
+  function setBearBackdrop(){
+    var banner=document.querySelector('body.vm-store-view .vm-winter-bear-banner');
+    if(!banner)return;
+    var img=banner.querySelector(':scope > img');
+    if(!img)return;
+    var apply=function(){
+      if(img.currentSrc||img.src){
+        var src=img.currentSrc||img.src;
+        banner.style.setProperty('--vm-bear-backdrop','url("'+src.replace(/"/g,'%22')+'")');
+      }
+    };
+    if(img.complete)apply();else img.addEventListener('load',apply,{once:true});
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setBearBackdrop,{once:true});
+  else setBearBackdrop();
+  document.addEventListener('click',function(){setTimeout(setBearBackdrop,0)},true);
+})();
+</script>
+
+</body>
 </html>
