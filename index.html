@@ -3350,7 +3350,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const homeBtn = document.getElementById('vmHomeBtn');
     const storeBtn = document.getElementById('vmStoreBtn');
     const shopNowBtn = document.getElementById('exploreBtn');
-    const welcomeHero = document.querySelector('main > .vm-hero');
 
     function showWelcome() {
       body.classList.remove('vm-store-view', 'vm-tracking-view');
@@ -3382,13 +3381,8 @@ document.addEventListener("DOMContentLoaded", function () {
       showStore();
     });
 
-    // The artwork contains a printed Shop Now button. Make clicks on the
-    // artwork work too, so the image's printed button can never be a dead area.
-    welcomeHero?.addEventListener('click', function () {
-      if (body.classList.contains('vm-home-view') && !body.classList.contains('vm-store-view')) {
-        showStore();
-      }
-    });
+    // Intentionally do not attach navigation to the welcome artwork or its background.
+    // Only the explicit Shop Now button (exploreBtn) opens the Store.
 
     document.getElementById('vmHomeSpin')?.addEventListener('click', function () {
       document.getElementById('openSpinPage')?.click();
