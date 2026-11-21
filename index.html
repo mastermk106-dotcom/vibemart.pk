@@ -1760,6 +1760,15 @@ body.vm-store-view .vm-winter-store-banner img{
 }
 </style>
 
+
+<style id="vm-product-stock-badge">
+.product .vm-product-stock{display:inline-flex;align-items:center;gap:6px;width:fit-content;max-width:100%;margin:7px 0 5px;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:900;line-height:1.25;border:1px solid transparent;letter-spacing:.1px}
+.product .vm-product-stock.is-in-stock{color:#166534;background:#ecfdf3;border-color:#bbf7d0}
+.product .vm-product-stock.is-out-of-stock{color:#b91c1c;background:#fef2f2;border-color:#fecaca}
+.product .vm-product-stock.is-stock-unset{color:#7c5a13;background:#fffbeb;border-color:#fde68a}
+.productbuttons button:disabled{opacity:.62;cursor:not-allowed;filter:grayscale(.15)}
+</style>
+
 </head>
 <body class="vm-home-view">
 <div class="announcement-bar"><span class="announce-dot"></span> Smart finds, friendly prices <span class="announce-sep">•</span> Cash on Delivery available <span class="announce-sep">•</span> Shop your vibe</div>
@@ -2455,7 +2464,7 @@ function renderProducts(){
   const b=document.createElement("div");b.className="productbody";
   const t=document.createElement("h3");t.textContent=productName(p)||"Product";
   const cat=document.createElement("p");cat.textContent=safeText(p.category||"Other");
-   const stock=document.createElement("p");stock.style.fontWeight="bold";stock.textContent=Number.isInteger(p.stock)?(p.stock>0?"📦 In stock: "+p.stock:"❌ Out of stock"):"⚠️ Stock set karna baqi hai";
+   const stock=document.createElement("div");stock.className="vm-product-stock "+(Number.isFinite(Number(p.stock))&&p.stock!==""?(Number(p.stock)>0?"is-in-stock":"is-out-of-stock"):"is-stock-unset");stock.textContent=Number.isFinite(Number(p.stock))&&p.stock!==""?(Number(p.stock)>0?"📦 In Stock · "+Number(p.stock)+" available":"❌ Out of Stock"):"📦 Stock not updated";
   const desc=document.createElement("p");desc.textContent=safeText(p.description);
   const rating=document.createElement("div");rating.className="ratingSummary";rating.textContent="⭐ Loading ratings...";
   loadReviewSummary(p.id).then(summary=>{
@@ -2467,7 +2476,11 @@ function renderProducts(){
   const add=document.createElement("button");
   add.type="button";
   add.className="primary";
-  add.textContent="🛒 Add to Cart";
+  const stockKnown=Number.isFinite(Number(p.stock))&&p.stock!=="";
+  const outOfStock=stockKnown&&Number(p.stock)<=0;
+  add.textContent=outOfStock?"Out of Stock":"🛒 Add to Cart";
+  add.disabled=outOfStock;
+  add.setAttribute("aria-label",outOfStock?"This product is out of stock":"Add to cart");
   add.onclick=()=>addToCart(p.id);
 
   const fav=document.createElement("button");
@@ -2550,6 +2563,9 @@ $("reviewForm").onsubmit=async e=>{
 /* CART */
 function addToCart(id){
  const p=allProducts.find(x=>x.id===id);if(!p)return;
+ if(Number.isFinite(Number(p.stock))&&p.stock!==""&&Number(p.stock)<=0){
+  message("status","Ye product abhi out of stock hai.",true);return;
+ }
  const i=cart.find(x=>x.id===id);
  if(i)i.qty=Math.min(99,i.qty+1);else cart.push({id,name:productName(p),price:effectivePrice(p),imageUrl:safeText(p.imageUrl),qty:1});
  renderCart();message("status","Product cart mein add ho gaya.");
