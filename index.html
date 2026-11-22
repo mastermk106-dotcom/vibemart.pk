@@ -5790,5 +5790,135 @@ body.vm-store-view > main > .vm-store-layout { display:block !important; }
 }
 </style>
 
+
+<style id="vm-winter-dashboard-all-options">
+/* Winter styling for every dashboard sub-page. Visual-only overrides: existing IDs, forms and handlers stay intact. */
+.vm-admin-page{
+  background:
+    radial-gradient(circle at 8% 5%,rgba(255,255,255,.95) 0 2px,transparent 3px),
+    radial-gradient(circle at 91% 14%,rgba(255,255,255,.8) 0 2px,transparent 3px),
+    linear-gradient(145deg,#eee4ff 0%,#faf7ff 46%,#fff7e9 100%)!important;
+  background-size:46px 46px,62px 62px,auto!important;
+  padding:clamp(12px,2.5vw,30px)!important;
+}
+.vm-admin-inner{max-width:1120px!important;margin:0 auto!important}
+.vm-admin-head{
+  top:0!important;min-height:66px!important;padding:12px 16px!important;
+  border:1px solid #e4d2fa!important;border-radius:19px 19px 0 0!important;
+  background:linear-gradient(110deg,#54209b,#7b35c7 58%,#9a58d8)!important;
+  box-shadow:0 5px 0 #e8dcf6!important;
+}
+.vm-admin-head h2{color:#fff!important;font-size:clamp(20px,2.4vw,28px)!important;font-weight:1000!important;text-shadow:0 2px 0 #3c146c}
+.vm-admin-head .vm-dashboard-x{
+  display:grid!important;place-items:center!important;width:43px!important;height:43px!important;min-width:43px!important;
+  padding:0!important;border:2px solid #fff!important;border-radius:50%!important;
+  background:linear-gradient(145deg,#fff,#f1e6ff)!important;color:#6422b6!important;
+  font-size:27px!important;font-weight:1000!important;line-height:1!important;
+  box-shadow:0 3px 0 #d9c3f1!important;cursor:pointer!important;
+}
+.vm-admin-head .vm-dashboard-x:hover{transform:rotate(90deg) scale(1.04)!important}
+.vm-admin-content{
+  min-height:220px!important;padding:clamp(16px,3vw,30px)!important;
+  border:1px solid #e5d4f7!important;border-top:0!important;border-radius:0 0 22px 22px!important;
+  background:linear-gradient(155deg,#fff 0%,#fdfaff 60%,#fffaf1 100%)!important;
+  box-shadow:0 18px 42px rgba(66,25,112,.14)!important;
+}
+.vm-admin-content>p.small:first-child{
+  margin:0 0 18px!important;padding:12px 15px!important;border:1px dashed #d8bdf6!important;border-radius:13px!important;
+  background:linear-gradient(100deg,#f5edff,#fff9e9)!important;color:#68428c!important;font-weight:800!important;
+}
+/* Headings and separators */
+.vm-admin-content h2,.vm-admin-content h3,.vm-admin-content h4{
+  color:#4d1b83!important;font-weight:1000!important;letter-spacing:.1px!important;
+}
+.vm-admin-content h3{
+  margin:22px 0 13px!important;padding:11px 14px!important;border-left:5px solid #8b4bd1!important;
+  border-radius:0 12px 12px 0!important;background:linear-gradient(90deg,#f0e4ff,#fff8e9)!important;
+}
+.vm-admin-content hr{border:0!important;border-top:2px dashed #d9c2f2!important;margin:22px 0!important}
+/* Product, coupon and order records */
+.vm-admin-content .order{
+  margin:12px 0!important;padding:16px!important;border:1px solid #e4d4f5!important;border-radius:17px!important;
+  background:linear-gradient(145deg,#fff,#f8f2ff 72%,#fff9ec)!important;
+  box-shadow:0 4px 0 #eee4f8,0 9px 20px rgba(69,29,111,.07)!important;
+}
+.vm-admin-content .order strong{display:block;color:#3f176d!important;font-size:15px!important;font-weight:1000!important;line-height:1.5!important}
+.vm-admin-content .order p{color:#655477!important;line-height:1.6!important;overflow-wrap:anywhere}
+.vm-admin-content .order .small{font-size:11px!important;color:#8a779b!important}
+/* All forms: Add/Edit Product, Coupons, Settings, profile-like form panels */
+.vm-admin-content form:not(#checkoutForm){
+  display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:13px 16px!important;
+  padding:clamp(14px,2vw,22px)!important;border:1px solid #e4d2f7!important;border-radius:19px!important;
+  background:linear-gradient(145deg,#fff,#f7f0ff 75%,#fff9eb)!important;
+  box-shadow:inset 0 1px 0 #fff,0 7px 20px rgba(74,31,120,.07)!important;
+}
+.vm-admin-content form .field{min-width:0!important;margin:0!important;padding:11px 12px!important;border:1px solid #eee4f8!important;border-radius:13px!important;background:#fff!important}
+.vm-admin-content form label{display:block!important;margin:0 0 7px!important;color:#51217f!important;font-size:12px!important;font-weight:950!important}
+.vm-admin-content form input:not([type="checkbox"]):not([type="radio"]),
+.vm-admin-content form select,.vm-admin-content form textarea{
+  width:100%!important;min-width:0!important;min-height:44px!important;padding:11px 12px!important;
+  border:1px solid #d9c5ef!important;border-radius:11px!important;background:#fff!important;color:#32164d!important;
+  font-family:inherit!important;font-size:14px!important;font-weight:600!important;line-height:1.4!important;box-shadow:inset 0 1px 3px rgba(56,25,91,.05)!important;outline:none!important;
+}
+.vm-admin-content form textarea{min-height:100px!important;resize:vertical!important}
+.vm-admin-content form input:focus,.vm-admin-content form select:focus,.vm-admin-content form textarea:focus{
+  border-color:#8c4bd2!important;box-shadow:0 0 0 3px rgba(140,75,210,.13)!important
+}
+.vm-admin-content form small{display:block;margin-top:6px!important;color:#89769c!important;font-size:11px!important;line-height:1.5!important}
+.vm-admin-content form .rowbtn,.vm-admin-content form .rowbtn:has(button){grid-column:1/-1!important;display:flex!important;flex-wrap:wrap!important;gap:10px!important;margin-top:4px!important}
+.vm-admin-content form button,.vm-admin-content>button,
+.vm-admin-content .rowbtn button{
+  min-height:43px!important;padding:11px 17px!important;border:0!important;border-radius:12px!important;
+  background:linear-gradient(110deg,#6726b8,#8c42d1)!important;color:#fff!important;font-weight:950!important;
+  box-shadow:0 4px 0 #48167f,0 7px 15px rgba(91,34,150,.15)!important;cursor:pointer!important;
+}
+.vm-admin-content form button:hover,.vm-admin-content>button:hover,.vm-admin-content .rowbtn button:hover{filter:brightness(1.07)!important;transform:translateY(-1px)!important}
+.vm-admin-content form button.secondary,.vm-admin-content .rowbtn button.secondary{
+  background:linear-gradient(110deg,#fff,#f3eaff)!important;color:#5a238f!important;border:1px solid #d9c3f0!important;box-shadow:0 3px 0 #e6d8f4!important
+}
+.vm-admin-content .rowbtn button.danger{background:linear-gradient(110deg,#bd3d66,#e05a6d)!important;color:#fff!important;box-shadow:0 4px 0 #8f2949!important}
+/* Native product form wrapper */
+#vmAddProductPage #productEditor{padding:0!important;border:0!important;background:transparent!important;box-shadow:none!important}
+#vmAddProductPage #formTitle{margin:0 0 15px!important;padding:12px 15px!important;border-radius:14px!important;background:linear-gradient(100deg,#eee2ff,#fff5e2)!important;color:#4d1b83!important}
+#vmAddProductPage #productForm,#vmCouponsPage #couponForm,#vmSettingsPage #settingsForm{margin:0!important}
+#vmProductsPage #addProductBtn{margin:0 0 16px!important}
+#vmProductsPage #manageProducts:empty,#vmOrdersPage #orders:empty,#vmCouponsPage #manageCoupons:empty{min-height:50px}
+/* Settings page inner elements */
+#vmSettingsPage #storeSettings{margin:0!important;padding:0!important;border:0!important;background:transparent!important;box-shadow:none!important}
+#vmSettingsPage #settingsMessage,#vmAddProductPage #status{margin-top:14px!important;padding:10px 13px!important;border-radius:12px!important}
+/* Spin page and rewards panel */
+#dailySpinPanel.spin-page{
+  position:fixed!important;inset:0!important;z-index:1400!important;overflow:auto!important;
+  padding:clamp(12px,3vw,30px)!important;background:linear-gradient(145deg,#eee4ff,#fffaf0)!important;
+}
+#dailySpinPanel.spin-page .spin-page-head{
+  position:sticky!important;top:0!important;z-index:3!important;max-width:1050px!important;margin:0 auto!important;
+  padding:14px 16px!important;border:1px solid #e0cdf5!important;border-radius:17px!important;
+  background:linear-gradient(110deg,#54209b,#8540ce)!important;color:#fff!important;box-shadow:0 5px 0 #e8dcf6!important;
+}
+#dailySpinPanel.spin-page .spin-page-head span{color:#fff!important}
+#dailySpinPanel.spin-page .spin-page-head button{display:grid!important;place-items:center!important;width:42px!important;height:42px!important;padding:0!important;border:2px solid #fff!important;border-radius:50%!important;background:#fff!important;color:#6422b6!important;font-size:24px!important;font-weight:1000!important}
+#dailySpinPanel.spin-page .spin-page-inner{max-width:1050px!important;margin:0 auto!important;padding:clamp(16px,3vw,30px)!important;border:1px solid #e4d2f7!important;border-radius:0 0 22px 22px!important;background:linear-gradient(145deg,#fff,#f8f2ff)!important;box-shadow:0 18px 42px rgba(66,25,112,.14)!important}
+#dailySpinPanel.spin-page .spin-page-inner h2{color:#4d1b83!important;font-weight:1000!important}
+#dailySpinPanel.spin-page .spin-page-inner .field{padding:14px!important;border:1px solid #e4d4f5!important;border-radius:14px!important;background:#fff!important}
+#dailySpinPanel.spin-page .spin-page-inner input{width:100%!important;min-height:44px!important;padding:10px 12px!important;border:1px solid #d9c5ef!important;border-radius:11px!important}
+/* Wishlist page content */
+#vmWishlistPage #wishlistPanel{margin:0!important;padding:0!important;border:0!important;background:transparent!important;box-shadow:none!important}
+/* Small screens */
+@media(max-width:680px){
+ .vm-admin-page{padding:9px!important}
+ .vm-admin-head{min-height:58px!important;padding:9px 11px!important;border-radius:15px 15px 0 0!important}
+ .vm-admin-head h2{font-size:18px!important}
+ .vm-admin-content{padding:13px!important;border-radius:0 0 16px 16px!important}
+ .vm-admin-content form:not(#checkoutForm){grid-template-columns:1fr!important;gap:10px!important;padding:12px!important}
+ .vm-admin-content form .rowbtn,.vm-admin-content form .rowbtn:has(button){grid-column:1!important}
+ .vm-admin-content .order{padding:12px!important}
+ .vm-admin-content .rowbtn{display:flex!important;flex-wrap:wrap!important}
+ .vm-admin-content .rowbtn button{flex:1 1 120px!important}
+ #dailySpinPanel.spin-page{padding:9px!important}
+ #dailySpinPanel.spin-page .spin-page-inner{padding:13px!important}
+}
+</style>
+
 </body>
 </html>
