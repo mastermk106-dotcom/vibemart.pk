@@ -1945,6 +1945,98 @@ body.vm-store-view .vm-winter-store-banner img{
 }
 </style>
 
+
+<style id="vm-dashboard-design2-winter-profile">
+#dashboard.vm-dashboard-redesigned{
+ --vm-dash-ink:#32164f;--vm-dash-purple:#6427bb;--vm-dash-lilac:#eee4ff;
+ background:linear-gradient(180deg,#f4edff 0%,#fff 48%,#f8f4ff 100%)!important;
+ border:1px solid #e2d2f8!important;border-radius:24px!important;
+ box-shadow:0 18px 55px rgba(59,25,100,.14)!important;
+}
+#dashboard .vm-dashboard-shell{display:grid;grid-template-columns:260px minmax(0,1fr);gap:0;overflow:hidden;border-radius:20px;background:#fff}
+#dashboard .vm-dashboard-side{
+ position:relative;min-width:0;padding:17px 14px 20px;
+ background:linear-gradient(180deg,#eee3ff 0%,#f8f4ff 48%,#fff 100%);
+ border-right:1px solid #e4d5f7;
+}
+#dashboard .vm-dashboard-winter-top{
+ position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;gap:3px;
+ min-height:96px;margin:-17px -14px 15px;padding:15px 10px 13px;
+ color:#fff;text-align:center;
+ background:radial-gradient(circle at 15% 18%,#ffffff55 0 3px,transparent 4px),radial-gradient(circle at 85% 70%,#ffffff55 0 4px,transparent 5px),linear-gradient(135deg,#4d1c91,#783bd0 55%,#a47ae7);
+ border-radius:0 0 22px 22px;
+}
+#dashboard .vm-dashboard-winter-top span{position:absolute;top:10px;font-size:20px;color:#fff}
+#dashboard .vm-dashboard-winter-top span:first-child{left:17px}
+#dashboard .vm-dashboard-winter-top span:nth-child(2){right:22px;top:24px}
+#dashboard .vm-dashboard-winter-top b{font-size:19px;letter-spacing:2px;font-weight:1000}
+#dashboard .vm-dashboard-winter-top small{font-size:9px;letter-spacing:2px;color:#eee2ff;font-weight:900}
+#dashboard .vm-owner-card{
+ display:grid;grid-template-columns:62px minmax(0,1fr) 30px;align-items:center;gap:10px;
+ margin:0 0 15px;padding:12px 10px;border:1px solid #e0d0f5;border-radius:17px;
+ background:linear-gradient(145deg,#fff,#f9f4ff);box-shadow:0 6px 17px #4c1d950c;
+}
+#dashboard .vm-owner-avatar{
+ display:grid;place-items:center;width:62px;height:62px;overflow:hidden;
+ border:3px solid #fff;border-radius:50%;
+ background:linear-gradient(145deg,#d7c1ff,#f6efff);
+ color:#55229b;font-size:23px;font-weight:1000;
+ box-shadow:0 0 0 2px #c6a7ee,0 5px 12px #5420b51c;
+}
+#dashboard .vm-owner-avatar img{width:100%;height:100%;object-fit:cover}
+#dashboard .vm-owner-meta{min-width:0;display:flex;flex-direction:column;gap:4px}
+#dashboard .vm-owner-meta strong{overflow-wrap:anywhere;color:#32164f;font-size:14px;font-weight:1000}
+#dashboard .vm-owner-meta small{color:#795c9c;font-size:11px;font-weight:800}
+#dashboard .vm-profile-edit-shortcut{
+ width:29px;height:29px;padding:0;border:1px solid #d9c5f3;border-radius:50%;
+ background:#fff;color:#6427bb;font-weight:900;cursor:pointer;
+}
+#dashboard .vm-dashboard-menu{display:flex;flex-direction:column;gap:7px}
+#dashboard .vm-dashboard-menu button{
+ display:flex;align-items:center;min-height:46px;padding:11px 12px;text-align:left;
+ border:1px solid #e5d8f6;border-radius:13px;background:#fff;color:#482275;
+ font-size:13px;font-weight:900;box-shadow:0 3px 0 #eadff8;
+}
+#dashboard .vm-dashboard-menu button:hover{transform:translateX(3px);background:#f3eaff;border-color:#cdb3ef}
+#dashboard .vm-dashboard-menu button[data-vm-dash="logout"]{margin-top:5px;color:#a12d56;background:#fff5f7;border-color:#f2d5df;box-shadow:0 3px 0 #f5e0e7}
+#dashboard .vm-profile-editor{
+ margin-top:14px;padding:13px;border:1px dashed #b991e7;border-radius:16px;background:#fff;
+}
+#dashboard .vm-profile-editor[hidden]{display:none!important}
+#dashboard .vm-profile-editor-title{margin-bottom:10px;color:#54209b;font-size:14px;font-weight:1000}
+#dashboard .vm-profile-editor label{display:block;margin:10px 0 5px;color:#4b286f;font-size:12px;font-weight:900}
+#dashboard .vm-profile-editor input[type="text"],
+#dashboard .vm-profile-editor input[type="file"]{
+ width:100%;min-width:0;padding:9px;border:1px solid #ddcef0;border-radius:10px;
+ background:#fff;color:#39204f;font-size:12px;
+}
+#dashboard .vm-profile-editor small{display:block;margin-top:6px;color:#78678b;font-size:10px;line-height:1.45}
+#dashboard .vm-profile-editor-actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+#dashboard .vm-profile-editor-actions button{
+ flex:1 1 100%;min-height:38px;border:0;border-radius:10px;
+ background:linear-gradient(110deg,#6427bb,#8950d4);color:#fff;font-size:12px;font-weight:950;
+}
+#dashboard .vm-profile-editor-actions button+button{background:#f3edfb;color:#5c2a94;border:1px solid #e0d2f2}
+#dashboard #vmOwnerProfileMessage{margin:8px 0 0;color:#5b3480;font-size:11px;line-height:1.4}
+#dashboard .vm-dashboard-content{min-width:0;padding:clamp(15px,2.4vw,27px);background:linear-gradient(180deg,#fff,#fcfaff)}
+#dashboard .vm-dashboard-content>.sectionhead{padding:0 0 13px;border-bottom:1px solid #eadff8}
+#dashboard .vm-dashboard-content>.sectionhead h2{color:#351650;font-weight:1000}
+#dashboard .vm-dashboard-content .notice{border:1px solid #e4d5f7;border-radius:13px;background:#f7f1ff;color:#563778}
+#dashboard .dashboard-shortcuts{gap:12px}
+#dashboard .dashboard-shortcuts button{min-height:86px;border:1px solid #e3d5f5;border-radius:15px;background:linear-gradient(145deg,#fff,#f7f1ff);color:#482275;box-shadow:0 4px 0 #e9def7,0 8px 18px #4c1d950b}
+@media(max-width:760px){
+ #dashboard .vm-dashboard-shell{grid-template-columns:1fr}
+ #dashboard .vm-dashboard-side{border-right:0;border-bottom:1px solid #e4d5f7;padding:12px}
+ #dashboard .vm-dashboard-winter-top{margin:-12px -12px 12px;min-height:75px;padding:10px}
+ #dashboard .vm-owner-card{max-width:420px;margin:0 auto 12px}
+ #dashboard .vm-dashboard-menu{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+ #dashboard .vm-dashboard-menu button{min-height:42px;padding:9px;font-size:12px}
+ #dashboard .vm-dashboard-menu button[data-vm-dash="logout"]{margin-top:0}
+ #dashboard .vm-profile-editor{max-width:460px;margin:12px auto 0}
+ #dashboard .vm-dashboard-content{padding:14px}
+}
+</style>
+
 </head>
 <body class="vm-home-view">
 <div class="announcement-bar"><span class="announce-dot"></span> Smart finds, friendly prices <span class="announce-sep">•</span> Cash on Delivery available <span class="announce-sep">•</span> Shop your vibe</div>
@@ -4231,11 +4323,131 @@ document.addEventListener('DOMContentLoaded',function(){
   dash.dataset.vmShell='1';dash.classList.add('vm-dashboard-redesigned');
   const shell=document.createElement('div');shell.className='vm-dashboard-shell';
   const side=document.createElement('aside');side.className='vm-dashboard-side';
-  side.innerHTML='<div class="vm-owner-card"><div class="vm-owner-avatar" aria-hidden="true">👤</div><strong>Malik Maazi</strong><small>Owner</small></div><nav class="vm-dashboard-menu" aria-label="Dashboard menu"><button type="button" data-vm-dash="home">▦　Dashboard</button><button type="button" data-vm-dash="orders">▤　Customer Orders</button><button type="button" data-vm-dash="products">▣　Manage Products</button><button type="button" data-vm-dash="spin">🎡　Spin &amp; Win</button><button type="button" data-vm-dash="settings">⚙　Settings</button><button type="button" data-vm-dash="logout">↪　Logout</button></nav>';
+  side.innerHTML=`
+   <div class="vm-dashboard-winter-top"><span>❄</span><span>✦</span><span>❄</span><b>VIBEMART</b><small>WINTER CONTROL ROOM</small></div>
+   <div class="vm-owner-card">
+    <div class="vm-owner-avatar" id="vmOwnerAvatar" aria-label="Your profile picture"><span>👤</span></div>
+    <div class="vm-owner-meta"><strong id="vmOwnerName">VibeMart Owner</strong><small>Store Owner</small></div>
+    <button type="button" class="vm-profile-edit-shortcut" data-vm-dash="profile" aria-label="Edit profile">✎</button>
+   </div>
+   <nav class="vm-dashboard-menu" aria-label="Dashboard menu">
+    <button type="button" data-vm-dash="home">▦　Dashboard</button>
+    <button type="button" data-vm-dash="orders">📦　My Orders</button>
+    <button type="button" data-vm-dash="wishlist">♡　Wishlist</button>
+    <button type="button" data-vm-dash="profile">👤　Profile</button>
+    <button type="button" data-vm-dash="settings">⚙　Settings</button>
+    <button type="button" data-vm-dash="products">🛍　Manage Products</button>
+    <button type="button" data-vm-dash="spin">🎡　Spin &amp; Win</button>
+    <button type="button" data-vm-dash="logout">↪　Logout</button>
+   </nav>
+   <section class="vm-profile-editor" id="vmProfileEditor" hidden>
+    <div class="vm-profile-editor-title">❄ Edit Your Profile</div>
+    <form id="vmOwnerProfileForm">
+     <label for="vmOwnerNameInput">Your display name</label>
+     <input id="vmOwnerNameInput" type="text" maxlength="40" placeholder="Enter your name" required>
+     <label for="vmOwnerPhotoInput">Profile picture</label>
+     <input id="vmOwnerPhotoInput" type="file" accept="image/png,image/jpeg,image/webp">
+     <small>Choose a picture from your computer or phone. JPG, PNG or WEBP (max 5 MB).</small>
+     <div class="vm-profile-editor-actions"><button type="submit">Save Profile</button><button type="button" id="vmOwnerPhotoClear">Remove Picture</button></div>
+     <p id="vmOwnerProfileMessage" role="status" aria-live="polite"></p>
+    </form>
+   </section>`;
   const content=document.createElement('div');content.className='vm-dashboard-content';
   while(dash.firstChild)content.appendChild(dash.firstChild);
   shell.append(side,content);dash.appendChild(shell);
-  side.addEventListener('click',function(e){const b=e.target.closest('[data-vm-dash]');if(!b)return;const key=b.dataset.vmDash;const ids={orders:'goOrdersAdmin',products:'goProductsAdmin',spin:'openSpinFromDashboard',settings:'openSettingsPage',logout:'logoutBtn'};if(key==='logout'){document.getElementById(ids.logout)?.click();return}if(key==='home'){document.getElementById('storeSettings')?.classList.add('hidden');return}document.getElementById(ids[key])?.click()});
+
+  const PROFILE_KEY='vibemart_owner_profile_v1';
+  let profilePhoto='';
+  const avatar=side.querySelector('#vmOwnerAvatar');
+  const nameLabel=side.querySelector('#vmOwnerName');
+  const nameInput=side.querySelector('#vmOwnerNameInput');
+  const photoInput=side.querySelector('#vmOwnerPhotoInput');
+  const profileForm=side.querySelector('#vmOwnerProfileForm');
+  const profileEditor=side.querySelector('#vmProfileEditor');
+  const profileMessage=side.querySelector('#vmOwnerProfileMessage');
+
+  function paintAvatar(data){
+   avatar.replaceChildren();
+   if(data){
+    const img=document.createElement('img');img.alt='Your profile picture';img.src=data;avatar.appendChild(img);
+   }else{
+    const initials=(nameLabel.textContent||'V').trim().split(/\s+/).slice(0,2).map(x=>x[0]).join('').toUpperCase();
+    const span=document.createElement('span');span.textContent=initials||'V';avatar.appendChild(span);
+   }
+  }
+  function loadProfile(){
+   let saved={};
+   try{saved=JSON.parse(localStorage.getItem(PROFILE_KEY)||'{}')||{};}catch{}
+   const savedName=typeof saved.name==='string'&&saved.name.trim()?saved.name.trim():'VibeMart Owner';
+   nameLabel.textContent=savedName;nameInput.value=savedName;
+   profilePhoto=typeof saved.photo==='string'?saved.photo:'';
+   paintAvatar(profilePhoto);
+  }
+  function showProfileEditor(){
+   profileEditor.hidden=!profileEditor.hidden;
+   if(!profileEditor.hidden){nameInput.value=nameLabel.textContent;profileMessage.textContent='';profileEditor.scrollIntoView({behavior:'smooth',block:'nearest'});}
+  }
+  let pendingPhoto=null;
+  photoInput.addEventListener('change',function(){
+   const file=photoInput.files&&photoInput.files[0];if(!file)return;
+   if(!/^image\/(png|jpeg|webp)$/.test(file.type)||file.size>5*1024*1024){
+    profileMessage.textContent='Please choose a JPG, PNG or WEBP image under 5 MB.';photoInput.value='';return;
+   }
+   const reader=new FileReader();
+   reader.onload=function(){
+    const img=new Image();
+    img.onload=function(){
+     const canvas=document.createElement('canvas'),size=320;
+     canvas.width=size;canvas.height=size;
+     const ctx=canvas.getContext('2d');
+     const scale=Math.max(size/img.width,size/img.height);
+     const w=img.width*scale,h=img.height*scale;
+     ctx.drawImage(img,(size-w)/2,(size-h)/2,w,h);
+     pendingPhoto=canvas.toDataURL('image/webp',0.78);
+     paintAvatar(pendingPhoto);
+     profileMessage.textContent='Picture selected. Press Save Profile to keep it.';
+    };
+    img.onerror=function(){profileMessage.textContent='Could not read this picture. Please choose another.';};
+    img.src=reader.result;
+   };
+   reader.onerror=function(){profileMessage.textContent='Could not read this file.';};
+   reader.readAsDataURL(file);
+  });
+  profileForm.addEventListener('submit',function(e){
+   e.preventDefault();
+   const newName=nameInput.value.trim();
+   if(!newName){profileMessage.textContent='Please enter your name.';return;}
+   const nextPhoto=pendingPhoto!==null?pendingPhoto:profilePhoto;
+   try{
+    localStorage.setItem(PROFILE_KEY,JSON.stringify({name:newName,photo:nextPhoto}));
+    nameLabel.textContent=newName;profilePhoto=nextPhoto;pendingPhoto=null;paintAvatar(profilePhoto);
+    profileMessage.textContent='Profile saved on this browser.';
+   }catch(err){
+    profileMessage.textContent='Could not save this picture in browser storage. Try a smaller image.';
+   }
+  });
+  side.querySelector('#vmOwnerPhotoClear').addEventListener('click',function(){
+   pendingPhoto='';profilePhoto='';photoInput.value='';paintAvatar('');
+   profileMessage.textContent='Picture removed. Press Save Profile to confirm.';
+  });
+  loadProfile();
+
+  side.addEventListener('click',function(e){
+   const b=e.target.closest('[data-vm-dash]');if(!b)return;
+   const key=b.dataset.vmDash;
+   const ids={orders:'goOrdersAdmin',products:'goProductsAdmin',spin:'openSpinFromDashboard',settings:'openSettingsPage',logout:'logoutBtn'};
+   if(key==='logout'){document.getElementById(ids.logout)?.click();return;}
+   if(key==='home'){profileEditor.hidden=true;document.getElementById('storeSettings')?.classList.add('hidden');return;}
+   if(key==='profile'){showProfileEditor();return;}
+   if(key==='wishlist'){
+    dash.classList.add('hidden');
+    const panel=document.getElementById('wishlistPanel');
+    if(panel){panel.classList.remove('hidden');if(typeof renderWishlist==='function')renderWishlist();}
+    return;
+   }
+   profileEditor.hidden=true;
+   document.getElementById(ids[key])?.click();
+  });
  }
 });
 </script>
