@@ -2263,6 +2263,64 @@ body.vm-profile-modal-open::after{content:"";position:fixed;inset:0;z-index:1000
 }
 </style>
 
+
+<style id="vm-dashboard-wood-board-and-final-layout-fix">
+#dashboard .vm-dash-welcome{
+  height:430px!important;min-height:430px!important;
+  background-size:125% 125%!important;
+  background-position:center 46%!important;
+  background-repeat:no-repeat!important;
+  overflow:hidden!important;
+}
+#dashboard .vm-dash-welcome-copy{
+  position:absolute!important;left:37%!important;top:8%!important;
+  width:53%!important;max-width:none!important;
+  margin:0!important;padding:5px 12px!important;
+  text-align:center!important;background:transparent!important;
+  border:0!important;border-radius:0!important;box-shadow:none!important;
+  backdrop-filter:none!important;
+}
+#dashboard .vm-dash-welcome-copy h1{
+  margin:0 0 7px!important;color:#3b1a0d!important;
+  font-size:clamp(28px,3.2vw,44px)!important;
+  line-height:1.04!important;text-align:center!important;
+  text-shadow:0 1px 0 #ffe5b5,0 2px 2px #8b431c!important;
+}
+#dashboard .vm-dash-welcome-copy h1 span{color:#57209a!important;text-shadow:0 1px 0 #f6d7a2,0 2px 2px #8b431c!important}
+#dashboard .vm-dash-welcome-copy p{
+  margin:7px 0!important;color:#4c1c78!important;
+  font-size:clamp(19px,2.15vw,28px)!important;
+  line-height:1.08!important;text-align:center!important;
+  text-shadow:0 1px 0 #ffe5b5!important;
+}
+#dashboard .vm-dash-welcome-copy small{
+  display:block!important;max-width:560px!important;margin:8px auto 0!important;
+  color:#3a2113!important;font-size:clamp(12px,1.15vw,15px)!important;
+  font-weight:950!important;line-height:1.25!important;text-align:center!important;
+  text-shadow:0 1px 0 #ffe5b5!important;
+}
+#dashboard .vm-dash-welcome-copy .vm-dash-edit-profile{
+  display:inline-flex!important;margin:11px auto 0!important;
+  padding:10px 17px!important;border:0!important;border-radius:999px!important;
+  background:linear-gradient(110deg,#6424bd,#8b43dc)!important;
+  color:#fff!important;font-size:13px!important;font-weight:950!important;
+  box-shadow:0 4px 0 #42127f!important;cursor:pointer!important;
+}
+/* Wishlist is now a dashboard sub-page, not a jump back into the Store. */
+#vmWishlistPage #wishlistPanel{display:block!important;visibility:visible!important;opacity:1!important}
+#vmWishlistPage #wishlistPanel.hidden{display:block!important}
+#vmWishlistPage #wishlistPanel>.sectionhead{margin-top:0!important}
+#vmWishlistPage #wishlistProducts{margin-top:14px!important}
+@media(max-width:760px){
+ #dashboard .vm-dash-welcome{height:350px!important;min-height:350px!important;background-size:135% 120%!important;background-position:58% 45%!important}
+ #dashboard .vm-dash-welcome-copy{left:34%!important;top:16%!important;width:62%!important;padding:4px 5px!important}
+ #dashboard .vm-dash-welcome-copy h1{font-size:clamp(19px,4.3vw,28px)!important}
+ #dashboard .vm-dash-welcome-copy p{font-size:clamp(14px,3.2vw,20px)!important}
+ #dashboard .vm-dash-welcome-copy small{font-size:clamp(9px,2.2vw,12px)!important}
+ #dashboard .vm-dash-welcome-copy .vm-dash-edit-profile{margin-top:7px!important;padding:8px 11px!important;font-size:11px!important}
+}
+</style>
+
 </head>
 <body class="vm-home-view">
 <div class="announcement-bar"><span class="announce-dot"></span> Smart finds, friendly prices <span class="announce-sep">•</span> Cash on Delivery available <span class="announce-sep">•</span> Shop your vibe</div>
@@ -2773,8 +2831,8 @@ function renderWishlist(){
   buttons.append(add,rev,remove);body.append(buttons);card.append(img,body);box.append(card);
  });
 }
-$("wishlistBtn").onclick=()=>{renderWishlist();$("wishlistPanel").classList.remove("hidden");goTo("wishlistPanel")};
-$("closeWishlistBtn").onclick=()=>$("wishlistPanel").classList.add("hidden");
+$("wishlistBtn").onclick=()=>{if(window.VibeMartDashboardNav)window.VibeMartDashboardNav.openPage("wishlist","store");else{renderWishlist();$("wishlistPanel").classList.remove("hidden");goTo("wishlistPanel")}};
+$("closeWishlistBtn").onclick=()=>window.VibeMartDashboardNav?.back();
 saveWishlist();
 /* Shop Now is handled by the unified screen controller at the end of this file. */
 if($("vmSaleShopBtn"))$("vmSaleShopBtn").onclick=()=>goTo("shop");
@@ -3405,7 +3463,7 @@ async function loadOrders(){
   const page=document.createElement("section");
   page.id=id;page.className="vm-admin-page hidden";
   page.innerHTML=`<div class="vm-admin-inner"><div class="vm-admin-head"><h2>${title}</h2><button class="secondary" type="button">← Back to Dashboard</button></div><div class="vm-admin-content"></div></div>`;
-  page.querySelector("button").onclick=()=>{page.classList.add("hidden");if(backTarget==="dashboard")dashboard.classList.remove("hidden");else openPage(backTarget)};
+  page.querySelector("button").onclick=()=>closeDashboardPage();
   document.body.append(page);return page.querySelector(".vm-admin-content");
  }
  const productsContent=makePage("vmProductsPage","📦 Manage Products");
@@ -3413,6 +3471,7 @@ async function loadOrders(){
  const couponsContent=makePage("vmCouponsPage","🎟️ Manage Coupons");
  const ordersContent=makePage("vmOrdersPage","🧾 Customer Orders");
  const settingsContent=makePage("vmSettingsPage","⚙️ Store Settings");
+ const wishlistContent=makePage("vmWishlistPage","♡ Wishlist");
 
  // Move the original working controls/forms into their own pages (IDs and listeners stay intact).
  const move=(id,target)=>{const el=$id(id);if(el)target.append(el)};
@@ -3424,6 +3483,7 @@ async function loadOrders(){
  const couponIntro=document.createElement("p");couponIntro.className="small";couponIntro.textContent="Discount coupon create karein ya existing coupons manage karein.";
  couponsContent.append(couponIntro);move("couponForm",couponsContent);move("manageCoupons",couponsContent);
  move("loadOrders",ordersContent);move("orders",ordersContent);
+ move("wishlistPanel",wishlistContent);
  const settings=$id("storeSettings");
  if(settings){settings.classList.remove("settings-page","hidden");settings.style.display="block";settings.style.visibility="visible";settings.style.opacity="1";settings.style.width="100%";settingsContent.append(settings);}
  const settingsHeader=settings?.querySelector(".settings-page-head");
@@ -3431,20 +3491,42 @@ async function loadOrders(){
  const settingsInner=settings?.querySelector(".settings-page-inner");
  if(settingsInner){settingsInner.style.display="block";settingsInner.style.visibility="visible";settingsInner.style.opacity="1";settingsInner.style.width="100%";settingsInner.style.maxWidth="none";settingsInner.style.margin="0";settingsInner.style.padding="0";settingsInner.style.border="0";settingsInner.style.boxShadow="none";}
 
- const pageIds=["vmProductsPage","vmAddProductPage","vmCouponsPage","vmOrdersPage","vmSettingsPage"];
+ const pageIds=["vmProductsPage","vmAddProductPage","vmCouponsPage","vmOrdersPage","vmSettingsPage","vmWishlistPage"];
  // One source of truth for Spin navigation: dailySpinPanel.dataset.returnTo.
  // Do not keep a second boolean state; it could become stale between openings.
+ let dashboardReturnTarget="dashboard";
  function closeAll(){pageIds.forEach(id=>$id(id).classList.add("hidden"));$id("dailySpinPanel").classList.add("hidden");$id("dailySpinPanel").classList.remove("spin-page");}
- function openPage(which){
+ function closeDashboardPage(){
+  closeAll();
+  if(dashboardReturnTarget==="dashboard"){
+   dashboard.classList.remove("hidden");
+   dashboard.style.removeProperty("display");
+  }else{
+   dashboard.classList.add("hidden");
+  }
+ }
+ function openPage(which,returnTo="dashboard"){
+  dashboardReturnTarget=returnTo;
   closeAll();dashboard.classList.add("hidden");
-  const map={products:"vmProductsPage",addProduct:"vmAddProductPage",coupons:"vmCouponsPage",orders:"vmOrdersPage",settings:"vmSettingsPage"};
-  if(which==="spin"){$id("dailySpinPanel").classList.remove("hidden");$id("dailySpinPanel").classList.add("spin-page");return}
+  const map={products:"vmProductsPage",addProduct:"vmAddProductPage",coupons:"vmCouponsPage",orders:"vmOrdersPage",settings:"vmSettingsPage",wishlist:"vmWishlistPage"};
+  if(which==="spin"){$id("dailySpinPanel").dataset.returnTo=returnTo;$id("dailySpinPanel").classList.remove("hidden");$id("dailySpinPanel").classList.add("spin-page");return}
   const page=$id(map[which]);if(page)page.classList.remove("hidden");
+  if(which==="wishlist"){
+   const panel=$id("wishlistPanel");if(panel)panel.classList.remove("hidden");
+   if(typeof renderWishlist==="function")renderWishlist();
+  }
   if(which==="settings"){const settingsEl=$id("storeSettings");if(settingsEl){settingsEl.classList.remove("hidden");settingsEl.style.display="block";}if(typeof fillSettingsForm==="function"){fillSettingsForm(window.currentStoreSettings||DEFAULT_STORE_SETTINGS)}}
   if(which==="coupons")loadCoupons();
   if(which==="orders")loadOrders();
   if(which==="products")renderManageProducts();
  }
+ window.VibeMartDashboardNav={
+  openPage,
+  closeAll,
+  back:closeDashboardPage,
+  showDashboard:function(){dashboardReturnTarget="dashboard";closeAll();dashboard.classList.remove("hidden");dashboard.style.removeProperty("display");},
+  isOwner:function(){return !!isOwner&&auth.currentUser?.uid===OWNER_UID;}
+ };
  dashboard.querySelector(".dashboard-shortcuts").classList.add("vm-admin-menu");
  shortcuts.querySelectorAll("[data-page]").forEach(btn=>btn.onclick=()=>{
   if(!isOwner||auth.currentUser?.uid!==OWNER_UID)return;
@@ -3455,7 +3537,7 @@ async function loadOrders(){
  });
  // Any legacy dashboard settings shortcut opens the dedicated settings page.
  const legacySettings=$id("openSettingsPage");if(legacySettings)legacySettings.onclick=()=>openPage("settings");
- $id("closeSettingsPage").onclick=()=>{closeAll();dashboard.classList.remove("hidden")};
+ $id("closeSettingsPage").onclick=()=>closeDashboardPage();
  const legacyProducts=$id("goProductsAdmin");if(legacyProducts)legacyProducts.onclick=()=>openPage("products");
  const legacyOrders=$id("goOrdersAdmin");if(legacyOrders)legacyOrders.onclick=()=>openPage("orders");
  // The old #openSpinFromDashboard node is replaced above; the new data-page button handles it.
@@ -4691,75 +4773,50 @@ document.addEventListener('DOMContentLoaded',function(){
    e.preventDefault();
    e.stopPropagation();
    const key=b.dataset.vmDash;
-
-   const closeProfile=()=>{
+   const nav=window.VibeMartDashboardNav;
+   if(key==='profile'){showProfileEditor();return;}
+   if(!nav)return;
+   if(!nav.isOwner())return;
+   if(key==='logout'){
     profileEditor.hidden=true;
     document.body.classList.remove('vm-profile-modal-open');
-   };
-   const routeIds={
-    orders:'vmRouteOrders',
-    customerOrders:'vmRouteOrders',
-    products:'vmRouteProducts',
-    editProducts:'vmRouteProducts',
-    addProduct:'vmRouteAddProduct',
-    coupons:'vmRouteCoupons',
-    settings:'vmRouteSettings',
-    storeSettings:'vmRouteSettings',
-    spin:'vmRouteSpin'
-   };
-
-   if(key==='profile'){showProfileEditor();return;}
-   if(key==='home'){
-    closeProfile();
-    document.getElementById('storeSettings')?.classList.add('hidden');
-    document.querySelectorAll('.vm-admin-page').forEach(p=>p.classList.add('hidden'));
-    document.getElementById('dailySpinPanel')?.classList.add('hidden');
-    document.getElementById('dailySpinPanel')?.classList.remove('spin-page');
-    dash.classList.remove('hidden');
-    return;
-   }
-   if(key==='wishlist'){
-    closeProfile();
-    dash.classList.add('hidden');
-    const panel=document.getElementById('wishlistPanel');
-    if(panel){
-     panel.classList.remove('hidden');
-     if(typeof renderWishlist==='function')renderWishlist();
-     panel.scrollIntoView({behavior:'smooth',block:'start'});
-    }
-    return;
-   }
-   if(key==='logout'){
-    closeProfile();
     document.getElementById('logoutBtn')?.click();
     return;
    }
-
-   closeProfile();
-   if(key==='spin'){
+   if(key==='home'){
+    profileEditor.hidden=true;
+    document.body.classList.remove('vm-profile-modal-open');
+    nav.showDashboard();
+    return;
+   }
+   const pages={
+    wishlist:'wishlist',
+    orders:'orders',
+    customerOrders:'orders',
+    products:'products',
+    editProducts:'products',
+    addProduct:'addProduct',
+    coupons:'coupons',
+    settings:'settings',
+    storeSettings:'settings',
+    spin:'spin'
+   };
+   const page=pages[key];
+   if(!page)return;
+   profileEditor.hidden=true;
+   document.body.classList.remove('vm-profile-modal-open');
+   if(page==='addProduct'){
+    if(typeof resetProductForm==='function')resetProductForm();
+    const title=document.getElementById('formTitle');
+    const save=document.getElementById('saveProductBtn');
+    if(title)title.textContent='Add New Product';
+    if(save)save.textContent='Save Product';
+   }
+   if(page==='spin'){
     const spin=document.getElementById('dailySpinPanel');
     if(spin)spin.dataset.returnTo='dashboard';
    }
-   const routeId=routeIds[key];
-   const routeButton=routeId?document.getElementById(routeId):null;
-   if(routeButton){
-    routeButton.click();
-    return;
-   }
-
-   // Safe fallbacks to the original, existing dashboard actions.
-   const fallbackIds={
-    products:'goProductsAdmin',
-    editProducts:'goProductsAdmin',
-    addProduct:'addProductBtn',
-    coupons:'vmRouteCoupons',
-    customerOrders:'goOrdersAdmin',
-    settings:'openSettingsPage',
-    storeSettings:'openSettingsPage',
-    spin:'openSpinFromDashboard'
-   };
-   const fallback=fallbackIds[key];
-   if(fallback)document.getElementById(fallback)?.click();
+   nav.openPage(page,'dashboard');
   });
  }
 });
