@@ -5667,3 +5667,92 @@ body.vm-store-view > main > .vm-store-layout { display:block !important; }
 </script>
 </body>
 </html>
+
+
+<style id="vm-dashboard-greeting-compact-final-fix">
+/* Compact, natural greeting placed directly on the wooden sign. */
+#dashboard .vm-dash-welcome{
+  position:relative!important;
+  overflow:hidden!important;
+  background-size:125% 125%!important;
+  background-position:center 46%!important;
+}
+#dashboard .vm-dash-welcome-copy{
+  position:absolute!important;
+  left:19%!important;
+  top:23%!important;
+  width:72%!important;
+  max-width:none!important;
+  margin:0!important;
+  padding:0 8px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:0!important;
+  text-align:center!important;
+  background:transparent!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+}
+#dashboard .vm-dash-welcome-copy .vm-dash-kicker,
+#dashboard .vm-dash-welcome-copy small,
+#dashboard .vm-dash-welcome-copy .vm-dash-edit-profile{
+  display:none!important;
+}
+#dashboard .vm-dash-welcome-copy h1{
+  display:block!important;
+  width:100%!important;
+  margin:0!important;
+  padding:0!important;
+  white-space:nowrap!important;
+  overflow:visible!important;
+  color:#3b1a0d!important;
+  font-size:clamp(22px,2.85vw,37px)!important;
+  line-height:1.08!important;
+  letter-spacing:-.65px!important;
+  font-weight:1000!important;
+  text-align:center!important;
+  text-shadow:0 1px 0 #ffe5b5,0 2px 3px #8b431c!important;
+}
+#dashboard .vm-dash-welcome-copy h1 span{
+  display:inline!important;
+  margin-left:.22em!important;
+  color:#57209a!important;
+  white-space:nowrap!important;
+  text-shadow:0 1px 0 #f6d7a2,0 2px 2px #8b431c!important;
+}
+#dashboard .vm-dash-welcome-copy p{
+  display:block!important;
+  margin:8px 0 0!important;
+  padding:0!important;
+  color:#4c1c78!important;
+  font-size:clamp(17px,1.9vw,25px)!important;
+  line-height:1.08!important;
+  font-weight:1000!important;
+  text-align:center!important;
+  text-shadow:0 1px 0 #ffe5b5!important;
+}
+@media(max-width:760px){
+  #dashboard .vm-dash-welcome{
+    height:330px!important;min-height:330px!important;
+    background-size:135% 120%!important;
+    background-position:58% 45%!important;
+  }
+  #dashboard .vm-dash-welcome-copy{
+    left:14%!important;top:20%!important;width:82%!important;
+    padding:0 3px!important;
+  }
+  #dashboard .vm-dash-welcome-copy h1{
+    font-size:clamp(16px,4vw,25px)!important;
+    letter-spacing:-.45px!important;
+  }
+  #dashboard .vm-dash-welcome-copy p{
+    margin-top:6px!important;
+    font-size:clamp(13px,3.2vw,19px)!important;
+  }
+}
+</style>
