@@ -2187,6 +2187,82 @@ body.vm-profile-modal-open::after{content:"";position:fixed;inset:0;z-index:1000
 }
 </style>
 
+
+<style id="vm-wooden-board-text-placement">
+/* Keep the original blank wooden sign artwork and place every live dashboard element ON the sign. */
+#dashboard .vm-dash-welcome{
+  position:relative!important;
+  display:block!important;
+  box-sizing:border-box!important;
+  min-height:390px!important;
+  height:390px!important;
+  padding:0!important;
+  overflow:hidden!important;
+  background-position:center center!important;
+  background-size:100% 100%!important;
+}
+#dashboard .vm-dash-welcome-copy{
+  position:absolute!important;
+  left:42.5%!important;
+  top:12%!important;
+  width:45%!important;
+  max-width:none!important;
+  box-sizing:border-box!important;
+  margin:0!important;
+  padding:8px 12px!important;
+  text-align:center!important;
+  color:#35180d!important;
+}
+#dashboard .vm-dash-welcome-copy h1{
+  margin:0 0 5px!important;
+  font-size:clamp(25px,2.7vw,39px)!important;
+  line-height:1.02!important;
+  text-align:center!important;
+}
+#dashboard .vm-dash-welcome-copy h1 span{color:#54208e!important}
+#dashboard .vm-dash-welcome-copy p{
+  margin:5px 0!important;
+  font-size:clamp(17px,1.8vw,24px)!important;
+  line-height:1.05!important;
+  text-align:center!important;
+}
+#dashboard .vm-dash-welcome-copy small{
+  display:block!important;
+  max-width:100%!important;
+  margin:7px auto 0!important;
+  font-size:clamp(11px,1.05vw,14px)!important;
+  line-height:1.25!important;
+  text-align:center!important;
+}
+#dashboard .vm-dash-edit-profile{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  margin:10px auto 0!important;
+  padding:9px 15px!important;
+  font-size:13px!important;
+  line-height:1.1!important;
+}
+@media(max-width:760px){
+  #dashboard .vm-dash-welcome{
+    min-height:330px!important;
+    height:330px!important;
+    background-size:100% 100%!important;
+    background-position:center center!important;
+  }
+  #dashboard .vm-dash-welcome-copy{
+    left:39%!important;
+    top:11%!important;
+    width:53%!important;
+    padding:5px 6px!important;
+  }
+  #dashboard .vm-dash-welcome-copy h1{font-size:clamp(17px,4.2vw,25px)!important}
+  #dashboard .vm-dash-welcome-copy p{font-size:clamp(13px,3.1vw,19px)!important}
+  #dashboard .vm-dash-welcome-copy small{font-size:clamp(9px,2.1vw,12px)!important}
+  #dashboard .vm-dash-edit-profile{margin-top:7px!important;padding:7px 10px!important;font-size:11px!important}
+}
+</style>
+
 </head>
 <body class="vm-home-view">
 <div class="announcement-bar"><span class="announce-dot"></span> Smart finds, friendly prices <span class="announce-sep">•</span> Cash on Delivery available <span class="announce-sep">•</span> Shop your vibe</div>
