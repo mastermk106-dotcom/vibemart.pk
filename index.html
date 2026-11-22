@@ -1769,6 +1769,181 @@ body.vm-store-view .vm-winter-store-banner img{
 .productbuttons button:disabled{opacity:.62;cursor:not-allowed;filter:grayscale(.15)}
 </style>
 
+
+<style id="vm-winter-cart-theme">
+/* VibeMart winter cart theme — visual-only layer; checkout IDs and handlers remain intact */
+#cartModal{
+  background:rgba(31,13,57,.72)!important;
+  backdrop-filter:blur(9px)!important;
+  padding:12px!important;
+}
+#cartModal .modalbox{
+  width:min(100%,760px)!important;
+  max-height:min(94vh,980px)!important;
+  padding:0!important;
+  overflow:hidden!important;
+  border:2px solid #e4d2ff!important;
+  border-radius:25px!important;
+  background:linear-gradient(180deg,#f7f0ff 0%,#fff 46%,#f8f4ff 100%)!important;
+  box-shadow:0 28px 90px rgba(30,8,60,.42),inset 0 1px 0 #fff!important;
+}
+#cartModal .cart-modal-scroll{
+  max-height:min(94vh,980px)!important;
+  padding:72px clamp(14px,3vw,26px) 24px!important;
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  scrollbar-color:#b99be8 #f4edff!important;
+}
+#cartModal .checkout-close{
+  top:12px!important;right:14px!important;
+  width:40px!important;height:40px!important;
+  border:2px solid #e5d6fb!important;
+  background:#fff!important;color:#5922a5!important;
+  box-shadow:0 4px 12px #4c1d9518!important;
+}
+#cartModal .vm-winter-cart-hero{
+  position:relative;isolation:isolate;overflow:hidden;
+  display:grid;grid-template-columns:minmax(0,1fr) auto;
+  align-items:center;gap:10px;
+  min-height:142px;margin:0 0 18px;padding:20px clamp(15px,3vw,25px);
+  border:1px solid #d8c0ff;border-radius:20px;
+  background:
+    radial-gradient(circle at 85% 15%,rgba(255,255,255,.9) 0 3px,transparent 4px),
+    radial-gradient(circle at 18% 90%,rgba(255,255,255,.8) 0 4px,transparent 5px),
+    linear-gradient(130deg,#eee3ff 0%,#d8c4ff 48%,#f7efff 100%);
+  box-shadow:0 8px 20px rgba(91,33,182,.10),inset 0 1px 0 #fff;
+}
+#cartModal .vm-winter-cart-hero:before,
+#cartModal .vm-winter-cart-hero:after{
+  content:"";position:absolute;z-index:-1;border-radius:50%;
+  background:rgba(255,255,255,.48);pointer-events:none;
+}
+#cartModal .vm-winter-cart-hero:before{width:180px;height:180px;right:5%;top:-115px}
+#cartModal .vm-winter-cart-hero:after{width:110px;height:110px;left:36%;bottom:-82px}
+#cartModal .vm-cart-snowflakes{
+  position:absolute;inset:8px 12px auto auto;color:#fff;
+  font-size:16px;letter-spacing:9px;opacity:.9;pointer-events:none;
+}
+#cartModal .vm-cart-hero-copy{min-width:0}
+#cartModal .vm-cart-kicker{
+  display:inline-block;margin-bottom:7px;padding:5px 10px;
+  border-radius:99px;background:#fff;color:#6d28d9;
+  font-size:10px;font-weight:950;letter-spacing:1.3px;
+}
+#cartModal .vm-cart-hero-copy h2{
+  margin:0!important;color:#35145f!important;
+  font-size:clamp(23px,4vw,34px)!important;line-height:1.08;
+  font-weight:950;letter-spacing:-.8px;
+}
+#cartModal .vm-cart-hero-copy p{
+  margin:7px 0 10px;color:#5f4a7c;font-size:13px;line-height:1.45;
+}
+#cartModal .vm-cart-cod-note{
+  display:inline-block;padding:6px 10px;border-radius:99px;
+  background:#6424c8;color:#fff;font-size:11px;font-weight:850;
+  box-shadow:0 3px 0 #4c1d95;
+}
+#cartModal .vm-cart-mascots{
+  display:flex;align-items:center;justify-content:center;gap:3px;
+  min-width:105px;padding:9px 7px;border-radius:18px;
+  background:rgba(255,255,255,.48);border:1px solid #fff9;
+}
+#cartModal .vm-cart-snowman{font-size:clamp(42px,7vw,62px);filter:drop-shadow(0 4px 3px #5b21b622)}
+#cartModal .vm-cart-penguin{font-size:clamp(36px,6vw,52px);filter:drop-shadow(0 4px 3px #5b21b622)}
+#cartModal .cart-modal-scroll>h2{
+  display:flex;align-items:center;gap:9px;
+  margin:5px 0 13px!important;padding:0 2px 10px;
+  border-bottom:2px dashed #e3d4f7;
+  color:#35145f!important;font-size:22px!important;font-weight:950;
+}
+#cartModal #cartItems{margin-bottom:12px}
+#cartModal .vm-cart-line{
+  display:grid!important;grid-template-columns:82px minmax(0,1fr) auto!important;
+  align-items:center!important;gap:12px!important;
+  margin:10px 0!important;padding:12px!important;
+  border:1px solid #e5d8f7!important;border-radius:17px!important;
+  background:linear-gradient(110deg,#fff 0%,#fcf9ff 100%)!important;
+  box-shadow:0 5px 14px rgba(67,28,112,.06)!important;
+}
+#cartModal .vm-cart-thumb{
+  width:82px!important;height:82px!important;object-fit:contain!important;
+  border:1px solid #eee4fb!important;border-radius:13px!important;
+  background:#f8f4ff!important;
+}
+#cartModal .vm-cart-line-info{min-width:0!important;color:#321b4d!important}
+#cartModal .vm-cart-line .rowbtn{display:flex!important;justify-content:flex-end!important;gap:6px!important;flex-wrap:wrap}
+#cartModal .summaryrow{
+  display:flex!important;justify-content:space-between!important;align-items:center;
+  gap:12px!important;margin:8px 0!important;padding:12px 14px!important;
+  border:1px solid #e7dcf6!important;border-radius:13px!important;
+  background:#fff!important;color:#3b2457!important;
+}
+#cartModal .summaryrow strong{color:#51209a!important}
+#cartModal .summaryrow:last-of-type{
+  background:linear-gradient(110deg,#eee3ff,#f8f1ff)!important;
+  border:1px solid #cbb0f2!important;font-size:16px;
+}
+#cartModal .couponbox{
+  margin:14px 0!important;padding:15px!important;
+  border:2px dashed #c8a9f0!important;border-radius:17px!important;
+  background:linear-gradient(135deg,#fbf7ff,#fff)!important;
+  color:#48236f!important;
+}
+#cartModal .couponbox>strong{display:block;margin-bottom:7px;font-size:15px}
+#cartModal .couponbox .searchrow{display:flex;gap:8px;align-items:center}
+#cartModal .couponbox input,
+#cartModal .field input,
+#cartModal .field textarea{
+  width:100%!important;min-width:0!important;
+  border:1.5px solid #e1d3f4!important;border-radius:12px!important;
+  background:#fff!important;color:#2f1b48!important;
+  padding:12px!important;box-shadow:0 3px 10px #4c1d9508!important;
+}
+#cartModal .field{margin:13px 0!important}
+#cartModal .field label{color:#48236f!important;font-weight:900!important}
+#cartModal .cart-modal-scroll>h3{
+  margin:18px 0 8px!important;padding:12px 14px;
+  border-radius:13px;background:#f0e7ff;color:#4c1d95!important;
+  border:1px solid #e0cff8;font-size:17px;
+}
+#cartModal #checkoutForm{
+  margin-top:12px!important;padding:16px!important;
+  border:1px solid #e5d8f7;border-radius:18px;
+  background:linear-gradient(145deg,#fff,#fcf9ff);
+}
+#cartModal #checkoutForm button[type="submit"],
+#cartModal #checkoutForm .primary{
+  min-height:50px!important;border:0!important;border-radius:14px!important;
+  background:linear-gradient(110deg,#6d28d9,#8b45e8)!important;
+  color:#fff!important;font-size:15px!important;font-weight:950!important;
+  box-shadow:0 5px 0 #4c1d95,0 9px 16px #5b21b626!important;
+}
+#cartModal #checkoutMessage,#cartModal #couponMessage{line-height:1.5}
+#cartModal #closeCart{
+  border-radius:12px!important;border:1px solid #d9c8f0!important;
+  background:#fff!important;color:#5922a5!important;font-weight:850;
+}
+@media(max-width:560px){
+  #cartModal{padding:6px!important}
+  #cartModal .modalbox{border-radius:18px!important;max-height:96vh!important}
+  #cartModal .cart-modal-scroll{max-height:96vh!important;padding:62px 11px 15px!important}
+  #cartModal .vm-winter-cart-hero{grid-template-columns:minmax(0,1fr) auto;min-height:126px;padding:15px 11px;gap:4px}
+  #cartModal .vm-cart-mascots{min-width:76px;padding:6px 3px}
+  #cartModal .vm-cart-snowman{font-size:39px}
+  #cartModal .vm-cart-penguin{font-size:34px}
+  #cartModal .vm-cart-hero-copy p{font-size:11px}
+  #cartModal .vm-cart-kicker{font-size:8px;letter-spacing:.8px}
+  #cartModal .vm-cart-line{grid-template-columns:62px minmax(0,1fr)!important;gap:8px!important;padding:9px!important}
+  #cartModal .vm-cart-thumb{width:62px!important;height:62px!important}
+  #cartModal .vm-cart-line .rowbtn{grid-column:1/-1!important;justify-content:flex-start!important}
+  #cartModal .couponbox .searchrow{align-items:stretch}
+}
+@media(prefers-reduced-motion:no-preference){
+  #cartModal .vm-winter-cart-hero{animation:vmCartSnowGlow 5s ease-in-out infinite alternate}
+  @keyframes vmCartSnowGlow{from{box-shadow:0 7px 17px #5b21b612}to{box-shadow:0 9px 24px #5b21b628}}
+}
+</style>
+
 </head>
 <body class="vm-home-view">
 <div class="announcement-bar"><span class="announce-dot"></span> Smart finds, friendly prices <span class="announce-sep">•</span> Cash on Delivery available <span class="announce-sep">•</span> Shop your vibe</div>
@@ -2039,7 +2214,18 @@ body.vm-store-view .vm-winter-store-banner img{
  <div class="modalbox">
   <button class="checkout-close" id="closeCartX" type="button" aria-label="Close checkout">×</button>
   <div class="cart-modal-scroll">
-  <h2>🛒 Your Cart</h2><div id="cartItems"></div>
+  
+  <section class="vm-winter-cart-hero" aria-label="Vibemart winter checkout">
+   <div class="vm-cart-snowflakes" aria-hidden="true">❄ ✦ ❄ ✧ ❄</div>
+   <div class="vm-cart-mascots" aria-hidden="true"><span class="vm-cart-snowman">☃️</span><span class="vm-cart-penguin">🐧</span></div>
+   <div class="vm-cart-hero-copy">
+    <span class="vm-cart-kicker">VIBEMART WINTER SHOPPING</span>
+    <h2>Cozy Winter Checkout</h2>
+    <p>Stay warm, shop happy — your favourites are almost yours!</p>
+    <span class="vm-cart-cod-note">💜 Easy Cash on Delivery</span>
+   </div>
+  </section>
+<h2>🛒 Your Cart</h2><div id="cartItems"></div>
   <div class="summaryrow"><span>Subtotal</span><strong id="cartSubtotal">Rs 0</strong></div>
   <div class="couponbox">
    <strong>🎟️ Have a coupon?</strong>
