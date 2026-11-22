@@ -2090,6 +2090,103 @@ body.vm-profile-modal-open::after{content:"";position:fixed;inset:0;z-index:1000
 @media(max-width:700px){#dashboard.vm-dashboard-redesigned{width:calc(100% - 14px)!important;margin:9px auto!important}#dashboard .vm-dashboard-shell{grid-template-columns:1fr!important}#dashboard .vm-dashboard-side{border-radius:20px 20px 0 0!important}#dashboard .vm-dashboard-menu{grid-template-columns:repeat(2,minmax(0,1fr))!important}#dashboard .vm-dash-welcome{min-height:260px;padding:115px 12px 14px;background-position:35% center}#dashboard .vm-dash-welcome-copy{padding:12px}#dashboard .vm-dash-welcome h1{font-size:27px}}
 </style>
 
+
+<style id="vm-dashboard-wood-and-navigation-fix">
+/* Remove the separate purple control-room masthead; keep the owner card and menu. */
+#dashboard .vm-dashboard-side{padding-top:18px!important}
+#dashboard .vm-dashboard-winter-top{display:none!important}
+#dashboard .vm-owner-card{margin-top:0!important}
+
+/* The greeting sits directly on the existing wooden sign artwork — no glass/paper card. */
+#dashboard .vm-dash-welcome{
+  min-height:315px!important;
+  padding:24px 4% 24px 47%!important;
+  border:0!important;
+  border-radius:18px!important;
+  background-position:center center!important;
+  background-size:cover!important;
+}
+#dashboard .vm-dash-welcome-copy{
+  width:100%!important;
+  max-width:620px!important;
+  padding:8px 10px!important;
+  margin:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  backdrop-filter:none!important;
+  color:#35180d!important;
+}
+#dashboard .vm-dash-welcome-copy .vm-dash-kicker{display:none!important}
+#dashboard .vm-dash-welcome-copy h1{
+  margin:0 0 5px!important;
+  color:#3c1a0c!important;
+  font-size:clamp(27px,3vw,43px)!important;
+  line-height:1.08!important;
+  font-weight:1000!important;
+  text-shadow:0 1px 0 #ffe2ad,0 2px 5px #f6c98755!important;
+}
+#dashboard .vm-dash-welcome-copy h1 span{color:#54208e!important}
+#dashboard .vm-dash-welcome-copy p{
+  margin:5px 0!important;color:#54208e!important;
+  font-size:clamp(18px,2vw,25px)!important;font-weight:1000!important;
+  text-shadow:0 1px 0 #ffe4b5!important;
+}
+#dashboard .vm-dash-welcome-copy small{
+  display:block!important;max-width:520px!important;
+  color:#452314!important;font-size:13px!important;font-weight:850!important;
+  text-shadow:0 1px 0 #ffe4b5!important;
+}
+#dashboard .vm-dash-edit-profile{
+  margin-top:12px!important;padding:10px 16px!important;
+  border:0!important;border-radius:999px!important;
+  background:linear-gradient(110deg,#6424bd,#8b43dc)!important;
+  color:#fff!important;font-weight:950!important;
+  box-shadow:0 4px 0 #42127f!important;cursor:pointer!important;
+}
+
+/* Make the profile modal close control sit neatly in the top-right corner. */
+#vmProfileEditor.vm-profile-editor{
+  position:fixed!important;
+  padding:25px 24px 22px!important;
+}
+#vmProfileEditor .vm-profile-editor-heading{
+  position:relative!important;
+  display:block!important;
+  min-height:38px!important;
+  margin:0 0 14px!important;
+  padding:2px 52px 0 0!important;
+}
+#vmProfileEditor #vmOwnerProfileClose{
+  position:absolute!important;
+  top:0!important;right:0!important;
+  display:grid!important;place-items:center!important;
+  width:38px!important;height:38px!important;
+  margin:0!important;padding:0!important;
+  line-height:1!important;
+  border:2px solid #fff!important;
+  border-radius:50%!important;
+  background:linear-gradient(135deg,#6424bd,#8c43dc)!important;
+  color:#fff!important;font-size:22px!important;font-weight:900!important;
+  box-shadow:0 3px 10px #3c126633!important;
+}
+#vmProfileEditor #vmOwnerProfileClose:hover{transform:scale(1.05)!important}
+@media(max-width:760px){
+ #dashboard .vm-dash-welcome{
+  min-height:300px!important;
+  padding:145px 12px 15px!important;
+  background-position:36% center!important;
+ }
+ #dashboard .vm-dash-welcome-copy{
+  max-width:100%!important;padding:7px 10px!important;
+  text-align:center!important;
+ }
+ #dashboard .vm-dash-welcome-copy h1{font-size:27px!important}
+ #dashboard .vm-dash-welcome-copy small{margin:0 auto!important}
+}
+</style>
+
 </head>
 <body class="vm-home-view">
 <div class="announcement-bar"><span class="announce-dot"></span> Smart finds, friendly prices <span class="announce-sep">•</span> Cash on Delivery available <span class="announce-sep">•</span> Shop your vibe</div>
@@ -4383,7 +4480,7 @@ document.addEventListener('DOMContentLoaded',function(){
   const shell=document.createElement('div');shell.className='vm-dashboard-shell';
   const side=document.createElement('aside');side.className='vm-dashboard-side';
   side.innerHTML=`
-   <div class="vm-dashboard-winter-top"><span>❄</span><span>✦</span><span>❄</span><b>VIBEMART</b><small>WINTER CONTROL ROOM</small></div>
+   
    <div class="vm-owner-card">
     <div class="vm-owner-avatar" id="vmOwnerAvatar" aria-label="Your profile picture"><span>👤</span></div>
     <div class="vm-owner-meta"><strong id="vmOwnerName">VibeMart Owner</strong><small>Store Owner</small></div>
@@ -4421,7 +4518,7 @@ document.addEventListener('DOMContentLoaded',function(){
   shell.append(side,content);dash.appendChild(shell);
   content.insertAdjacentHTML('afterbegin', `
    <section class="vm-dash-welcome" aria-label="Winter dashboard welcome">
-    <div class="vm-dash-welcome-copy"><span class="vm-dash-kicker">❄ VIBEMART WINTER CONTROL ROOM</span>
+    <div class="vm-dash-welcome-copy">
      <h1>Hello, <span id="vmGreetingName">VibeMart Owner</span>!</h1>
      <p>Your Dashboard</p><small>Your Vibe, Your Choice — manage your store from one cozy place.</small>
      <button type="button" class="vm-dash-edit-profile" data-vm-dash="profile">✎ Edit Profile</button>
@@ -4513,21 +4610,80 @@ document.addEventListener('DOMContentLoaded',function(){
   content.querySelector('.vm-dash-edit-profile')?.addEventListener('click',showProfileEditor);
 
   side.addEventListener('click',function(e){
-   const b=e.target.closest('[data-vm-dash]');if(!b)return;
+   const b=e.target.closest('[data-vm-dash]');
+   if(!b)return;
+   e.preventDefault();
+   e.stopPropagation();
    const key=b.dataset.vmDash;
-   const ids={orders:'vmRouteOrders',customerOrders:'vmRouteOrders',products:'vmRouteProducts',editProducts:'vmRouteProducts',addProduct:'vmRouteAddProduct',coupons:'vmRouteCoupons',settings:'vmRouteSettings',storeSettings:'vmRouteSettings',spin:'vmRouteSpin',logout:'logoutBtn'};
-   if(key==='logout'){document.getElementById(ids.logout)?.click();return;}
-   if(key==='home'){profileEditor.hidden=true;document.body.classList.remove('vm-profile-modal-open');document.getElementById('storeSettings')?.classList.add('hidden');document.querySelectorAll('.vm-admin-page').forEach(p=>p.classList.add('hidden'));dash.classList.remove('hidden');return;}
+
+   const closeProfile=()=>{
+    profileEditor.hidden=true;
+    document.body.classList.remove('vm-profile-modal-open');
+   };
+   const routeIds={
+    orders:'vmRouteOrders',
+    customerOrders:'vmRouteOrders',
+    products:'vmRouteProducts',
+    editProducts:'vmRouteProducts',
+    addProduct:'vmRouteAddProduct',
+    coupons:'vmRouteCoupons',
+    settings:'vmRouteSettings',
+    storeSettings:'vmRouteSettings',
+    spin:'vmRouteSpin'
+   };
+
    if(key==='profile'){showProfileEditor();return;}
-   if(key==='wishlist'){
-    dash.classList.add('hidden');
-    const panel=document.getElementById('wishlistPanel');
-    if(panel){panel.classList.remove('hidden');if(typeof renderWishlist==='function')renderWishlist();}
+   if(key==='home'){
+    closeProfile();
+    document.getElementById('storeSettings')?.classList.add('hidden');
+    document.querySelectorAll('.vm-admin-page').forEach(p=>p.classList.add('hidden'));
+    document.getElementById('dailySpinPanel')?.classList.add('hidden');
+    document.getElementById('dailySpinPanel')?.classList.remove('spin-page');
+    dash.classList.remove('hidden');
     return;
    }
-   profileEditor.hidden=true;document.body.classList.remove('vm-profile-modal-open');
-   if(key==='spin')document.getElementById('dailySpinPanel').dataset.returnTo='dashboard';
-   document.getElementById(ids[key])?.click();
+   if(key==='wishlist'){
+    closeProfile();
+    dash.classList.add('hidden');
+    const panel=document.getElementById('wishlistPanel');
+    if(panel){
+     panel.classList.remove('hidden');
+     if(typeof renderWishlist==='function')renderWishlist();
+     panel.scrollIntoView({behavior:'smooth',block:'start'});
+    }
+    return;
+   }
+   if(key==='logout'){
+    closeProfile();
+    document.getElementById('logoutBtn')?.click();
+    return;
+   }
+
+   closeProfile();
+   if(key==='spin'){
+    const spin=document.getElementById('dailySpinPanel');
+    if(spin)spin.dataset.returnTo='dashboard';
+   }
+   const routeId=routeIds[key];
+   const routeButton=routeId?document.getElementById(routeId):null;
+   if(routeButton){
+    routeButton.click();
+    return;
+   }
+
+   // Safe fallbacks to the original, existing dashboard actions.
+   const fallbackIds={
+    products:'goProductsAdmin',
+    editProducts:'goProductsAdmin',
+    addProduct:'addProductBtn',
+    coupons:'vmRouteCoupons',
+    customerOrders:'goOrdersAdmin',
+    settings:'openSettingsPage',
+    storeSettings:'openSettingsPage',
+    spin:'openSpinFromDashboard'
+   };
+   const fallback=fallbackIds[key];
+   if(fallback)document.getElementById(fallback)?.click();
   });
  }
 });
