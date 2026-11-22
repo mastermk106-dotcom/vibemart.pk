@@ -2037,6 +2037,22 @@ body.vm-store-view .vm-winter-store-banner img{
 }
 </style>
 
+
+<style id="vm-dashboard-header-access-fix">
+.vm-head-tools .vm-dashboard-nav{
+ display:inline-flex;align-items:center;justify-content:center;gap:7px;
+ min-height:44px;padding:10px 14px;border:1px solid #d8c5f2;border-radius:999px;
+ background:linear-gradient(110deg,#6427bb,#8744d4);color:#fff;
+ font-size:13px;font-weight:900;white-space:nowrap;cursor:pointer;
+ box-shadow:0 4px 12px #6427bb24;
+}
+.vm-head-tools .vm-dashboard-nav:hover{filter:brightness(1.06);transform:translateY(-1px)}
+.vm-head-tools .vm-dashboard-nav.hidden{display:none!important}
+@media(max-width:700px){
+ .vm-head-tools .vm-dashboard-nav{min-height:38px;padding:8px 10px;font-size:11px;gap:5px}
+}
+</style>
+
 </head>
 <body class="vm-home-view">
 <div class="announcement-bar"><span class="announce-dot"></span> Smart finds, friendly prices <span class="announce-sep">•</span> Cash on Delivery available <span class="announce-sep">•</span> Shop your vibe</div>
@@ -2045,7 +2061,7 @@ body.vm-store-view .vm-winter-store-banner img{
  <nav class="vm-nav" aria-label="Main navigation">
   <button class="vm-nav-active" type="button" id="vmHomeBtn">⌂ <span>Home</span></button>
   <button type="button" id="vmStoreBtn">♧ <span>Store</span></button>
-  <button type="button" id="dashboardBtn" class="hidden">▦ <span>Dashboard</span></button>
+  
   <button type="button" id="openSpinPage">🎡 <span>Spin &amp; Win</span></button>
   <button type="button" id="wishlistBtn">♡ <span>Wishlist</span> <i id="wishlistCount">0</i></button>
  </nav>
@@ -2053,7 +2069,7 @@ body.vm-store-view .vm-winter-store-banner img{
   <label class="vm-head-search"><input id="search" placeholder="Search products..." aria-label="Search products"><button id="searchBtn" type="button" aria-label="Search">⌕</button></label>
   <button class="vm-cart" id="cartBtn" type="button" aria-label="Cart" title="Cart"><span aria-hidden="true">🛒</span><i id="cartCount">0</i></button>
   <button class="vm-profile" id="loginBtn" type="button" aria-label="Account">👦</button>
-  <button class="vm-track-nav" id="trackBtn" type="button" aria-label="Track Order" title="Track Order"><span class="vm-header-action-icon" aria-hidden="true">📦</span><span>Track Order</span></button><button class="vm-logout-nav hidden" id="logoutBtn" type="button" aria-label="Logout" title="Logout"><span class="vm-header-action-icon" aria-hidden="true">↪</span><span>Logout</span></button>
+  <button class="vm-dashboard-nav hidden" type="button" id="dashboardBtn" aria-label="Owner Dashboard" title="Owner Dashboard"><span aria-hidden="true">▦</span><span>Dashboard</span></button> <button class="vm-track-nav" id="trackBtn" type="button" aria-label="Track Order" title="Track Order"><span class="vm-header-action-icon" aria-hidden="true">📦</span><span>Track Order</span></button><button class="vm-logout-nav hidden" id="logoutBtn" type="button" aria-label="Logout" title="Logout"><span class="vm-header-action-icon" aria-hidden="true">↪</span><span>Logout</span></button>
  </div>
 </header>
 
