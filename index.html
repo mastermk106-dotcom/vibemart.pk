@@ -2642,7 +2642,14 @@ body.vm-profile-modal-open::after{content:"";position:fixed;inset:0;z-index:1000
     </section>
    </div>
   </div>
-<section class="panel hidden" id="wishlistPanel">
+<section class="vm-search-page hidden" id="vmSearchPage" aria-label="Search results">
+  <div class="vm-search-page-head">
+   <div><p class="vm-search-kicker">VIBEMART SEARCH</p><h2 id="vmSearchTitle">Search Results</h2><p id="vmSearchSummary" aria-live="polite"></p></div>
+   <button type="button" class="vm-search-close" id="vmSearchClose" aria-label="Back to store" title="Back to store">✕</button>
+  </div>
+  <div class="vm-search-image-grid" id="vmSearchResults"></div>
+ </section>
+ <section class="panel hidden" id="wishlistPanel">
   <div class="sectionhead"><h2>❤️ My Wishlist</h2><button class="secondary vm-dashboard-x" id="closeWishlistBtn" type="button" aria-label="Return to dashboard" title="Return to dashboard">×</button></div>
   <div class="products" id="wishlistProducts"></div><p id="wishlistEmpty">Abhi wishlist khaali hai.</p>
  </section>
@@ -2860,8 +2867,10 @@ $("closeImagePreview").onclick=closeImagePreview;
 $("imagePreviewModal").addEventListener("click",e=>{if(e.target===$("imagePreviewModal"))closeImagePreview()});
 document.addEventListener("keydown",e=>{
  if(e.key==="Escape"){
-  if(!$("imagePreviewModal").classList.contains("hidden"))closeImagePreview();
+  if(!$("vmProductDetail").classList.contains("hidden"))closeVmProductDetail();
+  else if(!$("imagePreviewModal").classList.contains("hidden"))closeImagePreview();
   else if(!$("cartModal").classList.contains("hidden"))$("cartModal").classList.add("hidden");
+  else if(document.body.classList.contains("vm-search-view"))closeSearchResults();
  }
 });
 const spinWheel=$("spinWheel");
@@ -3223,9 +3232,35 @@ function renderProducts(){
  });
 }
 $("categories").onclick=e=>{const b=e.target.closest("button[data-cat]");if(!b)return;activeCategory=b.dataset.cat;$("categories").querySelectorAll("button").forEach(x=>x.classList.toggle("active",x===b));renderProducts()};
-function searchProducts(){searchText=$("search").value.trim();renderProducts()}
-$("searchBtn").onclick=searchProducts;
-$("search").onkeydown=e=>{if(e.key==="Enter")searchProducts()};
+function renderSearchResults(){
+ const grid=$("vmSearchResults"); if(!grid)return; grid.replaceChildren();
+ const queryText=searchText.toLowerCase();
+ let matches=allProducts.filter(p=>(productName(p)+" "+safeText(p.description)+" "+safeText(p.category)).toLowerCase().includes(queryText));
+ if($("inStockOnly")?.checked)matches=matches.filter(p=>Number(p.stock)>0);
+ const title=queryText?`Results for “${searchText}”`:"All Products";
+ $("vmSearchTitle").textContent=title;
+ $("vmSearchSummary").textContent=matches.length+" product(s) found — kisi bhi tasveer par click karke poori details dekhein.";
+ if(!matches.length){const empty=document.createElement("div");empty.className="vm-search-empty";empty.textContent="Is search se koi product nahi mila. Koi doosra naam try karein.";grid.append(empty);return}
+ matches.forEach(p=>{
+  const tile=document.createElement("button");tile.type="button";tile.className="vm-search-image-card";tile.setAttribute("aria-label","View details: "+(productName(p)||"Product"));
+  const img=document.createElement("img");img.loading="lazy";img.alt=productName(p)||"Product";img.src=safeText(p.imageUrl)||"https://placehold.co/600x600/f0eaff/6d28d9?text=Vibemart";img.onerror=()=>{img.onerror=null;img.src="https://placehold.co/600x600/f0eaff/6d28d9?text=Vibemart"};
+  tile.append(img);tile.addEventListener("click",()=>openVmProductDetail(p.id));grid.append(tile);
+ });
+}
+function openSearchResults(){
+ searchText=$("search").value.trim();
+ document.body.classList.remove("vm-home-view","vm-store-view");
+ document.body.classList.add("vm-search-view");
+ renderSearchResults();window.scrollTo({top:0,behavior:"instant"});
+}
+function closeSearchResults(){
+ document.body.classList.remove("vm-search-view");
+ document.body.classList.add("vm-store-view");
+ window.scrollTo({top:0,behavior:"instant"});
+}
+$("searchBtn").onclick=openSearchResults;
+$("search").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();openSearchResults()}};
+$("vmSearchClose")?.addEventListener("click",closeSearchResults);
 $("sortProducts").onchange=renderProducts;
 $("inStockOnly").onchange=renderProducts;
 
@@ -5529,6 +5564,30 @@ body.vm-store-view #products .productbuttons button { min-width:0 !important; pa
   body.vm-store-view .vm-sort-label select { min-width:110px !important; }
 }
 </style>
+<style id="vm-search-image-only-final">
+/* Search opens its own results screen; product tiles show only the product photo. */
+.vm-search-page{display:none;padding:24px clamp(14px,3vw,38px) 40px;min-height:65vh;background:#fbf8ff}
+.vm-search-page:not(.hidden){display:block}
+.vm-search-page-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 0 22px;padding:18px 20px;border:1px solid #e6d8fb;border-radius:18px;background:linear-gradient(120deg,#fff,#f3eaff);box-shadow:0 8px 24px #32105b0c}
+.vm-search-kicker{margin:0 0 5px;color:#7b35d5;font-size:11px;font-weight:950;letter-spacing:2px}
+.vm-search-page-head h2{margin:0;color:#281342;font-size:clamp(22px,3vw,32px);font-weight:950}
+#vmSearchSummary{margin:5px 0 0;color:#705d87;font-size:13px}
+.vm-search-close{flex:0 0 46px;width:46px;height:46px;border:0;border-radius:50%;background:#6f22d4;color:white;font-size:25px;font-weight:900;cursor:pointer;box-shadow:0 5px 14px #57209b35}
+.vm-search-image-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:16px}
+.vm-search-image-card{display:block;width:100%;aspect-ratio:1/1;padding:9px;border:1px solid #e5d6fb;border-radius:16px;background:#fff;cursor:pointer;overflow:hidden;box-shadow:0 5px 18px #30104d0c;transition:transform .18s ease,box-shadow .18s ease}
+.vm-search-image-card:hover{transform:translateY(-3px);box-shadow:0 10px 25px #30104d1c}
+.vm-search-image-card img{display:block;width:100%;height:100%;object-fit:contain;border-radius:10px}
+.vm-search-empty{grid-column:1/-1;padding:35px 18px;text-align:center;border:1px dashed #cdb4ef;border-radius:16px;background:#fff;color:#60447f;font-weight:750}
+/* Store product tiles are image-only too; tapping the image opens full details. */
+body.vm-store-view #products .product{display:block!important;min-width:0!important;padding:9px!important;border:1px solid #e5d6fb!important;border-radius:17px!important;background:#fff!important;overflow:hidden!important;box-shadow:0 5px 18px #30104d0c!important}
+body.vm-store-view #products .product>img{display:block!important;width:100%!important;height:auto!important;aspect-ratio:1/1!important;object-fit:contain!important;cursor:pointer!important;border-radius:11px!important;background:#fff!important;padding:5px!important}
+body.vm-store-view #products .product>.productbody{display:none!important}
+@media(max-width:1000px){.vm-search-image-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}}
+@media(max-width:650px){.vm-search-page{padding:12px 10px 28px}.vm-search-page-head{padding:13px;border-radius:14px}.vm-search-image-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.vm-search-image-card{padding:6px;border-radius:12px}body.vm-store-view #products .product{padding:6px!important}}
+body.vm-search-view>.announcement-bar,body.vm-search-view>.vm-header,body.vm-search-view>footer{display:flex!important}
+body.vm-search-view>main>.vm-search-page{display:block!important}
+body.vm-search-view>main>:not(#vmSearchPage):not(#vmProductDetail){display:none!important}
+</style>
 <style id="vm-unified-screen-visibility-final">
 /* Welcome view keeps the original artwork and hides site chrome. Store view restores the site chrome. */
 body.vm-home-view > .announcement-bar,
@@ -5576,7 +5635,7 @@ body.vm-store-view > main > .vm-store-layout { display:block !important; }
 
   function showStore() {
     hideTracking();
-    body.classList.remove("vm-home-view");
+    body.classList.remove("vm-home-view", "vm-search-view");
     body.classList.add("vm-store-view");
     setActiveNav("vmStoreBtn");
     window.scrollTo({ top: 0, behavior: "instant" });
