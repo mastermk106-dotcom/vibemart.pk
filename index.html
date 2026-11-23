@@ -2601,6 +2601,148 @@ body.vm-profile-modal-open::after{content:"";position:fixed;inset:0;z-index:1000
 }
 </style>
 
+
+<style id="vm-spin-design2-visual-fix-v2">
+/* Final visual correction: preserve the supplied portrait artwork's proportions.
+   The artwork already contains the close icon and Spin Now button; transparent
+   hit-areas make those exact printed controls interactive without duplicates. */
+#dailySpinPanel.spin-page{
+  position:fixed!important;inset:0!important;z-index:5000!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  padding:8px!important;margin:0!important;overflow:hidden!important;
+  background:rgba(22,8,43,.82)!important;backdrop-filter:blur(8px)!important;
+}
+#dailySpinPanel.spin-page.hidden{display:none!important}
+#dailySpinPanel .spin-page-inner.vm-spin-design2.vm-spin2-artboard{
+  position:relative!important;isolation:isolate!important;display:block!important;
+  flex:0 0 auto!important;
+  width:min(813px,calc(100vw - 16px),88.5dvh)!important;
+  height:auto!important;aspect-ratio:813 / 896!important;
+  max-width:calc(100vw - 16px)!important;max-height:calc(100dvh - 16px)!important;
+  box-sizing:border-box!important;overflow:hidden!important;
+  margin:auto!important;padding:0!important;border:3px solid #c99aff!important;
+  border-radius:25px!important;background:transparent!important;
+  box-shadow:0 22px 70px #10051f99!important;text-align:left!important;
+}
+#dailySpinPanel .vm-spin2-artwork{
+  position:absolute!important;inset:0!important;z-index:0!important;
+  display:block!important;width:100%!important;height:100%!important;
+  object-fit:fill!important;object-position:center!important;pointer-events:none!important;
+}
+#dailySpinPanel .vm-spin-close{
+  position:absolute!important;z-index:30!important;
+  top:5.1%!important;right:2.2%!important;
+  display:block!important;width:9.5%!important;height:9.5%!important;
+  min-width:0!important;min-height:0!important;margin:0!important;padding:0!important;
+  border:0!important;border-radius:50%!important;background:transparent!important;
+  color:transparent!important;font-size:0!important;line-height:0!important;
+  box-shadow:none!important;cursor:pointer!important;
+}
+/* Small input sits on the unused lower-left plank of the wooden sign. */
+#dailySpinPanel .vm-spin2-entry{
+  position:absolute!important;z-index:12!important;
+  left:19%!important;top:91.5%!important;width:40%!important;
+  max-width:none!important;margin:0!important;padding:4px 6px!important;
+  box-sizing:border-box!important;border:2px solid #a95d24!important;
+  border-radius:8px!important;
+  background:rgba(255,244,214,.96)!important;
+  box-shadow:inset 0 1px 3px #fff8d9,0 2px 5px #54200f55!important;
+  text-align:left!important;
+}
+#dailySpinPanel .vm-spin2-entry label{
+  display:block!important;margin:0 0 2px!important;
+  color:#54270e!important;font-size:clamp(7px,.9vw,10px)!important;
+  font-weight:1000!important;line-height:1.1!important;
+}
+#dailySpinPanel .vm-spin2-entry input{
+  display:block!important;width:100%!important;height:clamp(20px,3.1vw,27px)!important;
+  min-width:0!important;min-height:0!important;margin:0!important;padding:3px 6px!important;
+  box-sizing:border-box!important;border:1px solid #c68b43!important;
+  border-radius:5px!important;background:#fffaf0!important;color:#321b12!important;
+  font-size:clamp(8px,1vw,11px)!important;font-weight:700!important;
+}
+/* Keep the live wheel inside the printed wheel rim and completely clear of
+   the penguin's hands and gift on the left. */
+#dailySpinPanel .vm-spin2-wheel-zone{
+  position:absolute!important;z-index:8!important;
+  left:45.5%!important;top:37.5%!important;width:42%!important;
+  aspect-ratio:1 / 1!important;margin:0!important;padding:0!important;
+}
+#dailySpinPanel .spin-wheel-wrap{
+  position:relative!important;display:block!important;
+  width:100%!important;height:100%!important;aspect-ratio:1 / 1!important;
+  margin:0!important;padding:0!important;
+}
+#dailySpinPanel .spin-wheel{
+  position:relative!important;display:block!important;
+  width:100%!important;height:100%!important;box-sizing:border-box!important;
+  border:5px solid #f5d77e!important;border-radius:50%!important;
+  outline:2px solid #7b35bd!important;outline-offset:1px!important;
+  box-shadow:0 5px 16px #24104455,inset 0 0 0 3px #fff9!important;
+  overflow:hidden!important;
+}
+#dailySpinPanel .spin-wheel:after{
+  content:"🎁"!important;position:absolute!important;z-index:5!important;
+  left:50%!important;top:50%!important;transform:translate(-50%,-50%)!important;
+  display:grid!important;place-items:center!important;width:21%!important;
+  aspect-ratio:1!important;border:3px solid #f7d77d!important;border-radius:50%!important;
+  background:radial-gradient(circle at 35% 25%,#fff3c4,#9b4b14 72%)!important;
+  box-shadow:0 2px 6px #24104466!important;font-size:clamp(13px,2vw,22px)!important;
+}
+#dailySpinPanel .spin-label{
+  z-index:2!important;width:35%!important;max-width:none!important;min-width:0!important;
+  font-size:clamp(7px,.95vw,10px)!important;line-height:1.05!important;
+  font-weight:1000!important;color:#fff!important;
+  text-shadow:0 2px 3px #241044!important;pointer-events:none!important;
+}
+/* The red pointer is already part of the supplied image. */
+#dailySpinPanel .spin-pointer{display:none!important}
+/* Transparent hit-area sits exactly over the artwork's printed Spin Now button. */
+#dailySpinPanel #spinButton{
+  position:absolute!important;z-index:20!important;
+  left:8%!important;top:80.5%!important;width:47%!important;height:11.5%!important;
+  min-width:0!important;min-height:0!important;margin:0!important;padding:0!important;
+  border:0!important;border-radius:18px!important;background:transparent!important;
+  color:transparent!important;font-size:0!important;line-height:0!important;
+  box-shadow:none!important;cursor:pointer!important;
+}
+#dailySpinPanel #spinButton:disabled{opacity:.55!important;cursor:wait!important}
+/* Status/result only appears after an action; keep it away from the penguin and wheel. */
+#dailySpinPanel .vm-spin2-feedback{
+  position:absolute!important;z-index:22!important;
+  left:55%!important;bottom:4%!important;width:39%!important;max-height:9%!important;
+  overflow:auto!important;margin:0!important;padding:3px 6px!important;
+  border:1px solid #e7ceff!important;border-radius:8px!important;
+  background:rgba(255,255,255,.94)!important;box-shadow:0 2px 8px #24104433!important;
+}
+#dailySpinPanel .spin-message{
+  min-height:0!important;margin:0!important;color:#54218b!important;
+  font-size:clamp(7px,.9vw,10px)!important;line-height:1.2!important;font-weight:900!important;
+}
+#dailySpinPanel .spin-result-card{
+  display:none!important;max-width:none!important;margin:2px 0 0!important;padding:3px!important;
+  border:1px solid #c7a2f4!important;border-radius:6px!important;background:#fff!important;
+}
+#dailySpinPanel .spin-result-card.show{display:block!important}
+#dailySpinPanel .spin-result-kicker{font-size:7px!important}
+#dailySpinPanel .spin-result-value{display:block!important;font-size:clamp(9px,1.1vw,12px)!important}
+#dailySpinPanel .spin-result-note{font-size:7px!important;line-height:1.15!important}
+#dailySpinPanel .vm-spin2-footnote{display:none!important}
+@media(max-width:600px){
+  #dailySpinPanel.spin-page{padding:5px!important}
+  #dailySpinPanel .spin-page-inner.vm-spin-design2.vm-spin2-artboard{
+    width:min(calc(100vw - 10px),88.5dvh)!important;max-width:calc(100vw - 10px)!important;
+    max-height:calc(100dvh - 10px)!important;border-radius:17px!important;
+  }
+  #dailySpinPanel .vm-spin2-entry{padding:3px 4px!important;border-width:1px!important;border-radius:6px!important}
+  #dailySpinPanel .vm-spin2-entry label{font-size:clamp(6px,1.7vw,8px)!important}
+  #dailySpinPanel .vm-spin2-entry input{height:clamp(17px,3.1vw,22px)!important;font-size:clamp(7px,1.8vw,9px)!important}
+  #dailySpinPanel .spin-wheel{border-width:3px!important}
+  #dailySpinPanel .spin-label{font-size:clamp(6px,1.5vw,8px)!important}
+  #dailySpinPanel .vm-spin2-feedback{padding:2px 4px!important}
+}
+</style>
+
 </head>
 <body class="vm-home-view">
 <div class="announcement-bar"><span class="announce-dot"></span> Smart finds, friendly prices <span class="announce-sep">•</span> Cash on Delivery available <span class="announce-sep">•</span> Shop your vibe</div>
