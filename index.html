@@ -3140,6 +3140,7 @@ body.vm-profile-modal-open::after{content:"";position:fixed;inset:0;z-index:1000
 
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+import{getFunctions,httpsCallable}from"https://www.gstatic.com/firebasejs/12.18.0/firebase-functions.js";
 import{getAuth,onAuthStateChanged,signInWithEmailAndPassword,signOut,sendPasswordResetEmail}from"https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 import{getFirestore,collection,getDocs,addDoc,doc,getDoc,updateDoc,deleteDoc,query,orderBy,serverTimestamp,writeBatch,setDoc,runTransaction}from"https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
@@ -3154,7 +3155,7 @@ const firebaseConfig={
 };
 const OWNER_UID="ABfPBFg01PY6RPBVo5kIDNtc8X82";
 const CLOUDINARY_NAME="dvvsxjid",CLOUDINARY_PRESET="vibemart_upload";
-const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app),$=id=>document.getElementById(id);
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app),functions=getFunctions(app,"asia-south1"),checkDailySpin=httpsCallable(functions,"checkDailySpin"),spinDailyReward=httpsCallable(functions,"spinDailyReward"),$=id=>document.getElementById(id);
 
 let isOwner=false,allProducts=[],cart=[],activeCategory="All",searchText="",busy=false,lastOrderId="",appliedCoupon=null,wishlist=[],activeReviewProduct=null,reviewCache={};
 let spinPrize=null,spinClaimId="";
@@ -3206,8 +3207,6 @@ SPIN_PRIZES.forEach((p,i)=>{
  spinWheel.append(el);
 });
 spinWheel.style.background="conic-gradient("+SPIN_PRIZES.map((p,i)=>`${["#6d28d9","#f59e0b","#db2777","#16a34a","#2563eb","#9333ea","#ea580c","#0d9488"][i%8]} ${i*(360/SPIN_PRIZES.length)}deg ${(i+1)*(360/SPIN_PRIZES.length)}deg`).join(",")+")";
-function spinDay(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
-async function spinHash(v){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(v));return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,"0")).join("")}
 function cleanSpinId(v){v=v.trim().toLowerCase();if(v.includes("@"))return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)?v:"";const n=v.replace(/\D/g,"");return n.length>=7&&n.length<=15?n:""}
 let spinWheelRotation=0;
 function rotateWheelToPrize(prizeLabel,animate=true){
@@ -3253,45 +3252,46 @@ $("spinGateForm").addEventListener("submit",async e=>{
  if(!identifier){status.textContent="Valid email ya phone number enter karo.";status.classList.add("error");return}
  btn.disabled=true;status.classList.remove("error");status.textContent="Aaj ka spin check ho raha hai...";
  try{
-  const day=spinDay(),hash=await spinHash(identifier),claimId=day+"_"+hash;
-  const snap=await getDoc(doc(db,"dailySpins",claimId));
+  const response=await checkDailySpin({identifier});
+  const data=response.data||{};
   activeSpinIdentifier=identifier;
-  if(snap.exists()){
-   showSpinOutcome(snap.data(),claimId,{already:true});
+  if(data.exists){
+   showSpinOutcome(data.claim,data.claimId,{already:true});
    return;
   }
   $("spinGate").classList.add("hidden");
   $("spinOutcome").classList.add("hidden");
   document.querySelector("#dailySpinPanel .vm-spin2-artboard").classList.remove("hidden");
   status.textContent="";
- }catch(err){console.error(err);status.textContent="Spin check nahi ho saka: "+friendlyError(err);status.classList.add("error")}
- finally{btn.disabled=false}
+ }catch(err){
+  console.error("Spin check error:",err);
+  status.textContent="Spin check nahi ho saka: "+friendlyError(err);
+  status.classList.add("error");
+ }finally{btn.disabled=false}
 });
 $("closeSpinGate").onclick=()=>$("closeSpinPage").click();
 $("closeSpinOutcome").onclick=()=>$("closeSpinPage").click();
 $("spinOutcomeClose").onclick=()=>$("closeSpinPage").click();
 $("spinButton").onclick=async()=>{
  const btn=$("spinButton");
- if(!activeSpinIdentifier){$("spinGate").classList.remove("hidden");document.querySelector("#dailySpinPanel .vm-spin2-artboard").classList.add("hidden");return}
+ if(!activeSpinIdentifier){
+  $("spinGate").classList.remove("hidden");
+  document.querySelector("#dailySpinPanel .vm-spin2-artboard").classList.add("hidden");
+  return;
+ }
  btn.disabled=true;
  try{
-  const day=spinDay(),hash=await spinHash(activeSpinIdentifier),claimId=day+"_"+hash,ref=doc(db,"dailySpins",claimId);
-  // Atomic Firestore transaction prevents two tabs/devices from claiming two spins.
-  const result=await runTransaction(db,async tx=>{
-   const existing=await tx.get(ref);
-   if(existing.exists())return {claim:existing.data(),created:false};
-   const p=SPIN_PRIZES[Math.floor(Math.random()*SPIN_PRIZES.length)];
-   const claim={identifierHash:hash,day,prizeLabel:p.label,prizeType:p.type,value:p.value,createdAt:serverTimestamp()};
-   tx.set(ref,claim);
-   return {claim,created:true};
-  });
-  const c=result.claim;
-  rotateWheelToPrize(c.prizeLabel,result.created);
+  // Reward selection and the one-spin-per-day transaction now run on Firebase servers.
+  const response=await spinDailyReward({identifier:activeSpinIdentifier});
+  const result=response.data||{};
+  const c=result.claim,claimId=result.claimId;
+  if(!c||!claimId)throw new Error("Firebase ne valid spin result return nahi kiya.");
+  rotateWheelToPrize(c.prizeLabel,!!result.created);
   if(result.created)await new Promise(r=>setTimeout(r,4100));
   document.querySelector("#dailySpinPanel .vm-spin2-artboard").classList.add("hidden");
   showSpinOutcome(c,claimId,{already:!result.created});
  }catch(e){
-  console.error(e);
+  console.error("Spin creation error:",e);
   const status=$("spinGateMessage");
   status.textContent="Spin save nahi hua: "+friendlyError(e);
   status.classList.add("error");
