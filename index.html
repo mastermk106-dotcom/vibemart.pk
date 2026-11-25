@@ -2743,6 +2743,83 @@ body.vm-profile-modal-open::after{content:"";position:fixed;inset:0;z-index:1000
 }
 </style>
 
+
+<style id="vm-tracking-winter-design5">
+/* Vibemart Track Order — Design 5: purple winter night */
+#trackingPanel{
+  position:relative!important; isolation:isolate;
+  padding:28px 22px 26px!important;
+  border:1px solid #6f4aa9!important;
+  border-radius:24px!important;
+  background:radial-gradient(ellipse at 82% 8%,#6c43a7 0,transparent 34%),linear-gradient(145deg,#160d36 0%,#26104f 52%,#3b1769 100%)!important;
+  box-shadow:0 18px 48px #17082e38, inset 0 1px 0 #ffffff24!important;
+  color:#fff!important; overflow:hidden!important;
+}
+#trackingPanel:before{
+  content:"✦   ❄      ✧       ❄       ✦     ❄        ✧";
+  position:absolute;inset:8px 14px auto;z-index:-1;height:100%;
+  color:#e8dcff;font-size:clamp(15px,2vw,24px);letter-spacing:clamp(8px,2vw,24px);
+  line-height:2.8;opacity:.48;pointer-events:none;white-space:normal;
+}
+#trackingPanel:after{
+  content:"❄  ❄   ❄";position:absolute;right:5%;top:18%;z-index:-1;
+  color:#d8c8ff;font-size:22px;letter-spacing:22px;opacity:.55;pointer-events:none;
+}
+#trackingPanel .vm-tracking-heading h2{color:#fff!important;text-shadow:0 2px 12px #a879ff70}
+#trackingPanel .vm-tracking-close{background:#382064!important;border-color:#9b78d0!important;color:#fff!important}
+#trackingPanel .vm-tracking-close:hover{background:#503087!important}
+#trackingPanel .notice{
+  background:#ffffff12!important;border:1px solid #bda0eb55!important;
+  border-left:4px solid #e5c66b!important;color:#f0e7ff!important;
+  box-shadow:inset 0 1px 0 #ffffff16!important;
+}
+#trackingPanel .searchrow input{
+  background:#fff!important;color:#281344!important;border:1px solid #d9c4ff!important;
+  box-shadow:0 5px 18px #08031d38!important;
+}
+#trackingPanel .searchrow input::placeholder{color:#9888b0!important}
+#trackingPanel .searchrow button{
+  background:linear-gradient(135deg,#9b5cf6,#6425c2)!important;
+  border:1px solid #c39cff!important;color:#fff!important;
+  box-shadow:0 5px 0 #35115f,0 10px 20px #08031d55!important;
+}
+#trackingPanel .vm-tracking-visual{
+  min-height:210px!important;position:relative!important;isolation:isolate;
+  border:1px solid #a98bdb!important;border-radius:20px!important;
+  background:radial-gradient(circle at 79% 18%,#ffdb8a35 0 3%,transparent 20%),
+    radial-gradient(ellipse at 50% 115%,#f5f1ff 0 9%,#d8d0ef 10% 13%,transparent 14%),
+    linear-gradient(180deg,#29124f 0%,#42206f 58%,#72539a 100%)!important;
+  box-shadow:inset 0 1px 0 #ffffff35,0 10px 24px #08031d35!important;
+  overflow:hidden!important;
+}
+#trackingPanel .vm-tracking-visual:before{
+  content:"🏠";position:absolute;right:17%;top:3px;z-index:0;
+  font-size:clamp(54px,8vw,92px);line-height:1;
+  filter:drop-shadow(0 5px 7px #08031d80);opacity:.98;
+}
+#trackingPanel .vm-tracking-visual:after{
+  content:"☃️";position:absolute;right:3%;bottom:8px;z-index:2;
+  font-size:clamp(58px,8vw,88px);line-height:1;
+  filter:drop-shadow(0 5px 7px #08031d70);pointer-events:none;
+}
+#trackingPanel .vm-tracking-copy{z-index:3!important;max-width:300px!important}
+#trackingPanel .vm-tracking-copy strong{color:#fff!important;text-shadow:0 2px 12px #100522a8!important}
+#trackingPanel .vm-tracking-copy span{color:#e9ddff!important}
+#trackingPanel .vm-delivery-truck{z-index:3!important;filter:drop-shadow(0 12px 10px #08031d80)!important}
+#trackingPanel .vm-tracking-visual .vm-truck-spark{color:#ffe18b!important;text-shadow:0 0 14px #ffdb70!important}
+#trackingPanel #trackingResult{color:#fff!important}
+#trackingPanel #trackingResult h3{color:#fff!important}
+@media(max-width:760px){
+ #trackingPanel{padding:18px 12px 20px!important;border-radius:18px!important}
+ #trackingPanel .vm-tracking-visual{min-height:245px!important;padding:16px 12px!important}
+ #trackingPanel .vm-tracking-visual:before{right:20%;top:4px;font-size:66px}
+ #trackingPanel .vm-tracking-visual:after{right:2%;bottom:6px;font-size:62px}
+ #trackingPanel .vm-tracking-copy{max-width:100%!important;text-align:center!important}
+ #trackingPanel .vm-delivery-truck{width:min(88%,340px)!important}
+}
+@media(prefers-reduced-motion:reduce){#trackingPanel .vm-delivery-truck{animation:none!important}}
+</style>
+
 </head>
 <body class="vm-home-view">
 <div class="announcement-bar"><span class="announce-dot"></span> Smart finds, friendly prices <span class="announce-sep">•</span> Cash on Delivery available <span class="announce-sep">•</span> Shop your vibe</div>
