@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#6d28d9">
-<meta name="google-site-verification" content="AvCP9gb1o77sobdHLl43lDdHFEVsXqKgfAk3sTAwgwg" />
+<meta name="google-site-verification" content="AvCP9gb1o77sfhfkfdfhgobdHLl43lDdHFEVsXqKgfAk3sTAwgwg" />
 <meta name="description" content="Shop useful everyday finds at Vibemart.pk. Explore product deals, add favourites to your wishlist, order with Cash on Delivery, and track your order online.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Vibemart.pk — Smart Finds. Great Vibes.">
@@ -4161,58 +4161,6 @@ async function loadOrders(){
    window.scrollTo({top:0,behavior:"instant"});
   }
  };
- // Reliable Edit Product routing: resolve the product by its row ID,
- // open the actual edit page, then populate every existing field.
- const originalRender=renderManageProducts;
- renderManageProducts=function(){
-  originalRender();
-  $id("manageProducts").querySelectorAll(".order[data-product-id]").forEach(row=>{
-   const productId=row.dataset.productId;
-   const editButton=Array.from(row.querySelectorAll("button")).find(btn=>btn.textContent.trim()==="Edit");
-   if(!editButton)return;
-   editButton.type="button";
-   editButton.onclick=function(event){
-    event.preventDefault();
-    event.stopPropagation();
-    if(!isOwner||auth.currentUser?.uid!==OWNER_UID)return;
-    const product=allProducts.find(item=>item.id===productId);
-    if(!product){
-     message("status","Product dobara load nahi mila. Manage Products refresh karein.",true);
-     return;
-    }
-
-    resetProductForm();
-    openPage("addProduct");
-
-    $id("editId").value=product.id;
-    $id("pName").value=productName(product);
-    $id("pPrice").value=Number(product.price??product.regularPrice??0);
-    $id("pStock").value=Number(product.stock??10);
-    $id("pOldPrice").value=Number(product.oldPrice||0)||"";
-    $id("pSalePrice").value=Number(product.salePrice||0)||"";
-    $id("pCategory").value=product.category||"Other";
-    $id("pDescription").value=safeText(product.description);
-    $id("pImage").value="";
-
-    const saleEnd=product.saleEnds?new Date(product.saleEnds):null;
-    if(saleEnd&&!Number.isNaN(saleEnd.getTime())){
-     const local=new Date(saleEnd.getTime()-saleEnd.getTimezoneOffset()*60000);
-     $id("pSaleEnds").value=local.toISOString().slice(0,16);
-    }else{
-     $id("pSaleEnds").value="";
-    }
-
-    const existingCount=productGalleryImages(product).length;
-    $id("formTitle").textContent="Edit Product — "+productName(product);
-    $id("saveProductBtn").textContent="Update Product";
-    const intro=$id("vmAddProductPage")?.querySelector(".small");
-    if(intro){
-     intro.textContent="Existing photos: "+existingCount+"/4. Nayi photos select karne se purani photos ke saath add hongi.";
-    }
-    $id("pName").focus({preventScroll:true});
-   };
-  });
- };
  // After successful save, return to Manage Products; failed saves stay on the form.
  const productForm=$id("productForm");
  productForm.addEventListener("submit",()=>{
@@ -6734,6 +6682,84 @@ body.vm-store-view > main > .vm-store-layout { display:block !important; }
 }
 #vmAddProductPage #productEditor{display:block!important;visibility:visible!important}
 </style>
+
+
+<script id="vm-edit-product-capture-fix">
+(function(){
+  // Capture the click before the legacy Edit onclick handler. This is deliberate:
+  // the old handler only scrolls to the form, but the form now lives on a hidden page.
+  document.addEventListener("click", function(event){
+    const button=event.target.closest("#manageProducts .order[data-product-id] .rowbtn button");
+    if(!button || button.textContent.trim()!=="Edit") return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+
+    try{
+      const nav=window.VibeMartDashboardNav;
+      if(!nav || !nav.isOwner || !nav.isOwner()){
+        const status=document.getElementById("status");
+        if(status)status.textContent="Owner login dobara check karein, phir Edit try karein.";
+        return;
+      }
+
+      const row=button.closest(".order[data-product-id]");
+      const productId=row && row.dataset.productId;
+      const product=Array.isArray(allProducts) ? allProducts.find(p=>String(p.id)===String(productId)) : null;
+      if(!product){
+        const status=document.getElementById("status");
+        if(status)status.textContent="Product load nahi mila. Manage Products ko dobara khol kar try karein.";
+        return;
+      }
+
+      // Open the page that actually contains the editor before filling the fields.
+      nav.openPage("addProduct");
+      const byId=id=>document.getElementById(id);
+      const put=(id,value)=>{const el=byId(id);if(el)el.value=value??"";};
+
+      put("editId",product.id);
+      put("pName",product.name??product.title??product.productName??product.product_name??"");
+      put("pPrice",Number(product.price??product.regularPrice??product.sellingPrice??product.productPrice??product.product_price??product.amount??0));
+      put("pStock",Number(product.stock??10));
+      put("pOldPrice",Number(product.oldPrice??product.old_price??0)||"");
+      put("pSalePrice",Number(product.salePrice??product.sale_price??0)||"");
+      put("pCategory",product.category||"Other");
+      put("pDescription",product.description??"");
+      put("pImage","");
+
+      const saleEnd=product.saleEnds??product.sale_ends??"";
+      if(saleEnd){
+        const d=new Date(saleEnd);
+        if(!Number.isNaN(d.getTime())){
+          const local=new Date(d.getTime()-d.getTimezoneOffset()*60000);
+          put("pSaleEnds",local.toISOString().slice(0,16));
+        }else put("pSaleEnds",saleEnd);
+      }else put("pSaleEnds","");
+
+      const editor=byId("productEditor");
+      if(editor)editor.classList.remove("hidden");
+      const title=byId("formTitle");
+      if(title)title.textContent="Edit Product — "+(product.name??product.title??"");
+      const save=byId("saveProductBtn");
+      if(save)save.textContent="Update Product";
+
+      const photos=Array.isArray(product.imageUrls)?product.imageUrls:
+                   Array.isArray(product.images)?product.images:[];
+      const count=Math.min(4,photos.length || (product.imageUrl?1:0));
+      const status=byId("status");
+      if(status)status.textContent="Product edit form open hai. Existing photos: "+count+"/4. Changes ke baad Update Product dabayein.";
+
+      const name=byId("pName");
+      if(name)name.focus({preventScroll:true});
+      window.scrollTo({top:0,behavior:"smooth"});
+    }catch(error){
+      const status=document.getElementById("status");
+      if(status)status.textContent="Edit open nahi hua: "+(error?.message||"Unknown error");
+    }
+  }, true);
+})();
+</script>
 
 </body>
 </html>
