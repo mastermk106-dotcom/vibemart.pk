@@ -3957,7 +3957,7 @@ function renderManageProducts(){
  $("manageProducts").replaceChildren();if(!isOwner)return;
  if(!allProducts.length){$("manageProducts").textContent="Abhi koi product nahi.";return}
  allProducts.forEach(p=>{
-  const r=document.createElement("div");r.className="order";
+  const r=document.createElement("div");r.className="order";r.dataset.productId=p.id;
   const t=document.createElement("strong");t.textContent=productName(p)+" — "+money(p.price)+(isSaleActive(p)?" · ⚡ Sale "+money(p.salePrice):"");
   const bs=document.createElement("div");bs.className="rowbtn";
   const edit=document.createElement("button");edit.className="secondary";edit.textContent="Edit";
@@ -4161,15 +4161,56 @@ async function loadOrders(){
    window.scrollTo({top:0,behavior:"instant"});
   }
  };
- // Product edits are routed to the dedicated product form page.
+ // Reliable Edit Product routing: resolve the product by its row ID,
+ // open the actual edit page, then populate every existing field.
  const originalRender=renderManageProducts;
  renderManageProducts=function(){
   originalRender();
-  $id("manageProducts").querySelectorAll("button").forEach(btn=>{
-   if(btn.textContent==="Edit"){
-    const old=btn.onclick;
-    btn.onclick=function(){old.call(this);openPage("addProduct");};
-   }
+  $id("manageProducts").querySelectorAll(".order[data-product-id]").forEach(row=>{
+   const productId=row.dataset.productId;
+   const editButton=Array.from(row.querySelectorAll("button")).find(btn=>btn.textContent.trim()==="Edit");
+   if(!editButton)return;
+   editButton.type="button";
+   editButton.onclick=function(event){
+    event.preventDefault();
+    event.stopPropagation();
+    if(!isOwner||auth.currentUser?.uid!==OWNER_UID)return;
+    const product=allProducts.find(item=>item.id===productId);
+    if(!product){
+     message("status","Product dobara load nahi mila. Manage Products refresh karein.",true);
+     return;
+    }
+
+    resetProductForm();
+    openPage("addProduct");
+
+    $id("editId").value=product.id;
+    $id("pName").value=productName(product);
+    $id("pPrice").value=Number(product.price??product.regularPrice??0);
+    $id("pStock").value=Number(product.stock??10);
+    $id("pOldPrice").value=Number(product.oldPrice||0)||"";
+    $id("pSalePrice").value=Number(product.salePrice||0)||"";
+    $id("pCategory").value=product.category||"Other";
+    $id("pDescription").value=safeText(product.description);
+    $id("pImage").value="";
+
+    const saleEnd=product.saleEnds?new Date(product.saleEnds):null;
+    if(saleEnd&&!Number.isNaN(saleEnd.getTime())){
+     const local=new Date(saleEnd.getTime()-saleEnd.getTimezoneOffset()*60000);
+     $id("pSaleEnds").value=local.toISOString().slice(0,16);
+    }else{
+     $id("pSaleEnds").value="";
+    }
+
+    const existingCount=productGalleryImages(product).length;
+    $id("formTitle").textContent="Edit Product — "+productName(product);
+    $id("saveProductBtn").textContent="Update Product";
+    const intro=$id("vmAddProductPage")?.querySelector(".small");
+    if(intro){
+     intro.textContent="Existing photos: "+existingCount+"/4. Nayi photos select karne se purani photos ke saath add hongi.";
+    }
+    $id("pName").focus({preventScroll:true});
+   };
   });
  };
  // After successful save, return to Manage Products; failed saves stay on the form.
@@ -6600,6 +6641,98 @@ body.vm-store-view > main > .vm-store-layout { display:block !important; }
  #vmProductDetail .vm-detail-image-wrap img{border-radius:15px!important;clip-path:inset(0 round 15px)!important}
  #vmProductDetail .vm-detail-gallery{gap:7px!important;padding:7px!important}
 }
+</style>
+
+
+<style id="vm-actual-photo-corner-and-gallery-fix">
+/* The real photo element itself gets rounded corners; not just its surrounding frame. */
+#vmProductDetail .vm-detail-media .vm-detail-image-wrap{
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  padding:12px!important;overflow:hidden!important;border-radius:26px!important;
+  clip-path:inset(0 round 26px)!important;
+}
+#vmProductDetail .vm-detail-media img#vmDetailImage{
+  display:block!important;flex:0 1 auto!important;
+  width:100%!important;height:100%!important;max-width:100%!important;max-height:100%!important;
+  min-width:0!important;min-height:0!important;
+  margin:0!important;padding:0!important;
+  object-fit:contain!important;object-position:center!important;
+  border:0!important;border-radius:25px!important;
+  clip-path:inset(0 round 25px)!important;
+  overflow:hidden!important;background:transparent!important;
+  cursor:zoom-in!important;
+}
+#vmProductDetail .vm-detail-gallery{
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  visibility:visible;
+}
+#vmProductDetail .vm-gallery-thumb{
+  min-height:76px!important;
+}
+#vmProductDetail .vm-gallery-thumb img{
+  width:100%!important;height:100%!important;object-fit:contain!important;
+  border-radius:12px!important;clip-path:inset(0 round 12px)!important;
+}
+#products .product>img,#wishlistProducts .product>img{
+  border-radius:22px!important;clip-path:inset(0 round 22px)!important;
+  object-fit:contain!important;object-position:center!important;
+}
+@media(max-width:680px){
+ #vmProductDetail .vm-detail-media .vm-detail-image-wrap{
+  border-radius:20px!important;clip-path:inset(0 round 20px)!important;
+ }
+ #vmProductDetail .vm-detail-media img#vmDetailImage{
+  border-radius:19px!important;clip-path:inset(0 round 19px)!important;
+ }
+}
+</style>
+<script id="vm-gallery-click-feedback-fix">
+(function(){
+  const main=document.getElementById('vmDetailImage');
+  const gallery=document.getElementById('vmDetailGallery');
+  const hint=document.getElementById('vmGalleryHint');
+  if(!main||!gallery)return;
+
+  // The original gallery renderer creates up to four thumbnail buttons.
+  // After its existing click handler runs, scroll the opened thumbnails into view.
+  main.addEventListener('click',function(){
+    window.setTimeout(function(){
+      const thumbs=gallery.querySelectorAll('.vm-gallery-thumb');
+      if(thumbs.length>1 && !gallery.classList.contains('hidden')){
+        if(hint){
+          hint.textContent='Neeche thumbnails mein se kisi photo par click karein — main photo change ho jayegi.';
+          hint.classList.remove('hidden');
+        }
+        gallery.scrollIntoView({behavior:'smooth',block:'nearest'});
+      }else if(thumbs.length<=1){
+        if(hint){
+          hint.textContent='Is product ki abhi sirf 1 photo uploaded hai. Owner Dashboard → Manage Products → Edit mein 2–3 aur photos select karke Update Product karein.';
+          hint.classList.remove('hidden');
+        }
+      }
+    },0);
+  });
+
+  // Make gallery thumbnails accessible and clearly interactive.
+  gallery.addEventListener('click',function(event){
+    const thumb=event.target.closest('.vm-gallery-thumb');
+    if(!thumb)return;
+    gallery.querySelectorAll('.vm-gallery-thumb').forEach(el=>{
+      el.classList.toggle('is-active',el===thumb);
+    });
+  });
+})();
+</script>
+
+
+<style id="vm-edit-product-button-fix">
+#manageProducts .order[data-product-id] .rowbtn button{
+  min-width:88px;min-height:42px;cursor:pointer;position:relative;z-index:1;
+}
+#manageProducts .order[data-product-id] .rowbtn button:focus-visible{
+  outline:3px solid #a879ed;outline-offset:3px;
+}
+#vmAddProductPage #productEditor{display:block!important;visibility:visible!important}
 </style>
 
 </body>
