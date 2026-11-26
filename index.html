@@ -6427,5 +6427,70 @@ body.vm-store-view > main > .vm-store-layout { display:block !important; }
 @media(prefers-reduced-motion:reduce){#products .product,#wishlistProducts .product{transition:none!important}#products .product:hover,#wishlistProducts .product:hover{transform:none!important}}
 </style>
 
+
+
+<style id="vm-clean-product-badges-and-curved-images">
+/* Vibemart clean all-season product design: remove decorative winter labels/icons. */
+#products .product::before,
+#wishlistProducts .product::before,
+#products .product::after,
+#wishlistProducts .product::after{
+  content:none!important;
+  display:none!important;
+}
+
+/* Keep the product cards purple/lilac, but give each product photo softly curved corners. */
+#products .product>img,
+#wishlistProducts .product>img{
+  box-sizing:border-box!important;
+  width:calc(100% - 20px)!important;
+  height:180px!important;
+  margin:10px auto 0!important;
+  padding:12px!important;
+  border:1px solid #e8dcfa!important;
+  border-radius:16px!important;
+  background:linear-gradient(145deg,#f7f2ff 0%,#fff 52%,#f0e7ff 100%)!important;
+  object-fit:contain!important;
+  overflow:hidden!important;
+}
+
+/* Remove the decorative snowflake strip above the product detail panel. */
+#vmProductDetail .vm-detail-box::before{
+  content:none!important;
+  display:none!important;
+}
+
+/* Curved product image frame and image, matching the rounded product-card format. */
+#vmProductDetail .vm-detail-image-wrap{
+  border-radius:22px!important;
+  overflow:hidden!important;
+  padding:0!important;
+  background:linear-gradient(145deg,#f7f2ff,#fff 55%,#f0e7ff)!important;
+}
+#vmProductDetail .vm-detail-image-wrap img{
+  box-sizing:border-box!important;
+  border-radius:18px!important;
+  overflow:hidden!important;
+}
+
+/* All-season styling: do not imply that ordinary products are winter-only. */
+#products .product,
+#wishlistProducts .product{
+  background:linear-gradient(155deg,#fff 0%,#fcfaff 58%,#f5efff 100%)!important;
+}
+
+@media(max-width:680px){
+  #products .product>img,
+  #wishlistProducts .product>img{
+    height:150px!important;
+    width:calc(100% - 16px)!important;
+    margin:8px auto 0!important;
+    border-radius:14px!important;
+  }
+  #vmProductDetail .vm-detail-image-wrap{border-radius:17px!important}
+  #vmProductDetail .vm-detail-image-wrap img{border-radius:14px!important}
+}
+</style>
+
 </body>
 </html>
