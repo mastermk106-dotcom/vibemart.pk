@@ -2743,118 +2743,6 @@ body.vm-profile-modal-open::after{content:"";position:fixed;inset:0;z-index:1000
 }
 </style>
 
-
-<style id="vm-tracking-winter-design5">
-/* Vibemart Track Order — Design 5: purple winter night */
-#trackingPanel{
-  position:relative!important; isolation:isolate;
-  padding:28px 22px 26px!important;
-  border:1px solid #6f4aa9!important;
-  border-radius:24px!important;
-  background:radial-gradient(ellipse at 82% 8%,#6c43a7 0,transparent 34%),linear-gradient(145deg,#160d36 0%,#26104f 52%,#3b1769 100%)!important;
-  box-shadow:0 18px 48px #17082e38, inset 0 1px 0 #ffffff24!important;
-  color:#fff!important; overflow:hidden!important;
-}
-#trackingPanel:before{
-  content:"✦   ❄      ✧       ❄       ✦     ❄        ✧";
-  position:absolute;inset:8px 14px auto;z-index:-1;height:100%;
-  color:#e8dcff;font-size:clamp(15px,2vw,24px);letter-spacing:clamp(8px,2vw,24px);
-  line-height:2.8;opacity:.48;pointer-events:none;white-space:normal;
-}
-#trackingPanel:after{
-  content:"❄  ❄   ❄";position:absolute;right:5%;top:18%;z-index:-1;
-  color:#d8c8ff;font-size:22px;letter-spacing:22px;opacity:.55;pointer-events:none;
-}
-#trackingPanel .vm-tracking-heading h2{color:#fff!important;text-shadow:0 2px 12px #a879ff70}
-#trackingPanel .vm-tracking-close{background:#382064!important;border-color:#9b78d0!important;color:#fff!important}
-#trackingPanel .vm-tracking-close:hover{background:#503087!important}
-#trackingPanel .notice{
-  background:#ffffff12!important;border:1px solid #bda0eb55!important;
-  border-left:4px solid #e5c66b!important;color:#f0e7ff!important;
-  box-shadow:inset 0 1px 0 #ffffff16!important;
-}
-#trackingPanel .searchrow input{
-  background:#fff!important;color:#281344!important;border:1px solid #d9c4ff!important;
-  box-shadow:0 5px 18px #08031d38!important;
-}
-#trackingPanel .searchrow input::placeholder{color:#9888b0!important}
-#trackingPanel .searchrow button{
-  background:linear-gradient(135deg,#9b5cf6,#6425c2)!important;
-  border:1px solid #c39cff!important;color:#fff!important;
-  box-shadow:0 5px 0 #35115f,0 10px 20px #08031d55!important;
-}
-#trackingPanel .vm-tracking-visual{
-  min-height:210px!important;position:relative!important;isolation:isolate;
-  border:1px solid #a98bdb!important;border-radius:20px!important;
-  background:radial-gradient(circle at 79% 18%,#ffdb8a35 0 3%,transparent 20%),
-    radial-gradient(ellipse at 50% 115%,#f5f1ff 0 9%,#d8d0ef 10% 13%,transparent 14%),
-    linear-gradient(180deg,#29124f 0%,#42206f 58%,#72539a 100%)!important;
-  box-shadow:inset 0 1px 0 #ffffff35,0 10px 24px #08031d35!important;
-  overflow:hidden!important;
-}
-#trackingPanel .vm-tracking-visual:before{
-  content:"🏠";position:absolute;right:17%;top:3px;z-index:0;
-  font-size:clamp(54px,8vw,92px);line-height:1;
-  filter:drop-shadow(0 5px 7px #08031d80);opacity:.98;
-}
-#trackingPanel .vm-tracking-visual:after{
-  content:"☃️";position:absolute;right:3%;bottom:8px;z-index:2;
-  font-size:clamp(58px,8vw,88px);line-height:1;
-  filter:drop-shadow(0 5px 7px #08031d70);pointer-events:none;
-}
-#trackingPanel .vm-tracking-copy{z-index:3!important;max-width:300px!important}
-#trackingPanel .vm-tracking-copy strong{color:#fff!important;text-shadow:0 2px 12px #100522a8!important}
-#trackingPanel .vm-tracking-copy span{color:#e9ddff!important}
-#trackingPanel .vm-delivery-truck{z-index:3!important;filter:drop-shadow(0 12px 10px #08031d80)!important}
-#trackingPanel .vm-tracking-visual .vm-truck-spark{color:#ffe18b!important;text-shadow:0 0 14px #ffdb70!important}
-#trackingPanel #trackingResult{color:#fff!important}
-#trackingPanel #trackingResult h3{color:#fff!important}
-@media(max-width:760px){
- #trackingPanel{padding:18px 12px 20px!important;border-radius:18px!important}
- #trackingPanel .vm-tracking-visual{min-height:245px!important;padding:16px 12px!important}
- #trackingPanel .vm-tracking-visual:before{right:20%;top:4px;font-size:66px}
- #trackingPanel .vm-tracking-visual:after{right:2%;bottom:6px;font-size:62px}
- #trackingPanel .vm-tracking-copy{max-width:100%!important;text-align:center!important}
- #trackingPanel .vm-delivery-truck{width:min(88%,340px)!important}
-}
-@media(prefers-reduced-motion:reduce){#trackingPanel .vm-delivery-truck{animation:none!important}}
-</style>
-
-
-<style id="vm-tracking-winter-design5-fix">
-/* Clean, balanced winter scene: decorations stay in the background and never cover content. */
-#trackingPanel:before,#trackingPanel:after{content:none!important;display:none!important}
-#trackingPanel{overflow:hidden!important;background:radial-gradient(ellipse at 88% 0%,#68419b 0,transparent 34%),linear-gradient(135deg,#180d35 0%,#2b1452 58%,#40206b 100%)!important}
-#trackingPanel .vm-tracking-heading{position:relative;z-index:2}
-#trackingPanel .notice,#trackingPanel>.searchrow,#trackingPanel #trackingResult{position:relative;z-index:2}
-#trackingPanel .vm-tracking-visual{
-  display:flex!important;flex-direction:row!important;align-items:center!important;justify-content:space-between!important;
-  flex-wrap:nowrap!important;gap:22px!important;min-height:205px!important;height:auto!important;max-height:none!important;
-  padding:22px!important;margin-top:18px!important;overflow:hidden!important;isolation:isolate!important;
-  background:
-    radial-gradient(circle at 12% 20%,#ffffffa8 0 1px,transparent 2px),
-    radial-gradient(circle at 35% 14%,#ffffff80 0 2px,transparent 3px),
-    radial-gradient(circle at 62% 18%,#ffffff80 0 1.5px,transparent 3px),
-    radial-gradient(circle at 91% 22%,#ffffffa0 0 2px,transparent 3px),
-    linear-gradient(180deg,#2b1550 0%,#45256f 68%,#76599b 100%)!important;
-  border:1px solid #a98bdb!important;box-shadow:inset 0 1px 0 #ffffff35,0 10px 24px #08031d35!important;
-}
-#trackingPanel .vm-tracking-visual:before{content:none!important;display:none!important}
-#trackingPanel .vm-tracking-visual:after{content:none!important;display:none!important}
-#trackingPanel .vm-tracking-copy{position:relative!important;z-index:3!important;flex:1 1 42%!important;width:auto!important;max-width:380px!important;min-width:0!important;text-align:left!important}
-#trackingPanel .vm-delivery-truck{position:relative!important;z-index:3!important;display:block!important;flex:0 1 360px!important;width:min(48%,360px)!important;max-width:360px!important;height:auto!important;max-height:170px!important;object-fit:contain!important;margin:0!important}
-#trackingPanel .vm-tracking-visual .vm-truck-spark{z-index:4!important}
-#trackingPanel .vm-spark-a{right:5%!important;top:10%!important}
-#trackingPanel .vm-spark-b{right:47%!important;bottom:12%!important}
-@media(max-width:760px){
- #trackingPanel{padding:18px 12px 20px!important}
- #trackingPanel .vm-tracking-visual{flex-direction:column!important;flex-wrap:nowrap!important;justify-content:center!important;gap:8px!important;min-height:0!important;padding:18px 12px!important}
- #trackingPanel .vm-tracking-copy{flex:0 1 auto!important;width:100%!important;max-width:none!important;text-align:center!important}
- #trackingPanel .vm-delivery-truck{flex:0 1 auto!important;width:min(100%,340px)!important;max-height:none!important;margin:0 auto!important}
- #trackingPanel .vm-tracking-visual .vm-spark-a{right:8%!important;top:8%!important}
-}
-</style>
-
 </head>
 <body class="vm-home-view">
 <div class="announcement-bar"><span class="announce-dot"></span> Smart finds, friendly prices <span class="announce-sep">•</span> Cash on Delivery available <span class="announce-sep">•</span> Shop your vibe</div>
@@ -6419,6 +6307,124 @@ body.vm-store-view > main > .vm-store-layout { display:block !important; }
 #dailySpinPanel .vm-outcome-again{background:#ffffff18!important;color:#fff!important;border-color:#ffffff80}
 #dailySpinPanel .vm-spin2-entry{display:none!important}
 @media(max-width:600px){#dailySpinPanel{padding:9px!important}#dailySpinPanel .vm-spin-gate,#dailySpinPanel .vm-spin-outcome{width:min(520px,96vw);min-height:440px;padding:46px 20px 24px;border-radius:23px}#spinGateForm{padding:15px}#dailySpinPanel .vm-spin-gate-close{top:10px;right:10px;width:38px;height:38px;min-width:38px;min-height:38px}}
+</style>
+
+
+<style id="vm-winter-product-20x20">
+/* Vibemart winter product gallery + product detail skin. Visual-only: keep product data and existing handlers. */
+#products .product, #wishlistProducts .product{
+  position:relative!important; overflow:hidden!important; isolation:isolate!important;
+  border:1px solid #dfccff!important; border-radius:19px!important;
+  background:linear-gradient(155deg,#fff 0%,#fbf8ff 54%,#f1eaff 100%)!important;
+  box-shadow:0 8px 22px rgba(83,35,145,.10),inset 0 1px 0 #fff!important;
+  transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease!important;
+}
+#products .product:hover, #wishlistProducts .product:hover{
+  transform:translateY(-4px)!important; border-color:#a879f1!important;
+  box-shadow:0 15px 30px rgba(83,35,145,.18)!important;
+}
+#products .product::before, #wishlistProducts .product::before{
+  content:"❄"!important; position:absolute!important; z-index:3!important; top:10px!important; left:12px!important;
+  display:grid!important; place-items:center!important; width:27px!important; height:27px!important;
+  border:1px solid rgba(255,255,255,.9)!important; border-radius:50%!important;
+  color:#fff!important; font-size:17px!important; line-height:1!important;
+  background:linear-gradient(145deg,#9d69ef,#6022c6)!important;
+  box-shadow:0 3px 10px rgba(67,25,128,.24)!important; pointer-events:none!important;
+}
+#products .product::after, #wishlistProducts .product::after{
+  content:"WINTER FIND"!important; position:absolute!important; z-index:3!important; top:13px!important; right:10px!important;
+  padding:5px 9px!important; border-radius:999px!important; color:#fff!important;
+  background:linear-gradient(100deg,#6825cf,#9a58ed)!important; font-size:9px!important;
+  font-weight:950!important; letter-spacing:.65px!important; box-shadow:0 3px 9px #4b1b8a33!important;
+  pointer-events:none!important;
+}
+#products .product>img, #wishlistProducts .product>img{
+  display:block!important; width:100%!important; height:190px!important; object-fit:contain!important;
+  padding:17px!important; background:
+    radial-gradient(circle at 14% 18%,rgba(255,255,255,.95) 0 2px,transparent 3px),
+    radial-gradient(circle at 84% 24%,rgba(255,255,255,.8) 0 2px,transparent 3px),
+    linear-gradient(145deg,#f1e8ff 0%,#fff 48%,#e8dcff 100%)!important;
+  border-bottom:1px solid #e9defa!important; cursor:pointer!important;
+}
+#products .productbody, #wishlistProducts .productbody{
+  position:relative!important; padding:13px 14px 15px!important;
+  background:linear-gradient(180deg,#fff 0%,#fbf8ff 100%)!important;
+}
+#products .product h3, #wishlistProducts .product h3{color:#29104e!important;font-weight:950!important;line-height:1.3!important}
+#products .product .price, #wishlistProducts .product .price{color:#6422c5!important}
+#products .product .productbuttons, #wishlistProducts .product .productbuttons{gap:7px!important}
+#products .product .productbuttons button, #wishlistProducts .product .productbuttons button{
+  border-radius:10px!important; font-weight:850!important; min-height:38px!important;
+}
+#products .product .productbuttons .primary, #wishlistProducts .product .productbuttons .primary{
+  background:linear-gradient(110deg,#6424c8,#8b3fe4)!important; color:#fff!important;
+  box-shadow:0 4px 0 #40127f!important;
+}
+#products .product .productbuttons .secondary, #wishlistProducts .product .productbuttons .secondary{
+  background:#f7f1ff!important; border:1px solid #dfcefa!important; color:#5720a8!important;
+}
+#products .product .vm-product-stock, #wishlistProducts .product .vm-product-stock{font-size:11px!important}
+
+/* Full product-detail interface: retain IDs, text, prices, quantity and all existing click handlers. */
+#vmProductDetail{padding:clamp(10px,2.5vw,24px)!important}
+#vmProductDetail .vm-detail-backdrop{
+  background:linear-gradient(135deg,rgba(25,8,48,.88),rgba(76,29,129,.78))!important;
+  backdrop-filter:blur(9px)!important;
+}
+#vmProductDetail .vm-detail-box{
+  width:min(1000px,100%)!important; max-height:min(92vh,900px)!important;
+  padding:clamp(15px,2.4vw,26px)!important; overflow:auto!important;
+  border:2px solid #dfc9ff!important; border-radius:25px!important;
+  background:linear-gradient(145deg,#fff 0%,#fff 64%,#f7f0ff 100%)!important;
+  box-shadow:0 28px 90px rgba(18,5,39,.48),inset 0 1px 0 #fff!important;
+  position:relative!important;
+}
+#vmProductDetail .vm-detail-box::before{
+  content:"❄  ✦  ❄  ✧  ❄"!important; display:block!important; margin:-3px 54px 14px 0!important;
+  padding:9px 13px!important; border-radius:13px!important; color:#fff!important;
+  background:linear-gradient(100deg,#281047,#6826c9 65%,#9c67e8)!important;
+  font-size:14px!important; font-weight:900!important; letter-spacing:5px!important; text-align:center!important;
+}
+#vmProductDetail .vm-detail-close{
+  position:absolute!important; top:18px!important; right:18px!important; float:none!important;
+  border:1px solid #e3d3fa!important; background:#f5edff!important; color:#6023bd!important;
+  box-shadow:0 3px 12px #30105c18!important;
+}
+#vmProductDetail .vm-detail-grid{grid-template-columns:minmax(0,1.05fr) minmax(0,1fr)!important;gap:clamp(17px,2.4vw,26px)!important;align-items:start!important}
+#vmProductDetail .vm-detail-image-wrap{
+  min-height:360px!important; border:1px solid #e6d8fa!important; border-radius:19px!important;
+  background:
+    radial-gradient(circle at 14% 16%,#fff 0 2px,transparent 3px),
+    radial-gradient(circle at 87% 23%,#fff 0 2px,transparent 3px),
+    linear-gradient(145deg,#f5efff,#fff 48%,#eee3ff)!important;
+  box-shadow:inset 0 0 0 7px rgba(255,255,255,.45)!important; overflow:hidden!important;
+}
+#vmProductDetail .vm-detail-image-wrap img{width:100%!important;height:100%!important;min-height:330px!important;max-height:490px!important;object-fit:contain!important;padding:clamp(12px,2vw,22px)!important}
+#vmProductDetail .vm-detail-info{padding:5px 3px 3px!important;min-width:0!important}
+#vmProductDetail .vm-detail-kicker{display:inline-block!important;padding:6px 10px!important;border-radius:999px!important;background:#f1e7ff!important;color:#7135ca!important;letter-spacing:1.2px!important}
+#vmProductDetail .vm-detail-info h2{color:#281044!important;font-weight:950!important;font-size:clamp(25px,3vw,36px)!important;line-height:1.16!important}
+#vmProductDetail .vm-detail-price{display:inline-block!important;padding:9px 12px!important;border:1px solid #f2d78c!important;border-radius:12px!important;background:linear-gradient(110deg,#fff8df,#f8edff)!important;color:#5720a6!important;font-size:clamp(20px,2.4vw,25px)!important}
+#vmProductDetail .vm-detail-category, #vmProductDetail .vm-detail-stock{display:inline-flex!important;margin:9px 7px 0 0!important;padding:7px 11px!important;border:1px solid #e4d5fb!important;border-radius:999px!important;background:#f8f3ff!important;color:#624b7d!important}
+#vmProductDetail .vm-detail-info p{color:#665a74!important;line-height:1.65!important}
+#vmProductDetail .vm-detail-qty{padding:10px 12px!important;border:1px solid #e5d5fb!important;border-radius:13px!important;background:#fbf8ff!important}
+#vmProductDetail .vm-detail-qty button{background:#eee3ff!important;color:#5720a8!important;font-weight:950!important}
+#vmProductDetail .vm-detail-actions{gap:9px!important}
+#vmProductDetail .vm-detail-actions button{min-height:46px!important;border-radius:11px!important;font-weight:900!important}
+#vmProductDetail #vmDetailAdd{background:linear-gradient(110deg,#6424c8,#8c3fe4)!important;color:#fff!important;box-shadow:0 4px 0 #40127f!important}
+#vmProductDetail #vmDetailWishlist, #vmProductDetail #vmDetailReviews{background:#f7f1ff!important;border:1px solid #dfcefa!important;color:#5720a8!important}
+#vmProductDetail .vm-detail-note{color:#7d708e!important}
+@media(max-width:680px){
+  #products .product>img, #wishlistProducts .product>img{height:155px!important;padding:13px!important}
+  #vmProductDetail{align-items:flex-start!important;padding:8px!important}
+  #vmProductDetail .vm-detail-box{max-height:96vh!important;padding:13px!important;border-radius:18px!important}
+  #vmProductDetail .vm-detail-box::before{margin:0 48px 12px 0!important;font-size:11px!important;letter-spacing:3px!important}
+  #vmProductDetail .vm-detail-grid{grid-template-columns:minmax(0,1fr)!important;gap:14px!important}
+  #vmProductDetail .vm-detail-image-wrap{min-height:220px!important;max-height:280px!important}
+  #vmProductDetail .vm-detail-image-wrap img{min-height:210px!important;max-height:260px!important}
+  #vmProductDetail .vm-detail-info h2{font-size:25px!important}
+  #vmProductDetail .vm-detail-actions button{flex:1 1 30%!important;min-width:0!important;padding:10px 6px!important;font-size:12px!important}
+}
+@media(prefers-reduced-motion:reduce){#products .product,#wishlistProducts .product{transition:none!important}#products .product:hover,#wishlistProducts .product:hover{transform:none!important}}
 </style>
 
 </body>
