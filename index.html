@@ -2820,6 +2820,41 @@ body.vm-profile-modal-open::after{content:"";position:fixed;inset:0;z-index:1000
 @media(prefers-reduced-motion:reduce){#trackingPanel .vm-delivery-truck{animation:none!important}}
 </style>
 
+
+<style id="vm-tracking-winter-design5-fix">
+/* Clean, balanced winter scene: decorations stay in the background and never cover content. */
+#trackingPanel:before,#trackingPanel:after{content:none!important;display:none!important}
+#trackingPanel{overflow:hidden!important;background:radial-gradient(ellipse at 88% 0%,#68419b 0,transparent 34%),linear-gradient(135deg,#180d35 0%,#2b1452 58%,#40206b 100%)!important}
+#trackingPanel .vm-tracking-heading{position:relative;z-index:2}
+#trackingPanel .notice,#trackingPanel>.searchrow,#trackingPanel #trackingResult{position:relative;z-index:2}
+#trackingPanel .vm-tracking-visual{
+  display:flex!important;flex-direction:row!important;align-items:center!important;justify-content:space-between!important;
+  flex-wrap:nowrap!important;gap:22px!important;min-height:205px!important;height:auto!important;max-height:none!important;
+  padding:22px!important;margin-top:18px!important;overflow:hidden!important;isolation:isolate!important;
+  background:
+    radial-gradient(circle at 12% 20%,#ffffffa8 0 1px,transparent 2px),
+    radial-gradient(circle at 35% 14%,#ffffff80 0 2px,transparent 3px),
+    radial-gradient(circle at 62% 18%,#ffffff80 0 1.5px,transparent 3px),
+    radial-gradient(circle at 91% 22%,#ffffffa0 0 2px,transparent 3px),
+    linear-gradient(180deg,#2b1550 0%,#45256f 68%,#76599b 100%)!important;
+  border:1px solid #a98bdb!important;box-shadow:inset 0 1px 0 #ffffff35,0 10px 24px #08031d35!important;
+}
+#trackingPanel .vm-tracking-visual:before{content:none!important;display:none!important}
+#trackingPanel .vm-tracking-visual:after{content:none!important;display:none!important}
+#trackingPanel .vm-tracking-copy{position:relative!important;z-index:3!important;flex:1 1 42%!important;width:auto!important;max-width:380px!important;min-width:0!important;text-align:left!important}
+#trackingPanel .vm-delivery-truck{position:relative!important;z-index:3!important;display:block!important;flex:0 1 360px!important;width:min(48%,360px)!important;max-width:360px!important;height:auto!important;max-height:170px!important;object-fit:contain!important;margin:0!important}
+#trackingPanel .vm-tracking-visual .vm-truck-spark{z-index:4!important}
+#trackingPanel .vm-spark-a{right:5%!important;top:10%!important}
+#trackingPanel .vm-spark-b{right:47%!important;bottom:12%!important}
+@media(max-width:760px){
+ #trackingPanel{padding:18px 12px 20px!important}
+ #trackingPanel .vm-tracking-visual{flex-direction:column!important;flex-wrap:nowrap!important;justify-content:center!important;gap:8px!important;min-height:0!important;padding:18px 12px!important}
+ #trackingPanel .vm-tracking-copy{flex:0 1 auto!important;width:100%!important;max-width:none!important;text-align:center!important}
+ #trackingPanel .vm-delivery-truck{flex:0 1 auto!important;width:min(100%,340px)!important;max-height:none!important;margin:0 auto!important}
+ #trackingPanel .vm-tracking-visual .vm-spark-a{right:8%!important;top:8%!important}
+}
+</style>
+
 </head>
 <body class="vm-home-view">
 <div class="announcement-bar"><span class="announce-dot"></span> Smart finds, friendly prices <span class="announce-sep">•</span> Cash on Delivery available <span class="announce-sep">•</span> Shop your vibe</div>
