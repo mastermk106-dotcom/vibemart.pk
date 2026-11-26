@@ -3012,7 +3012,7 @@ body.vm-profile-modal-open::after{content:"";position:fixed;inset:0;z-index:1000
     <div class="field"><label for="pSaleEnds">Flash Sale End Date & Time (optional)</label><input id="pSaleEnds" type="datetime-local"><small>Khali chhorne par sale ki expiry nahi hogi.</small></div>
     <div class="field"><label for="pCategory">Category *</label><select id="pCategory"><option>Fashion</option><option>Home</option><option>Beauty</option><option>Accessories</option><option>Electronics</option><option>Other</option></select></div>
     <div class="field"><label for="pDescription">Description</label><textarea id="pDescription" rows="3" maxlength="1000"></textarea></div>
-    <div class="field"><label for="pImage">Product image (JPG, PNG, WEBP)</label><input id="pImage" type="file" accept="image/jpeg,image/png,image/webp"><small>New product ke liye image zaroori hai. Maximum 5 MB.</small></div>
+    <div class="field"><label for="pImage">Product photos (1–4 JPG, PNG, WEBP)</label><input id="pImage" type="file" accept="image/jpeg,image/png,image/webp" multiple><small>Ek product ki total maximum 4 photos. Har photo 5 MB tak. Existing product mein purani photo rahegi aur nayi photos add hongi; khali chhorne par kuch change nahi hoga.</small></div>
     <div class="rowbtn"><button class="primary" type="submit" id="saveProductBtn">Save Product</button><button class="secondary" type="button" id="cancelEdit">Clear Form</button></div>
    </form>
   </div>
@@ -3037,7 +3037,7 @@ body.vm-profile-modal-open::after{content:"";position:fixed;inset:0;z-index:1000
  <div class="vm-detail-box">
   <button type="button" class="vm-detail-close" id="vmDetailClose" aria-label="Close product details">✕</button>
   <div class="vm-detail-grid">
-   <div class="vm-detail-image-wrap"><img id="vmDetailImage" alt="Product image"></div>
+   <div class="vm-detail-media"><div class="vm-detail-image-wrap"><img id="vmDetailImage" alt="Product image" title="Click to view all product photos"></div><div id="vmDetailGallery" class="vm-detail-gallery hidden" aria-label="More product photos"></div><small id="vmGalleryHint" class="vm-gallery-hint hidden">Tasveer par click karein — tamam product photos dekhein</small></div>
    <div class="vm-detail-info">
     <span class="vm-detail-kicker">VIBEMART PRODUCT</span>
     <h2 id="vmDetailName">Product name</h2>
@@ -3508,14 +3508,44 @@ async function loadProducts(){
 
 let vmSelectedDetailProduct = null;
 let vmDetailQuantity = 1;
+let vmDetailActiveImage = 0;
+function productGalleryImages(p){
+ const raw=Array.isArray(p?.imageUrls)?p.imageUrls:(Array.isArray(p?.images)?p.images:[]);
+ const urls=raw.map(x=>typeof x==="string"?x:safeText(x?.url||x?.src)).filter(Boolean);
+ const primary=safeText(p?.imageUrl);
+ if(primary&&!urls.includes(primary))urls.unshift(primary);
+ return [...new Set(urls)].slice(0,4);
+}
+function renderVmDetailGallery(){
+ const gallery=$("vmDetailGallery"),main=$("vmDetailImage"),hint=$("vmGalleryHint");
+ if(!gallery||!main)return;
+ const urls=productGalleryImages(vmSelectedDetailProduct);
+ gallery.replaceChildren();
+ if(urls.length<=1){gallery.classList.add("hidden");hint?.classList.add("hidden");main.title="Product photo";return}
+ urls.forEach((url,index)=>{
+  const thumb=document.createElement("button");thumb.type="button";thumb.className="vm-gallery-thumb"+(index===vmDetailActiveImage?" is-active":"");
+  thumb.setAttribute("aria-label","Product photo "+(index+1));
+  const image=document.createElement("img");image.src=url;image.alt=productName(vmSelectedDetailProduct)+" photo "+(index+1);
+  image.onerror=()=>{image.onerror=null;thumb.classList.add("vm-thumb-error")};
+  thumb.append(image);thumb.addEventListener("click",()=>{
+   vmDetailActiveImage=index;main.src=url;main.alt=productName(vmSelectedDetailProduct)+" photo "+(index+1);
+   gallery.querySelectorAll(".vm-gallery-thumb").forEach((el,i)=>el.classList.toggle("is-active",i===index));
+  });
+  gallery.append(thumb);
+ });
+ hint?.classList.remove("hidden");
+ main.title="Click to hide product photos";
+}
 function closeVmProductDetail(){
  const modal=$("vmProductDetail"); if(modal)modal.classList.add("hidden");
- vmSelectedDetailProduct=null; vmDetailQuantity=1;
+ $("vmDetailGallery")?.classList.add("hidden");$("vmGalleryHint")?.classList.add("hidden");
+ vmSelectedDetailProduct=null; vmDetailQuantity=1;vmDetailActiveImage=0;
 }
 function openVmProductDetail(productId){
  const p=allProducts.find(x=>x.id===productId); if(!p)return;
- vmSelectedDetailProduct=p; vmDetailQuantity=1;
- const image=safeText(p.imageUrl)||"https://placehold.co/900x900/f0eaff/6d28d9?text=Vibemart";
+ vmSelectedDetailProduct=p; vmDetailQuantity=1;vmDetailActiveImage=0;
+ const images=productGalleryImages(p);
+ const image=images[0]||"https://placehold.co/900x900/f0eaff/6d28d9?text=Vibemart";
  $("vmDetailImage").src=image; $("vmDetailImage").alt=productName(p);
  $("vmDetailName").textContent=productName(p)||"Product";
  $("vmDetailPrice").replaceChildren(priceDetails(p));
@@ -3523,8 +3553,15 @@ function openVmProductDetail(productId){
  $("vmDetailStock").textContent=Number.isInteger(p.stock)?(p.stock>0?"📦 In stock: "+p.stock:"❌ Out of stock"):"Stock information unavailable";
  $("vmDetailDescription").textContent=safeText(p.description)||"Is product ki mazeed details jald update hongi.";
  $("vmDetailQty").textContent="1";
+ $("vmDetailGallery")?.classList.add("hidden");$("vmGalleryHint")?.classList.add("hidden");
+ renderVmDetailGallery();
  $("vmProductDetail").classList.remove("hidden");
 }
+$("vmDetailImage")?.addEventListener("click",()=>{
+ const gallery=$("vmDetailGallery");
+ if(gallery&&!gallery.classList.contains("hidden")){gallery.classList.add("hidden");$("vmGalleryHint")?.classList.remove("hidden")}
+ else if(gallery&&gallery.children.length>1){gallery.classList.remove("hidden");$("vmGalleryHint")?.classList.add("hidden")}
+});
 $("vmDetailClose")?.addEventListener("click",closeVmProductDetail);
 $("vmDetailBackdrop")?.addEventListener("click",closeVmProductDetail);
 $("vmDetailMinus")?.addEventListener("click",()=>{vmDetailQuantity=Math.max(1,vmDetailQuantity-1);$("vmDetailQty").textContent=String(vmDetailQuantity)});
@@ -3892,16 +3929,23 @@ function resetProductForm(){$("productForm").reset();$("editId").value="";$("for
 $("cancelEdit").onclick=resetProductForm;
 $("productForm").onsubmit=async e=>{
  e.preventDefault();if(!isOwner||auth.currentUser?.uid!==OWNER_UID){message("status","Owner login required.",true);return}if(busy)return;
- const name=$("pName").value.trim(),price=Number($("pPrice").value),stock=Number($("pStock").value),oldPrice=$("pOldPrice").value?Number($("pOldPrice").value):0,salePrice=$("pSalePrice").value?Number($("pSalePrice").value):0,saleEnds=$("pSaleEnds").value||"",category=$("pCategory").value,description=$("pDescription").value.trim(),file=$("pImage").files[0],editId=$("editId").value;
+ const name=$("pName").value.trim(),price=Number($("pPrice").value),stock=Number($("pStock").value),oldPrice=$("pOldPrice").value?Number($("pOldPrice").value):0,salePrice=$("pSalePrice").value?Number($("pSalePrice").value):0,saleEnds=$("pSaleEnds").value||"",category=$("pCategory").value,description=$("pDescription").value.trim(),files=Array.from($("pImage").files||[]),editId=$("editId").value;
  if(!name||!Number.isInteger(price)||price<1||price>1e7||(oldPrice&&(!Number.isInteger(oldPrice)||oldPrice<0||oldPrice>1e7))||!Number.isInteger(stock)||stock<0||stock>1000000){message("status","Product name aur prices check karo.",true);return}
  if(salePrice&&(!Number.isInteger(salePrice)||salePrice<1||salePrice>=price)){message("status","Flash sale price regular price se kam honi chahiye.",true);return}
  if(saleEnds&&salePrice&&!Number.isFinite(new Date(saleEnds).getTime())){message("status","Flash sale end date check karo.",true);return}
- if(!editId&&!file){message("status","Naye product ke liye image select karo.",true);return}
+ const existingProduct=editId?allProducts.find(x=>x.id===editId):null;
+ const existingImages=existingProduct?productGalleryImages(existingProduct):[];
+ if(existingImages.length+files.length>4){message("status","Is product mein pehle se "+existingImages.length+" photo(s) hain. Total maximum 4 photos ho sakti hain.",true);return}
+ if(!editId&&!files.length){message("status","Naye product ke liye kam az kam 1 photo select karo.",true);return}
  setBusy(true);
  try{
-  message("status",file?"Image upload ho rahi hai...":"Product save ho raha hai...");
-  const imageUrl=file?await uploadImage(file):"",data={name,price,stock,oldPrice,category,description,salePrice,saleEnds};
-  if(imageUrl)data.imageUrl=imageUrl;
+  message("status",files.length?files.length+" photo(s) upload ho rahi hain...":"Product save ho raha hai...");
+  const uploadedImages=files.length?await Promise.all(files.map(uploadImage)):[];
+  const data={name,price,stock,oldPrice,category,description,salePrice,saleEnds};
+  if(uploadedImages.length){
+   const combinedImages=[...existingImages,...uploadedImages].slice(0,4);
+   data.imageUrls=combinedImages;data.imageUrl=combinedImages[0];
+  }
   if(editId)await updateDoc(doc(db,"products",editId),data);
   else{data.createdAt=serverTimestamp();await addDoc(collection(db,"products"),data)}
   resetProductForm();await loadProducts();message("status","Product successfully save ho gaya!");
@@ -6489,6 +6533,72 @@ body.vm-store-view > main > .vm-store-layout { display:block !important; }
   }
   #vmProductDetail .vm-detail-image-wrap{border-radius:17px!important}
   #vmProductDetail .vm-detail-image-wrap img{border-radius:14px!important}
+}
+</style>
+
+
+<style id="vm-curved-image-gallery-v2">
+/* Store cards: show one complete product photo inside a real rounded image frame. */
+#products .product>img,#wishlistProducts .product>img{
+ display:block!important;box-sizing:border-box!important;
+ width:calc(100% - 18px)!important;height:auto!important;aspect-ratio:1/1!important;
+ max-height:220px!important;margin:9px auto 0!important;padding:9px!important;
+ object-fit:contain!important;object-position:center!important;
+ border:1px solid #e6d8fa!important;border-radius:22px!important;
+ background:linear-gradient(145deg,#f8f3ff,#fff 58%,#f1e9ff)!important;
+ overflow:hidden!important;clip-path:inset(0 round 22px)!important;
+}
+#products .product,#wishlistProducts .product{overflow:hidden!important;border-radius:20px!important}
+
+/* Product detail photo: the IMG itself has rounded corners and the whole image fits. */
+#vmProductDetail .vm-detail-media{min-width:0;width:100%}
+#vmProductDetail .vm-detail-image-wrap{
+ display:flex!important;align-items:center!important;justify-content:center!important;
+ width:100%!important;min-height:0!important;height:clamp(300px,39vw,470px)!important;
+ padding:12px!important;box-sizing:border-box!important;overflow:hidden!important;
+ border:1px solid #e6d8fa!important;border-radius:24px!important;
+ background:linear-gradient(145deg,#f8f3ff,#fff 55%,#f0e8ff)!important;
+}
+#vmProductDetail .vm-detail-image-wrap img{
+ display:block!important;width:100%!important;height:100%!important;max-height:none!important;
+ min-width:0!important;min-height:0!important;box-sizing:border-box!important;
+ padding:0!important;margin:0!important;object-fit:contain!important;object-position:center!important;
+ border-radius:20px!important;clip-path:inset(0 round 20px)!important;
+ cursor:pointer!important;background:#fff!important;
+}
+#vmProductDetail .vm-detail-gallery{
+ display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;
+ gap:10px!important;margin-top:12px!important;padding:10px!important;
+ border:1px solid #e6d8fa!important;border-radius:16px!important;
+ background:#faf7ff!important;
+}
+#vmProductDetail .vm-detail-gallery.hidden{display:none!important}
+#vmProductDetail .vm-gallery-thumb{
+ display:flex!important;align-items:center!important;justify-content:center!important;
+ min-width:0!important;aspect-ratio:1/1!important;padding:5px!important;
+ border:2px solid #e7dcf7!important;border-radius:14px!important;
+ background:#fff!important;overflow:hidden!important;cursor:pointer!important;
+}
+#vmProductDetail .vm-gallery-thumb.is-active{border-color:#762bd5!important;box-shadow:0 0 0 2px #762bd522!important}
+#vmProductDetail .vm-gallery-thumb img{
+ display:block!important;width:100%!important;height:100%!important;object-fit:contain!important;
+ border-radius:9px!important;clip-path:inset(0 round 9px)!important;
+}
+#vmProductDetail .vm-gallery-thumb.vm-thumb-error{opacity:.4}
+#vmProductDetail .vm-gallery-hint{
+ display:block!important;margin:8px 2px 0!important;color:#79658e!important;
+ font-size:11px!important;font-weight:700!important;
+}
+#vmProductDetail .vm-gallery-hint.hidden{display:none!important}
+@media(max-width:680px){
+ #products .product>img,#wishlistProducts .product>img{
+  width:calc(100% - 12px)!important;max-height:170px!important;padding:6px!important;border-radius:17px!important;
+  clip-path:inset(0 round 17px)!important;
+ }
+ #vmProductDetail .vm-detail-grid{grid-template-columns:minmax(0,1fr)!important}
+ #vmProductDetail .vm-detail-image-wrap{height:min(78vw,380px)!important;min-height:250px!important;border-radius:19px!important}
+ #vmProductDetail .vm-detail-image-wrap img{border-radius:15px!important;clip-path:inset(0 round 15px)!important}
+ #vmProductDetail .vm-detail-gallery{gap:7px!important;padding:7px!important}
 }
 </style>
 
