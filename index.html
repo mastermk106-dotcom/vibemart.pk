@@ -3925,7 +3925,22 @@ async function uploadImage(file){
  if(!r.ok||!j.secure_url)throw Error(j.error?.message||"Cloudinary upload fail hua.");
  return j.secure_url;
 }
-function resetProductForm(){$("productForm").reset();$("editId").value="";$("formTitle").textContent="Add New Product";$("saveProductBtn").textContent="Save Product"}
+function resetProductForm(){
+ $("productForm").reset();
+ // Explicitly clear values so a previous Edit Product session never appears in Add Product.
+ $("editId").value="";
+ $("pName").value="";
+ $("pPrice").value="";
+ $("pStock").value="10";
+ $("pOldPrice").value="";
+ $("pSalePrice").value="";
+ $("pSaleEnds").value="";
+ $("pCategory").selectedIndex=0;
+ $("pDescription").value="";
+ $("pImage").value="";
+ $("formTitle").textContent="Add New Product";
+ $("saveProductBtn").textContent="Save Product";
+}
 $("cancelEdit").onclick=resetProductForm;
 $("productForm").onsubmit=async e=>{
  e.preventDefault();if(!isOwner||auth.currentUser?.uid!==OWNER_UID){message("status","Owner login required.",true);return}if(busy)return;
