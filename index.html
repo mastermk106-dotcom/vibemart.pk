@@ -2768,6 +2768,25 @@ body.vm-profile-modal-open::after{content:"";position:fixed;inset:0;z-index:1000
 }
 </style>
 
+<style id="vm-image-frame-fit-v5">
+/* Cleaner rounded image frames: use the full frame without padded inset. */
+#products .product>img,#wishlistProducts .product>img{
+ width:100%!important;height:auto!important;aspect-ratio:1/1!important;
+ max-height:220px!important;margin:0 auto!important;padding:0!important;
+ object-fit:contain!important;object-position:center!important;
+ border:1px solid #e6d8fa!important;border-radius:20px!important;
+ background:#fff!important;clip-path:inset(0 round 20px)!important;
+}
+#products .product,#wishlistProducts .product{padding:12px!important;overflow:hidden!important;border-radius:20px!important}
+#vmProductDetail .vm-detail-image-wrap{
+ padding:0!important;overflow:hidden!important;border-radius:24px!important;
+ background:#fff!important;
+}
+#vmProductDetail .vm-detail-image-wrap img,#vmProductDetail img#vmDetailImage{
+ padding:0!important;margin:0!important;object-fit:contain!important;
+ border-radius:23px!important;clip-path:inset(0 round 23px)!important;
+}
+</style>
 </head>
 <body class="vm-home-view">
 <div class="announcement-bar"><span class="announce-dot"></span> Smart finds, friendly prices <span class="announce-sep">•</span> Cash on Delivery available <span class="announce-sep">•</span> Shop your vibe</div>
