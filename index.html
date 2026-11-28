@@ -3987,7 +3987,7 @@ function renderManageProducts(){
    $("saveProductBtn").textContent="Update Product";
    $("productEditor").classList.remove("hidden");
    // Open the actual editor page immediately; no second click is needed.
-   window.VibeMartDashboardNav.openPage("addProduct");
+   window.VibeMartDashboardNav.openPage("addProduct","products");
    window.scrollTo({top:0,behavior:"smooth"});
   };
   const del=document.createElement("button");del.className="danger";del.textContent="Delete";
@@ -4071,7 +4071,14 @@ async function loadOrders(){
   const page=document.createElement("section");
   page.id=id;page.className="vm-admin-page hidden";
   page.innerHTML=`<div class="vm-admin-inner"><div class="vm-admin-head"><h2>${title}</h2><button class="secondary vm-dashboard-x" type="button" aria-label="Return to dashboard" title="Return to dashboard">×</button></div><div class="vm-admin-content"></div></div>`;
-  page.querySelector("button").onclick=()=>closeDashboardPage();
+  page.querySelector("button").onclick=()=>{
+      // Return to Manage Products when the edit form was opened from that page.
+      if(id==="vmAddProductPage" && dashboardReturnTarget==="products"){
+        openPage("products");
+      }else{
+        closeDashboardPage();
+      }
+    };
   document.body.append(page);return page.querySelector(".vm-admin-content");
  }
  const productsContent=makePage("vmProductsPage","📦 Manage Products");
